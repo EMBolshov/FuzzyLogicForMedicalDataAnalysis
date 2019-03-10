@@ -1,0 +1,15 @@
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csprojAssemblyReference.cache
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csproj.CoreCompileInputs.cache
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\bin\Debug\FuzzyLogicCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\bin\Debug\FuzzyLogicCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\bin\Debug\MedicalDataCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\bin\Debug\MedicalDataCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csproj.CopyComplete
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\obj\Debug\FuzzyLogicCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicTestingConsole\FuzzyLogicCore\obj\Debug\FuzzyLogicCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\bin\Debug\FuzzyLogicMedicalCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\bin\Debug\FuzzyLogicMedicalCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csprojAssemblyReference.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csproj.CoreCompileInputs.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.pdb
