@@ -1,7 +1,8 @@
 ﻿using System;
 using FuzzyLogicMedicalCore;
+using FuzzyLogicMedicalCore.FHIR;
+using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
 using FuzzyLogicTestingConsole.Manager;
-using MedicalDataCore;
 
 namespace FuzzyLogicTestingConsole
 {
@@ -9,23 +10,14 @@ namespace FuzzyLogicTestingConsole
     {
         private static void Main(string[] args)
         {
-            //todo remove this
-            /* Есть несколько различных медицинских показателей - результаты выполнения анализов.
-             * Подготовлена база с описанием референесных значений для этих показателей,
-             * составленная с учетом возраста и пола пациента.
-             * Есть список результатов исследований пациентов с информацией по пациенту - возраст, пол.
-             * По результатам исследования конкретного пациента определяется вероятность постановки
-             * диагноза.
-             */
-
             //TODO make this test
 
-            var patientId = new Guid();
+            var patientGuid = new Guid();
 
             var temperature = new Observation()
             {
                 IndicationName = "Temperature",
-                PatientReference = patientId,
+                PatientReference = patientGuid,
                 ReferenceHigh = 37.0m,
                 ReferenceLow = 35.0m,
                 Value = 36.6m
@@ -36,7 +28,7 @@ namespace FuzzyLogicTestingConsole
             var iron = new Observation()
             {
                 IndicationName = "Iron in blood",
-                PatientReference = patientId,
+                PatientReference = patientGuid,
                 ReferenceHigh = 1.0m,
                 ReferenceLow = 0.0m,
                 Value = 1.1m
@@ -45,7 +37,7 @@ namespace FuzzyLogicTestingConsole
             var whiteBloodCells = new Observation()
             {
                 IndicationName = "White blood cells",
-                PatientReference = patientId,
+                PatientReference = patientGuid,
                 ReferenceHigh = 10.0m,
                 ReferenceLow = 0.0m,
                 Value = 5m
@@ -73,6 +65,9 @@ namespace FuzzyLogicTestingConsole
                 Name = "Flu"
             };
 
+            var patient = medicalDataManager.GetPatientById(patientGuid);
+            var fakeResults = medicalDataManager.GetFakeAnalysisResults(patientGuid);
+            
         }
     }
 }

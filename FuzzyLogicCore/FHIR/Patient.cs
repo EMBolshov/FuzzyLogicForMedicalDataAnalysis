@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MedicalDataCore
+namespace FuzzyLogicMedicalCore.FHIR
 {
     public class Patient
     {
@@ -9,14 +9,7 @@ namespace MedicalDataCore
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
-        public Gender Gender { get; set; }
+        public string Gender { get; set; }
         public int Age { get; set; }
-    }
-
-    //todo maybe do not use enum
-    public enum Gender
-    {
-        Male,
-        Female
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace FuzzyLogicMedicalCore
+﻿namespace FuzzyLogicMedicalCore.FuzzyLogic
 {
     public abstract class AbstractResult : ITerm
     {
@@ -10,10 +10,12 @@
         public decimal MaxValue { get; set; }
         public decimal CurrentValue { get; set; }
 
-        public virtual decimal CalculateAffiliation(decimal value)
+        public virtual decimal CalculateAffiliation()
         {
             //todo select formula for each term type
-            var result = value;
+            //сейчас рассчитывается насколько число соответствует середине интервала
+            var middleOfRange = (MaxValue + MinValue) / 2;
+            var result = CurrentValue;
             return result;
         }
     }

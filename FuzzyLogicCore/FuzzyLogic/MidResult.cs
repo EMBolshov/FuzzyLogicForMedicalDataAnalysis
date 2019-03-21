@@ -1,11 +1,11 @@
-﻿namespace FuzzyLogicMedicalCore
+﻿namespace FuzzyLogicMedicalCore.FuzzyLogic
 {
     public class MidResult : AbstractResult
     {
-        public override decimal CalculateAffiliation(decimal value)
+        public override decimal CalculateAffiliation()
         {
             //todo select formula for each term type
-            var result = value;
+            var result = CurrentValue;
             return result;
         }
     }

@@ -1,14 +1,16 @@
-﻿namespace FuzzyLogicMedicalCore
+﻿using FuzzyLogicMedicalCore.FuzzyLogic;
+
+namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
 {
     public class Diagnosis : ITerm
     {
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
 
-        public decimal CalculateAffiliation(decimal value)
+        public decimal CalculateAffiliation()
         {
             //todo select formula for each term type
-            var result = value;
+            var result = 123;
             return result;
         }
     }

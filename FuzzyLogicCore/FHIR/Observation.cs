@@ -1,7 +1,7 @@
 ﻿using System;
-using FuzzyLogicMedicalCore;
+using FuzzyLogicMedicalCore.FuzzyLogic;
 
-namespace MedicalDataCore
+namespace FuzzyLogicMedicalCore.FHIR
 {
     public class Observation
     {
@@ -14,6 +14,5 @@ namespace MedicalDataCore
         public HighResult HighResult { get; set; }
         public MidResult MidResult { get; set; }
         public LowResult LowResult { get; set; }
-
     }
 }
