@@ -5,7 +5,8 @@ namespace FuzzyLogicMedicalCore.FHIR
     public class Patient
     {
         //todo use FHIR resource
-        public Guid PatientId { get; set; }
+        public int Id { get; set; }
+        public Guid Guid { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }

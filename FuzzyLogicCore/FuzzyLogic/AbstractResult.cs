@@ -13,8 +13,6 @@
         public virtual decimal CalculateAffiliation()
         {
             //todo select formula for each term type
-            //сейчас рассчитывается насколько число соответствует середине интервала
-            var middleOfRange = (MaxValue + MinValue) / 2;
             var result = CurrentValue;
             return result;
         }

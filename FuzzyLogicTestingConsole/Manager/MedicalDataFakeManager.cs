@@ -4,15 +4,17 @@ using FuzzyLogicMedicalCore;
 using FuzzyLogicMedicalCore.FHIR;
 using FuzzyLogicMedicalCore.FuzzyLogic;
 using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
+using FuzzyLogicTestingConsole.Data;
 
 namespace FuzzyLogicTestingConsole.Manager
 {
-    public class MedicalDataManager
+    public class MedicalDataFakeManager
     {
-        public Patient GetPatientById(Guid guid)
+        public Patient GetFakePatient()
         {
             //TODO get patient info by guid from database
             //now - example - return new patient
+            var guid = new Guid();
             var patient = new Patient()
             {
                 Age = 25,
@@ -20,8 +22,9 @@ namespace FuzzyLogicTestingConsole.Manager
                 LastName = "Test Subject LastName",
                 MiddleName = "Test Subject MiddleName",
                 Gender = "Male",
-                PatientId = guid
+                Guid = guid
             };
+
             return patient;
         }
 
@@ -41,9 +44,10 @@ namespace FuzzyLogicTestingConsole.Manager
 
                 var result = new FakeAnalysisResult()
                 {
+                    AnalysisName = $"Analysis №{i}",
                     LowResult = new LowResult()
                     { 
-                        Name = "result №" + i,
+                        Name = $"result №{i}",
                         CurrentValue = randomGenerator.Next(lowMin, lowMax),
                         MaxValue = lowMax,
                         MinValue = lowMin
@@ -51,7 +55,7 @@ namespace FuzzyLogicTestingConsole.Manager
 
                     MidResult = new MidResult()
                     {
-                        Name = "result №" + i,
+                        Name = $"result №{i}",
                         CurrentValue = randomGenerator.Next(midMin, midMax),
                         MaxValue = lowMax,
                         MinValue = lowMin
@@ -59,7 +63,7 @@ namespace FuzzyLogicTestingConsole.Manager
 
                     HighResult = new HighResult()
                     {
-                        Name = "result №" + i,
+                        Name = $"result №{i}",
                         CurrentValue = randomGenerator.Next(highMin, highMax),
                         MaxValue = lowMax,
                         MinValue = lowMin
@@ -75,6 +79,60 @@ namespace FuzzyLogicTestingConsole.Manager
             }
 
             return resultList;
+        }
+
+        public List<Observation> GetFakeObservationList(Guid patientGuid)
+        {
+            return new List<Observation>
+            {
+                new Observation()
+                {
+                    IndicationName = "Temperature",
+                    PatientReference = patientGuid,
+                    ReferenceHigh = 37.0m,
+                    ReferenceLow = 35.0m,
+                    Value = 36.6m
+                },
+
+                new Observation()
+                {
+                    IndicationName = "Iron in blood",
+                    PatientReference = patientGuid,
+                    ReferenceHigh = 1.0m,
+                    ReferenceLow = 0.0m,
+                    Value = 1.1m
+                },
+
+                new Observation()
+                {
+                    IndicationName = "White blood cells",
+                    PatientReference = patientGuid,
+                    ReferenceHigh = 10.0m,
+                    ReferenceLow = 0.0m,
+                    Value = 5m
+                }
+            };
+        }
+
+        public List<Diagnosis> GetFakeDiagnoses()
+        {
+            return new List<Diagnosis>
+            {
+                new Diagnosis()
+                {
+                    Name = "Blood cancer"
+                },
+
+                new Diagnosis()
+                {
+                    Name = "Anemia"
+                },
+
+                new Diagnosis()
+                {
+                    Name = "Flu"
+                }
+            };
         }
     }
 }
