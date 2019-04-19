@@ -14,7 +14,7 @@ namespace FuzzyLogicTestingConsole.Manager
         {
             //TODO get patient info by guid from database
             //now - example - return new patient
-            var guid = new Guid();
+            var guid = Guid.NewGuid();
             var patient = new Patient()
             {
                 Age = 25,
@@ -33,14 +33,15 @@ namespace FuzzyLogicTestingConsole.Manager
             var resultList = new List<FakeAnalysisResult>();
             var randomGenerator = new Random();
             //fake result set generation
-            for (var i = 0; i < 3; i++)
+            for (var i = 1; i < 4; i++)
             {
                 var lowMin = randomGenerator.Next(0, 20);
                 var lowMax = randomGenerator.Next(lowMin, lowMin + 20);
-                var midMin = randomGenerator.Next(lowMax, lowMax + 20);
-                var midMax = randomGenerator.Next(midMin, midMin + 20);
-                var highMin = randomGenerator.Next(midMax, midMax + 20);
+                var midMin = (lowMin + lowMax) / 2;
+                var highMin = lowMax;
                 var highMax = randomGenerator.Next(highMin, highMin + 20);
+                var midMax = (lowMax + highMax) / 2;
+                var currentValue = randomGenerator.Next(lowMin, highMax);
 
                 var result = new FakeAnalysisResult()
                 {
@@ -48,7 +49,7 @@ namespace FuzzyLogicTestingConsole.Manager
                     LowResult = new LowResult()
                     { 
                         Name = $"result №{i}",
-                        CurrentValue = randomGenerator.Next(lowMin, lowMax),
+                        CurrentValue = currentValue,
                         MaxValue = lowMax,
                         MinValue = lowMin
                     },
@@ -56,23 +57,23 @@ namespace FuzzyLogicTestingConsole.Manager
                     MidResult = new MidResult()
                     {
                         Name = $"result №{i}",
-                        CurrentValue = randomGenerator.Next(midMin, midMax),
-                        MaxValue = lowMax,
-                        MinValue = lowMin
+                        CurrentValue = currentValue,
+                        MaxValue = midMax,
+                        MinValue = midMin
                     },
 
                     HighResult = new HighResult()
                     {
                         Name = $"result №{i}",
-                        CurrentValue = randomGenerator.Next(highMin, highMax),
-                        MaxValue = lowMax,
-                        MinValue = lowMin
+                        CurrentValue = currentValue,
+                        MaxValue = highMax,
+                        MinValue = highMin
                     }
                 };
 
-                result.LowResult.CalculateAffiliation();
-                result.MidResult.CalculateAffiliation();
-                result.HighResult.CalculateAffiliation();
+                result.LowResult.GetAffiliation();
+                result.MidResult.GetAffiliation();
+                result.HighResult.GetAffiliation();
                 result.PatientGuid = patientGuid;
 
                 resultList.Add(result);

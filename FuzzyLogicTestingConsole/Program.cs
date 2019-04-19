@@ -1,8 +1,4 @@
-﻿using System;
-using FuzzyLogicMedicalCore;
-using FuzzyLogicMedicalCore.FHIR;
-using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
-using FuzzyLogicTestingConsole.Manager;
+﻿using FuzzyLogicTestingConsole.Manager;
 
 namespace FuzzyLogicTestingConsole
 {

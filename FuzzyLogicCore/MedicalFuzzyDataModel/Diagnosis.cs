@@ -7,11 +7,11 @@ namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
 
-        public decimal CalculateAffiliation()
+        public void GetAffiliation()
         {
             //todo select formula for each term type
             var result = 123;
-            return result;
+            Affiliation = result;
         }
     }
 }

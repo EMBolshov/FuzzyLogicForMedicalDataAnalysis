@@ -13,3 +13,6 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\D
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csproj.CoreCompileInputs.cache
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\bin\Debug\System.ValueTuple.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\bin\Debug\System.ValueTuple.xml
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csproj.CopyComplete

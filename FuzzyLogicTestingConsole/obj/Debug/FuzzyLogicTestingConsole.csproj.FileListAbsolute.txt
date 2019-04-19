@@ -20,3 +20,5 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingCon
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicMedicalCore.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicMedicalCore.pdb
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csproj.CopyComplete
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\System.ValueTuple.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\System.ValueTuple.xml
