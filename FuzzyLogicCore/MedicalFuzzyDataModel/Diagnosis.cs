@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FuzzyLogicMedicalCore.FuzzyLogic;
 
 namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
@@ -8,12 +10,16 @@ namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
         public Guid PatientGuid { get; set; }
+        public List<Rule> Rules { get; set; }
 
         public void GetAffiliation()
         {
-            //todo select formula for each term type
-            var result = 123;
-            Affiliation = result;
+            Affiliation = Rules.Max(x => x.Power);
+        }
+
+        public Diagnosis()
+        {
+            Rules = new List<Rule>();
         }
     }
 }

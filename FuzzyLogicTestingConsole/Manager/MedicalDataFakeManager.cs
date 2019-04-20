@@ -35,11 +35,11 @@ namespace FuzzyLogicTestingConsole.Manager
             //fake result set generation
             for (var i = 1; i < 4; i++)
             {
-                var lowMin = randomGenerator.Next(0, 20);
-                var lowMax = randomGenerator.Next(lowMin, lowMin + 20);
+                var lowMin = randomGenerator.Next(0, 200);
+                var lowMax = randomGenerator.Next(lowMin, lowMin + 200);
                 var midMin = (lowMin + lowMax) / 2;
                 var highMin = lowMax;
-                var highMax = randomGenerator.Next(highMin, highMin + 20);
+                var highMax = randomGenerator.Next(highMin, highMin + 200);
                 var midMax = (lowMax + highMax) / 2;
                 var currentValue = randomGenerator.Next(lowMin, highMax);
 
@@ -145,19 +145,19 @@ namespace FuzzyLogicTestingConsole.Manager
                 {
                     Id = 1,
                     InputTerms = "Analysis №1:Low;Analysis №2:Low",
-                    OutputTerms = "Diagnosis №1",
+                    OutputTerms = "Blood cancer",
                 },
                 new Rule()
                 {
                     Id = 2,
                     InputTerms = "Analysis №1:Low;Analysis №3:High",
-                    OutputTerms = "Diagnosis №1;Diagnosis №2",
+                    OutputTerms = "Blood cancer;Anemia",
                 },
                 new Rule()
                 {
                     Id = 3,
                     InputTerms = "Analysis №3:High;Analysis №2:High",
-                    OutputTerms = "Diagnosis №2;Diagnosis №3",
+                    OutputTerms = "Anemia;Flu",
                 }
             };
             return allRules;
@@ -168,6 +168,22 @@ namespace FuzzyLogicTestingConsole.Manager
             foreach (var rule in rules)
             {
                 rule.GetPower(fakeResults);
+            }
+        }
+
+        public void GetDiagnosisAffiliation(List<Diagnosis> diagnoses, Rule rule)
+        {
+            foreach (var diagnosis in diagnoses)
+            {
+                var outputTerms = rule.OutputTerms.Split(';').ToList();
+                
+                foreach (var outputTerm in outputTerms)
+                {
+                    if (diagnosis.Name == outputTerm)
+                    {
+                        diagnosis.Rules.Add(rule);
+                    }
+                }
             }
         }
     }
