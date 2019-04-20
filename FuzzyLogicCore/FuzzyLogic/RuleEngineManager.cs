@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FuzzyLogicMedicalCore.FHIR;
 
 namespace FuzzyLogicMedicalCore.FuzzyLogic
 {
@@ -11,5 +12,9 @@ namespace FuzzyLogicMedicalCore.FuzzyLogic
             return allRules;
         }
 
+        public void GetOutputTerms(List<Observation> observationList)
+        {
+
+        }
     }
 }

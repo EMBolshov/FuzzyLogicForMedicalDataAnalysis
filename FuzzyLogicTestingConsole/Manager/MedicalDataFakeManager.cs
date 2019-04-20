@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using FuzzyLogicMedicalCore;
+using System.Linq;
 using FuzzyLogicMedicalCore.FHIR;
 using FuzzyLogicMedicalCore.FuzzyLogic;
 using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
@@ -28,9 +28,9 @@ namespace FuzzyLogicTestingConsole.Manager
             return patient;
         }
 
-        public List<FakeAnalysisResult> GetFakeAnalysisResults(Guid patientGuid)
+        public List<IAnalysisResult> GetFakeAnalysisResults(Guid patientGuid)
         {
-            var resultList = new List<FakeAnalysisResult>();
+            var resultList = new List<IAnalysisResult>();
             var randomGenerator = new Random();
             //fake result set generation
             for (var i = 1; i < 4; i++)
@@ -89,7 +89,7 @@ namespace FuzzyLogicTestingConsole.Manager
                 new Observation()
                 {
                     IndicationName = "Temperature",
-                    PatientReference = patientGuid,
+                    PatientGuid = patientGuid,
                     ReferenceHigh = 37.0m,
                     ReferenceLow = 35.0m,
                     Value = 36.6m
@@ -98,7 +98,7 @@ namespace FuzzyLogicTestingConsole.Manager
                 new Observation()
                 {
                     IndicationName = "Iron in blood",
-                    PatientReference = patientGuid,
+                    PatientGuid = patientGuid,
                     ReferenceHigh = 1.0m,
                     ReferenceLow = 0.0m,
                     Value = 1.1m
@@ -107,7 +107,7 @@ namespace FuzzyLogicTestingConsole.Manager
                 new Observation()
                 {
                     IndicationName = "White blood cells",
-                    PatientReference = patientGuid,
+                    PatientGuid = patientGuid,
                     ReferenceHigh = 10.0m,
                     ReferenceLow = 0.0m,
                     Value = 5m
@@ -134,6 +134,41 @@ namespace FuzzyLogicTestingConsole.Manager
                     Name = "Flu"
                 }
             };
+        }
+       
+        public List<Rule> GetAllFakeRules()
+        {
+            //TODO get rules from db
+            var allRules = new List<Rule>
+            {
+                new Rule()
+                {
+                    Id = 1,
+                    InputTerms = "Analysis №1:Low;Analysis №2:Low",
+                    OutputTerms = "Diagnosis №1",
+                },
+                new Rule()
+                {
+                    Id = 2,
+                    InputTerms = "Analysis №1:Low;Analysis №3:High",
+                    OutputTerms = "Diagnosis №1;Diagnosis №2",
+                },
+                new Rule()
+                {
+                    Id = 3,
+                    InputTerms = "Analysis №3:High;Analysis №2:High",
+                    OutputTerms = "Diagnosis №2;Diagnosis №3",
+                }
+            };
+            return allRules;
+        }
+
+        public void GetPowerOfRules(List<Rule> rules, List<IAnalysisResult> fakeResults)
+        {
+            foreach (var rule in rules)
+            {
+                rule.GetPower(fakeResults);
+            }
         }
     }
 }

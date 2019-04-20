@@ -1,4 +1,5 @@
-﻿using FuzzyLogicMedicalCore.FuzzyLogic;
+﻿using System;
+using FuzzyLogicMedicalCore.FuzzyLogic;
 
 namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
 {
@@ -6,6 +7,7 @@ namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
     {
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
+        public Guid PatientGuid { get; set; }
 
         public void GetAffiliation()
         {

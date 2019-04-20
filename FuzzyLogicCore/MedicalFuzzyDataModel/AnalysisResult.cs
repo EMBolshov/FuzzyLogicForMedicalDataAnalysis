@@ -1,10 +1,9 @@
 ﻿using System;
-using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
 using FuzzyLogicMedicalCore.FuzzyLogic;
 
-namespace FuzzyLogicTestingConsole.Data
+namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
 {
-    public class FakeAnalysisResult : IAnalysisResult
+    public class AnalysisResult : IAnalysisResult
     {
         public string AnalysisName { get; set; }
         public LowResult LowResult { get; set; }

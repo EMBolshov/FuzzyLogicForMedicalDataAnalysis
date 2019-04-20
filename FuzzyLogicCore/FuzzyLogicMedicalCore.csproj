@@ -49,12 +49,14 @@
     <Compile Include="FuzzyLogic\AbstractResult.cs" />
     <Compile Include="FuzzyLogic\Rule.cs" />
     <Compile Include="FuzzyLogic\RuleEngineManager.cs" />
+    <Compile Include="MedicalFuzzyDataModel\AnalysisResult.cs" />
     <Compile Include="MedicalFuzzyDataModel\Diagnosis.cs" />
     <Compile Include="FuzzyLogic\HighResult.cs" />
     <Compile Include="FuzzyLogic\ITerm.cs" />
     <Compile Include="FuzzyLogic\MidResult.cs" />
     <Compile Include="FHIR\Observation.cs" />
     <Compile Include="FHIR\Patient.cs" />
+    <Compile Include="MedicalFuzzyDataModel\IAnalysisResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FuzzyLogic\LowResult.cs" />
   </ItemGroup>
