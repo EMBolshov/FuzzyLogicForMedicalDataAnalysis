@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FuzzyLogicMedicalCore.FHIR;
 using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
 
 namespace FuzzyLogicMedicalCore.FuzzyLogic
@@ -41,10 +40,6 @@ namespace FuzzyLogicMedicalCore.FuzzyLogic
                             case "High":
                             {
                                 affiliations.Add(result.HighResult.Affiliation);
-                                break;
-                            }
-                            default:
-                            {
                                 break;
                             }
                         }

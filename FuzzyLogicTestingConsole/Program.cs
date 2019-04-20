@@ -8,6 +8,7 @@ namespace FuzzyLogicTestingConsole
     {
         private static void Main(string[] args)
         {
+            Console.WriteLine("Console started");
             for (var i = 0; i < 30; i++)
             {
                 //TODO make this test
