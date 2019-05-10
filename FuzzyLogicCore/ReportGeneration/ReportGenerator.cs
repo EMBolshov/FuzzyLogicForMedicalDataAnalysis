@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using FuzzyLogicMedicalCore.FHIR;
 using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
@@ -39,6 +40,27 @@ namespace FuzzyLogicMedicalCore.ReportGeneration
                     builder.AppendLine($"Диагноз {diagnosis.Name}, вероятность {decimal.Round(diagnosis.Affiliation, 2, MidpointRounding.AwayFromZero)}%");
                 }
                 
+                var report = builder.ToString();
+                file.Write(report);
+            }
+        }
+
+        public void GenerateStatistics(List<Patient> patients, List<Diagnosis> diagnoses)
+        {
+            using (var file = File.AppendText(_reportPath))
+            {
+                var builder = new StringBuilder();
+                builder.AppendLine($"Всего пациентов: {patients.Count}");
+                builder.AppendLine("Подозрения на диагнозы:");
+
+                var diagnosisNames = diagnoses.Select(x => x.Name).Distinct().ToList();
+
+                foreach (var diagnosisName in diagnosisNames)
+                {
+                    var diagnosisSetCount = diagnoses.Count(x => x.Name == diagnosisName && x.Affiliation > 0);
+                    builder.AppendLine($"Подозрения на диагноз {diagnosisName} замечены у {diagnosisSetCount} пациентов.");
+                }
+
                 var report = builder.ToString();
                 file.Write(report);
             }
