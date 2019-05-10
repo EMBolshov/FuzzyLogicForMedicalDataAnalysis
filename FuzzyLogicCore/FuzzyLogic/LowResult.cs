@@ -4,6 +4,11 @@ namespace FuzzyLogicMedicalCore.FuzzyLogic
 {
     public class LowResult : AbstractResult
     {
+        public LowResult(decimal currentValue)
+        {
+            CurrentValue = currentValue;
+        }
+       
         public override void GetAffiliation()
         {
             try

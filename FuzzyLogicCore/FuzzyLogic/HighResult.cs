@@ -2,6 +2,11 @@
 {
     public class HighResult : AbstractResult
     {
+        public HighResult(decimal currentValue)
+        {
+            CurrentValue = currentValue;
+        }
+
         public override void GetAffiliation()
         {
             var midValue = (MaxValue + MinValue) / 2;

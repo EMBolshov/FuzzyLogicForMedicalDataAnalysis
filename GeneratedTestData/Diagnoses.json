@@ -2,16 +2,19 @@
   {
     "Name": "Blood cancer",
     "Affiliation": 0.0,
-    "Rules": []
+    "Rules": [],
+    "PatientGuid": "00000000-0000-0000-0000-000000000000"
   },
   {
     "Name": "Anemia",
     "Affiliation": 0.0,
-    "Rules": []
+    "Rules": [],
+    "PatientGuid": "00000000-0000-0000-0000-000000000000"
   },
   {
     "Name": "Flu",
     "Affiliation": 0.0,
-    "Rules": []
+    "Rules": [],
+    "PatientGuid": "00000000-0000-0000-0000-000000000000"
   }
 ]

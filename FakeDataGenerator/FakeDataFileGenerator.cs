@@ -75,34 +75,29 @@ namespace FakeDataGenerator
                 var result = new AnalysisResult()
                 {
                     AnalysisName = $"Analysis №{i}",
-                    LowResult = new LowResult()
+                    CurrentValue = currentValue,
+                    LowResult = new LowResult(currentValue)
                     {
                         Name = $"result №{i}",
-                        CurrentValue = currentValue,
                         MaxValue = lowMax,
                         MinValue = lowMin
                     },
 
-                    MidResult = new MidResult()
+                    MidResult = new MidResult(currentValue)
                     {
                         Name = $"result №{i}",
-                        CurrentValue = currentValue,
                         MaxValue = midMax,
                         MinValue = midMin
                     },
 
-                    HighResult = new HighResult()
+                    HighResult = new HighResult(currentValue)
                     {
                         Name = $"result №{i}",
-                        CurrentValue = currentValue,
                         MaxValue = highMax,
                         MinValue = highMin
                     }
                 };
 
-                result.LowResult.GetAffiliation();
-                result.MidResult.GetAffiliation();
-                result.HighResult.GetAffiliation();
                 result.PatientGuid = patientGuid;
 
                 resultList.Add(result);

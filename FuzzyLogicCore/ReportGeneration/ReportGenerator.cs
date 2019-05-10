@@ -23,16 +23,16 @@ namespace FuzzyLogicMedicalCore.ReportGeneration
             {
                 var builder = new StringBuilder();
                 builder.AppendLine($"Пациент: {patient.FirstName} {patient.MiddleName} {patient.LastName}");
-                builder.AppendLine($"Результаты анализов:");
+                builder.AppendLine("Результаты анализов:");
                 foreach (var analysis in analysisResults)
                 {
-                    builder.AppendLine($"Анализ: {analysis.AnalysisName}, Ваш показатель: {decimal.Round(analysis.LowResult.CurrentValue, 2, MidpointRounding.AwayFromZero)}");
+                    builder.AppendLine($"Анализ: {analysis.AnalysisName}, Ваш показатель: {decimal.Round(analysis.CurrentValue, 2, MidpointRounding.AwayFromZero)}");
                     builder.AppendLine($"Ниже нормы на {decimal.Round(analysis.LowResult.Affiliation, 2, MidpointRounding.AwayFromZero)}%");
                     builder.AppendLine($"Соответствует норме на {decimal.Round(analysis.MidResult.Affiliation, 2, MidpointRounding.AwayFromZero)}%");
                     builder.AppendLine($"Выше нормы на {decimal.Round(analysis.HighResult.Affiliation, 2, MidpointRounding.AwayFromZero)}%");
                 }
 
-                builder.AppendLine($"Вероятности диагнозов:");
+                builder.AppendLine("Вероятности диагнозов:");
 
                 foreach (var diagnosis in diagnoses)
                 {

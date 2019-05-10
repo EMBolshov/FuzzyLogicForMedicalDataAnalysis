@@ -15,9 +15,10 @@ namespace FuzzyLogicTestingConsole
 
             foreach (var patient in patientList)
             {
-                var reportGenerator = new ReportGenerator(medicalDataManager.PathToReports + $"_{patient.Guid}.txt");
+                var reportGenerator = new ReportGenerator(medicalDataManager.PathToReports + $"{patient.Guid}.txt");
                 fakeDiagnoses.ForEach(x => x.PatientGuid = patient.Guid);
                 var fakeResults = medicalDataManager.GetFakeAnalysisResults(patient.Guid);
+                medicalDataManager.GetAnalysisResultsAffiliation(fakeResults);
                 medicalDataManager.GetPowerOfRules(fakeRules, fakeResults);
 
                 foreach (var result in fakeResults)

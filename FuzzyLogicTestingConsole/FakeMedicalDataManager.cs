@@ -77,6 +77,16 @@ namespace FuzzyLogicTestingConsole
             }
         }
 
+        public void GetAnalysisResultsAffiliation(List<AnalysisResult> analysisResults)
+        {
+            foreach (var result in analysisResults)
+            {
+                result.LowResult.GetAffiliation();
+                result.MidResult.GetAffiliation();
+                result.HighResult.GetAffiliation();
+            }
+        }
+
         public void GetDiagnosisAffiliation(List<Diagnosis> diagnoses, Rule rule)
         {
             foreach (var diagnosis in diagnoses)
