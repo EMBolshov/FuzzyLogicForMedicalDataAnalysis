@@ -1,0 +1,20 @@
+[
+  {
+    "Id": 1,
+    "InputTerms": "Analysis №1:Low;Analysis №2:Low",
+    "OutputTerms": "Blood cancer",
+    "Power": 0.0
+  },
+  {
+    "Id": 2,
+    "InputTerms": "Analysis №1:Low;Analysis №3:High",
+    "OutputTerms": "Blood cancer;Anemia",
+    "Power": 0.0
+  },
+  {
+    "Id": 3,
+    "InputTerms": "Analysis №3:High;Analysis №2:High",
+    "OutputTerms": "Anemia;Flu",
+    "Power": 0.0
+  }
+]

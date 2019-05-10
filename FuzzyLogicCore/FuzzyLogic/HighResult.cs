@@ -8,7 +8,7 @@
 
             if (CurrentValue == midValue)
             {
-                Affiliation = 100.00m;
+                Affiliation = 100m;
             }
 
             (decimal, decimal) firstPoint;
@@ -16,25 +16,29 @@
 
             if (CurrentValue > midValue)
             {
-                firstPoint = (midValue, 100.00m);
-                secondPoint = (MaxValue, 0.00m);
+                Affiliation = 100m;
             }
             else
             {
-                firstPoint = (MinValue, 0.00m);
-                secondPoint = (midValue, 100.00m);
+                firstPoint = (MinValue, 0m);
+                secondPoint = (midValue, 100m);
+
+                var k = (secondPoint.Item2 - firstPoint.Item2)
+                        / (secondPoint.Item1 - firstPoint.Item1);
+                var b = firstPoint.Item2 - firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
+                        / (secondPoint.Item1 - firstPoint.Item1);
+
+                Affiliation = k * CurrentValue + b;
             }
 
-            var k = (secondPoint.Item2 - firstPoint.Item2)
-                    / (secondPoint.Item1 - firstPoint.Item1);
-            var b = firstPoint.Item2 - firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
-                    / (secondPoint.Item1 - firstPoint.Item1);
-
-            Affiliation = k * CurrentValue + b;
-
-            if (Affiliation < 0)
+            if (Affiliation < 0m)
             {
-                Affiliation = 0;
+                Affiliation = 0m;
+            }
+
+            if (Affiliation > 100m)
+            {
+                Affiliation = 100m;
             }
         }
     }

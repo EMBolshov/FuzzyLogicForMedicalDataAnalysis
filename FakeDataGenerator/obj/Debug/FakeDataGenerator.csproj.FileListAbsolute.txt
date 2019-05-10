@@ -1,0 +1,14 @@
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\FakeDataGenerator.exe.config
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\FakeDataGenerator.exe
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\FakeDataGenerator.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\FuzzyLogicMedicalCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\System.ValueTuple.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\FuzzyLogicMedicalCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\bin\Debug\System.ValueTuple.xml
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.csprojAssemblyReference.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.csproj.CoreCompileInputs.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.csproj.CopyComplete
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.exe
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.pdb

@@ -7,11 +7,11 @@ namespace FuzzyLogicMedicalCore.FuzzyLogic
     public class Rule
     {
         public int Id { get; set; }
-        public string InputTerms { get; set; } //хранение в базе через разделитель, конвертация в список
-        public string OutputTerms { get; set; } //todo - где конвертим?
+        public string InputTerms { get; set; } 
+        public string OutputTerms { get; set; } 
         public decimal Power { get; set; }
 
-        public void GetPower(List<IAnalysisResult> results)
+        public void GetPower(List<AnalysisResult> results)
         {
             var inputTerms = InputTerms.Split(';').ToList();
             var affiliations = new List<decimal>();

@@ -3,7 +3,7 @@ using FuzzyLogicMedicalCore.FuzzyLogic;
 
 namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
 {
-    public class AnalysisResult : IAnalysisResult
+    public class AnalysisResult
     {
         public string AnalysisName { get; set; }
         public LowResult LowResult { get; set; }

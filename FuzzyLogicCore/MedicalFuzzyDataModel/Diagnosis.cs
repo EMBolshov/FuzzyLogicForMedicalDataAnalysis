@@ -9,8 +9,8 @@ namespace FuzzyLogicMedicalCore.MedicalFuzzyDataModel
     {
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
-        public Guid PatientGuid { get; set; }
         public List<Rule> Rules { get; set; }
+        public Guid PatientGuid { get; set; }
 
         public void GetAffiliation()
         {

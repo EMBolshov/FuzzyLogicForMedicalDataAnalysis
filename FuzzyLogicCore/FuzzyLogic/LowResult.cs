@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.Serialization.Formatters;
 
 namespace FuzzyLogicMedicalCore.FuzzyLogic
 {
@@ -23,23 +22,27 @@ namespace FuzzyLogicMedicalCore.FuzzyLogic
                 {
                     firstPoint = (midValue, 100.00m);
                     secondPoint = (MaxValue, 0.00m);
+
+                    var k = (secondPoint.Item2 - firstPoint.Item2)
+                            / (secondPoint.Item1 - firstPoint.Item1);
+                    var b = firstPoint.Item2 - firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
+                            / (secondPoint.Item1 - firstPoint.Item1);
+
+                    Affiliation = k * CurrentValue + b;
                 }
                 else
                 {
-                    firstPoint = (MinValue, 0.00m);
-                    secondPoint = (midValue, 100.00m);
+                    Affiliation = 100m;
                 }
 
-                var k = (secondPoint.Item2 - firstPoint.Item2)
-                        / (secondPoint.Item1 - firstPoint.Item1);
-                var b = firstPoint.Item2 - firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
-                        / (secondPoint.Item1 - firstPoint.Item1);
-
-                Affiliation = k * CurrentValue + b;
-
-                if (Affiliation < 0)
+                if (Affiliation < 0m)
                 {
-                    Affiliation = 0;
+                    Affiliation = 0m;
+                }
+
+                if (Affiliation > 100m)
+                {
+                    Affiliation = 100m;
                 }
             }
             catch (Exception)

@@ -1,0 +1,92 @@
+[
+  {
+    "Id": 0,
+    "Guid": "51d9261a-44ed-4e06-b947-5ab3ca611b1a",
+    "FirstName": "Варфоломей",
+    "MiddleName": "Изяславович",
+    "LastName": "Юдицкий",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 1,
+    "Guid": "4b694dc6-d9c1-4d6d-b8bb-906bf08357ce",
+    "FirstName": "Семён",
+    "MiddleName": "Глебович",
+    "LastName": "Ломовцев",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 2,
+    "Guid": "57b0fd6c-2a88-4fc7-8180-e3b031900fe1",
+    "FirstName": "Варфоломей",
+    "MiddleName": "Платонович",
+    "LastName": "Юдицкий",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 3,
+    "Guid": "62e3a995-a1f5-4289-99c9-21b810fb20ef",
+    "FirstName": "Семён",
+    "MiddleName": "Данилевич",
+    "LastName": "Сурков",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 4,
+    "Guid": "1ac05eb2-dec1-4641-9505-2bc5ebe05037",
+    "FirstName": "Семён",
+    "MiddleName": "Артемиевич",
+    "LastName": "Сурков",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 5,
+    "Guid": "be813d17-2b55-47af-b041-fef5feae5878",
+    "FirstName": "Захар",
+    "MiddleName": "Данилевич",
+    "LastName": "Ломовцев",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 6,
+    "Guid": "95f422da-8a9a-48de-8b4e-b77fa1b8f172",
+    "FirstName": "Антон",
+    "MiddleName": "Данилевич",
+    "LastName": "Сурков",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 7,
+    "Guid": "108af757-6a6d-48ea-b420-a636a12586b8",
+    "FirstName": "Серафим",
+    "MiddleName": "Давыдович",
+    "LastName": "Сурков",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 8,
+    "Guid": "90cb35eb-14f7-4cd9-bb1c-63ba55566314",
+    "FirstName": "Варфоломей",
+    "MiddleName": "Платонович",
+    "LastName": "Шеповалов",
+    "Gender": "Male",
+    "Age": 25
+  },
+  {
+    "Id": 9,
+    "Guid": "4c223f16-c75c-4cc9-80f0-4049179231e6",
+    "FirstName": "Иосиф",
+    "MiddleName": "Артемиевич",
+    "LastName": "Чуличков",
+    "Gender": "Male",
+    "Age": 25
+  }
+]

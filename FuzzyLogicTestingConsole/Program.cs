@@ -1,22 +1,20 @@
 ﻿using System;
-using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
-using FuzzyLogicTestingConsole.Manager;
 
 namespace FuzzyLogicTestingConsole
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             Console.WriteLine("Console started");
-            for (var i = 0; i < 30; i++)
+            var medicalDataManager = new MedicalDataFakeManager();
+            var patientList = medicalDataManager.GetFakePatientList();
+            var fakeRules = medicalDataManager.GetAllFakeRules();
+
+            foreach (var patient in patientList)
             {
-                //TODO make this test
-                var medicalDataManager = new MedicalDataFakeManager();
-                var patient = medicalDataManager.GetFakePatient();
+                var fakeDiagnoses = medicalDataManager.GetFakeDiagnoses(patient.Guid);
                 var fakeResults = medicalDataManager.GetFakeAnalysisResults(patient.Guid);
-                var fakeDiagnoses = medicalDataManager.GetFakeDiagnoses();
-                var fakeRules = medicalDataManager.GetAllFakeRules();
                 medicalDataManager.GetPowerOfRules(fakeRules, fakeResults);
 
                 foreach (var result in fakeResults)
@@ -38,6 +36,7 @@ namespace FuzzyLogicTestingConsole
                     fakeDiagnosis.GetAffiliation();
                     Console.WriteLine($"Diagnosis: {fakeDiagnosis.Name}, Probability: {fakeDiagnosis.Affiliation}");
                 }
+
                 Console.WriteLine("New generation \n");
             }
 

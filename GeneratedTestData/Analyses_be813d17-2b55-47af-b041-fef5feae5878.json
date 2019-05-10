@@ -1,0 +1,77 @@
+[
+  {
+    "AnalysisName": "Analysis №1",
+    "LowResult": {
+      "Name": "result №1",
+      "Affiliation": 0.0,
+      "MinValue": 122.0,
+      "MaxValue": 150.0,
+      "CurrentValue": 234.0
+    },
+    "MidResult": {
+      "Name": "result №1",
+      "Affiliation": 0.0,
+      "MinValue": 136.0,
+      "MaxValue": 229.0,
+      "CurrentValue": 234.0
+    },
+    "HighResult": {
+      "Name": "result №1",
+      "Affiliation": 100.0,
+      "MinValue": 150.0,
+      "MaxValue": 308.0,
+      "CurrentValue": 234.0
+    },
+    "PatientGuid": "be813d17-2b55-47af-b041-fef5feae5878"
+  },
+  {
+    "AnalysisName": "Analysis №2",
+    "LowResult": {
+      "Name": "result №2",
+      "Affiliation": 0.0,
+      "MinValue": 79.0,
+      "MaxValue": 226.0,
+      "CurrentValue": 353.0
+    },
+    "MidResult": {
+      "Name": "result №2",
+      "Affiliation": 0.0,
+      "MinValue": 152.0,
+      "MaxValue": 322.0,
+      "CurrentValue": 353.0
+    },
+    "HighResult": {
+      "Name": "result №2",
+      "Affiliation": 100.0,
+      "MinValue": 226.0,
+      "MaxValue": 418.0,
+      "CurrentValue": 353.0
+    },
+    "PatientGuid": "be813d17-2b55-47af-b041-fef5feae5878"
+  },
+  {
+    "AnalysisName": "Analysis №3",
+    "LowResult": {
+      "Name": "result №3",
+      "Affiliation": 57.31707317073170731707317072,
+      "MinValue": 89.0,
+      "MaxValue": 253.0,
+      "CurrentValue": 206.0
+    },
+    "MidResult": {
+      "Name": "result №3",
+      "Affiliation": 75.26881720430107526881720430,
+      "MinValue": 171.0,
+      "MaxValue": 264.0,
+      "CurrentValue": 206.0
+    },
+    "HighResult": {
+      "Name": "result №3",
+      "Affiliation": 0.0,
+      "MinValue": 253.0,
+      "MaxValue": 276.0,
+      "CurrentValue": 206.0
+    },
+    "PatientGuid": "be813d17-2b55-47af-b041-fef5feae5878"
+  }
+]

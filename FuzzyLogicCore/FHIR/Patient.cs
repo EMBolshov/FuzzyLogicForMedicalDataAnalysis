@@ -3,8 +3,7 @@
 namespace FuzzyLogicMedicalCore.FHIR
 {
     public class Patient
-    {
-        //todo use FHIR resource
+    {        
         public int Id { get; set; }
         public Guid Guid { get; set; }
         public string FirstName { get; set; }
