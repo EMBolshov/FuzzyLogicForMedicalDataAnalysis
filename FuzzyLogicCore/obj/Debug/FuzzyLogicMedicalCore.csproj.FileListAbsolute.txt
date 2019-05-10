@@ -15,3 +15,4 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\D
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\bin\Debug\System.ValueTuple.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\bin\Debug\System.ValueTuple.xml
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csproj.CopyComplete
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicCore\obj\Debug\FuzzyLogicMedicalCore.csprojAssemblyReference.cache

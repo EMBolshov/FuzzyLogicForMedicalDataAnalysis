@@ -1,4 +1,5 @@
 ﻿using System;
+using FuzzyLogicMedicalCore.ReportGeneration;
 
 namespace FuzzyLogicTestingConsole
 {
@@ -7,13 +8,15 @@ namespace FuzzyLogicTestingConsole
         private static void Main()
         {
             Console.WriteLine("Console started");
-            var medicalDataManager = new MedicalDataFakeManager();
+            var medicalDataManager = new FakeMedicalDataManager();
             var patientList = medicalDataManager.GetFakePatientList();
             var fakeRules = medicalDataManager.GetAllFakeRules();
+            var fakeDiagnoses = medicalDataManager.GetFakeDiagnoses();
 
             foreach (var patient in patientList)
             {
-                var fakeDiagnoses = medicalDataManager.GetFakeDiagnoses(patient.Guid);
+                var reportGenerator = new ReportGenerator(medicalDataManager.PathToReports + $"_{patient.Guid}.txt");
+                fakeDiagnoses.ForEach(x => x.PatientGuid = patient.Guid);
                 var fakeResults = medicalDataManager.GetFakeAnalysisResults(patient.Guid);
                 medicalDataManager.GetPowerOfRules(fakeRules, fakeResults);
 
@@ -36,6 +39,8 @@ namespace FuzzyLogicTestingConsole
                     fakeDiagnosis.GetAffiliation();
                     Console.WriteLine($"Diagnosis: {fakeDiagnosis.Name}, Probability: {fakeDiagnosis.Affiliation}");
                 }
+
+                reportGenerator.GenerateReport(patient, fakeResults, fakeDiagnoses);
 
                 Console.WriteLine("New generation \n");
             }

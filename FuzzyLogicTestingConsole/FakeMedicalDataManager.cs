@@ -10,13 +10,15 @@ using Newtonsoft.Json;
 
 namespace FuzzyLogicTestingConsole
 {
-    public class MedicalDataFakeManager
+    public class FakeMedicalDataManager
     {
         private readonly string _pathToFolder;
+        public string PathToReports { get; set; }
 
-        public MedicalDataFakeManager()
+        public FakeMedicalDataManager()
         {
             _pathToFolder = ConfigurationManager.AppSettings["PathToFolderWithGeneratedData"];
+            PathToReports = ConfigurationManager.AppSettings["PathToReports"];
         }
 
         public List<Patient> GetFakePatientList()
@@ -43,7 +45,7 @@ namespace FuzzyLogicTestingConsole
             return resultList;
         }
 
-        public List<Diagnosis> GetFakeDiagnoses(Guid patientGuid)
+        public List<Diagnosis> GetFakeDiagnoses()
         {
             List<Diagnosis> diagnoses;
             using (var file = File.OpenText(_pathToFolder + $"Diagnoses.json"))
@@ -51,8 +53,7 @@ namespace FuzzyLogicTestingConsole
                 var serializer = new JsonSerializer();
                 diagnoses = (List<Diagnosis>)serializer.Deserialize(file, typeof(List<Diagnosis>));
             }
-            diagnoses.ForEach(x => x.PatientGuid = patientGuid);
-            
+
             return diagnoses;
         }
        
