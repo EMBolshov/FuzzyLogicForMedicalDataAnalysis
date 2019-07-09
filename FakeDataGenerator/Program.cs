@@ -4,6 +4,7 @@
     {
         private static void Main(string[] args)
         {
+            //DEPRECATED
             var generator = new FakeDataFileGenerator();
             generator.MakeDiagnoses();
             generator.MakeRules();

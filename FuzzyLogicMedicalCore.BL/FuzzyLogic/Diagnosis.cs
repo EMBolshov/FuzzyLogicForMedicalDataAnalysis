@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 
-namespace FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel
+namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 {
     public class Diagnosis : ITerm
     {

@@ -10,6 +10,9 @@ using Newtonsoft.Json;
 
 namespace FakeDataGenerator
 {
+    /// <summary>
+    /// DEPRECATED!
+    /// </summary>
     public class FakeDataFileGenerator
     {
         private readonly string _pathToFolder;

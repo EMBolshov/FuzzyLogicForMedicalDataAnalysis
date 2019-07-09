@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
+using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 using FuzzyLogicMedicalCore.BL.ReportGeneration;
 
 namespace FuzzyLogicTestingConsole

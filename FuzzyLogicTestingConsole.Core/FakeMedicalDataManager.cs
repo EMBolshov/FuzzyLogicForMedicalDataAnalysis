@@ -4,11 +4,8 @@ using System.IO;
 using System.Linq;
 using FuzzyLogicMedicalCore.BL.FHIR;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
-using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.FileExtensions;
-using Microsoft.Extensions.Configuration.Json;
 
 namespace FuzzyLogicTestingConsole.Core
 {
@@ -99,9 +96,7 @@ namespace FuzzyLogicTestingConsole.Core
         {
             foreach (var diagnosis in diagnoses)
             {
-                var outputTerms = rule.OutputTerms.Split(';').ToList();
-                
-                foreach (var outputTerm in outputTerms)
+                foreach (var outputTerm in rule.OutputTerms)
                 {
                     if (diagnosis.Name == outputTerm)
                     {

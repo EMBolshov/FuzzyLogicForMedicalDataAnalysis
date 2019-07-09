@@ -4,7 +4,7 @@
     {
         private static void Main(string[] args)
         {
-            var generator = new RealDataFileGenerator();
+            var generator = new AnemiaFakeDataFileGenerator();
             generator.MakeDiagnoses();
             generator.MakeRules();
             var patients = generator.MakePatients(2000);

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using FuzzyLogicMedicalCore.BL.FHIR;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
-using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
 using Newtonsoft.Json;
 
 namespace FuzzyLogicTestingConsole
@@ -91,9 +90,7 @@ namespace FuzzyLogicTestingConsole
         {
             foreach (var diagnosis in diagnoses)
             {
-                var outputTerms = rule.OutputTerms.Split(';').ToList();
-                
-                foreach (var outputTerm in outputTerms)
+                foreach (var outputTerm in rule.OutputTerms)
                 {
                     if (diagnosis.Name == outputTerm)
                     {

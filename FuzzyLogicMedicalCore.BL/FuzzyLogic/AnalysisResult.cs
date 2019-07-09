@@ -1,7 +1,6 @@
 ﻿using System;
-using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 
-namespace FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel
+namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 {
     public class AnalysisResult
     {

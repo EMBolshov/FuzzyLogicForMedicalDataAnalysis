@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using FuzzyLogicMedicalCore.BL.FHIR;
-using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
+using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 
 namespace FuzzyLogicMedicalCore.BL.ReportGeneration
 {

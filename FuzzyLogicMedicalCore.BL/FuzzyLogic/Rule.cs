@@ -1,31 +1,26 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
 
 namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 {
     public class Rule
     {
         public int Id { get; set; }
-        public string InputTerms { get; set; } 
-        public string OutputTerms { get; set; } 
+        public List<InputTerm> InputTerms { get; set; } 
+        public List<string> OutputTerms { get; set; } 
         public decimal Power { get; set; }
 
         public void GetPower(List<AnalysisResult> results)
         {
-            var inputTerms = InputTerms.Split(';').ToList();
             var affiliations = new List<decimal>();
 
-            foreach (var inputTerm in inputTerms)
+            foreach (var inputTerm in InputTerms)
             {
-                var inputTermName = inputTerm.Split(':').First();
-                var inputTermValue = inputTerm.Split(':').ElementAt(1);
-
                 foreach (var result in results)
                 {
-                    if (result.AnalysisName == inputTermName)
+                    if (result.AnalysisName == inputTerm.AnalysisName)
                     {
-                        switch (inputTermValue)
+                        switch (inputTerm.AnalysisTerm)
                         {
                             case "Low":
                             {

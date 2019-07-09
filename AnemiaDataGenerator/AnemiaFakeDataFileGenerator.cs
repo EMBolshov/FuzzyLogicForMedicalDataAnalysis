@@ -5,12 +5,11 @@ using System.IO;
 using System.Linq;
 using FuzzyLogicMedicalCore.BL.FHIR;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
-using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
 using Newtonsoft.Json;
 
 namespace RealDataGenerator
 {
-    public class RealDataFileGenerator
+    public class AnemiaFakeDataFileGenerator
     {
         private readonly string _pathToFolder;
         public List<string> MalePatientFirstNames { get; set; }
@@ -21,7 +20,7 @@ namespace RealDataGenerator
         public List<string> FemalePatientLastNames { get; set; }
         private static Random _random;
 
-        public RealDataFileGenerator()
+        public AnemiaFakeDataFileGenerator()
         {
             _pathToFolder = ConfigurationManager.AppSettings["PathToFolderWithGeneratedData"];
             _random = new Random();
@@ -182,26 +181,208 @@ namespace RealDataGenerator
                 new Rule()
                 {
                     Id = 1,
-                    InputTerms = "Гемоглобин (HGB):Low;Железо в сыворотке:Low;Ферритин:Low;Витамин B12:Mid;Витамин B12:High;Фолат сыворотки:Mid;Фолат сыворотки:High",
-                    OutputTerms = "Железодефицитная анемия (ЖДА)",
+                    InputTerms = new List<InputTerm>()
+                    {
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гемоглобин (HGB)",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гемоглобин (HGB)",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гемоглобин (HGB)",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "High"
+                        }
+                    },
+
+                    OutputTerms = new List<string>(){"Железодефицитная анемия (ЖДА)"},
                 },
                 new Rule()
                 {
                     Id = 2,
-                    InputTerms = "Гемоглобин (HGB):Low;Железо в сыворотке:Mid;Железо в сыворотке:Low;Ферритин:Mid;Ферритин:High;Витамин B12:Mid;Витамин B12:High;Фолат сыворотки:Mid;Фолат сыворотки:High",
-                    OutputTerms = "Анемия хронических заболеваний (АХЗ)",
+                    InputTerms = new List<InputTerm>()
+                    {
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гемоглобин (HGB)",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "High"
+                        },
+                    },
+
+                    OutputTerms = new List<string>(){"Анемия хронических заболеваний (АХЗ)"},
                 },
                 new Rule()
                 {
                     Id = 3,
-                    InputTerms = "Гемоглобин (HGB):Low;Железо в сыворотке:Mid;Железо в сыворотке:High;Ферритин:Mid;Ферритин:High;Витамин B12:Low;Фолат сыворотки:Mid;Фолат сыворотки:High",
-                    OutputTerms = "B12-дефицитная анемия",
+                    InputTerms = new List<InputTerm>()
+                    {
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гемоглобин (HGB)",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "High"
+                        }
+                    },
+
+                    OutputTerms = new List<string>(){"B12-дефицитная анемия"},
                 },
                 new Rule()
                 {
                     Id = 4,
-                    InputTerms = "Гемоглобин (HGB):Low;Железо в сыворотке:Mid;Железо в сыворотке:High;Ферритин:Mid;Ферритин:High;Витамин B12:Mid;Витамин B12:High;Фолат сыворотки:Low",
-                    OutputTerms = "Фолиеводефицитная анемия",
+                    InputTerms = new List<InputTerm>()
+                    {
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гемоглобин (HGB)",
+                            AnalysisTerm = "Low"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Железо в сыворотке",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Ферритин",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "Mid"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Витамин B12",
+                            AnalysisTerm = "High"
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Фолат сыворотки",
+                            AnalysisTerm = "Low"
+                        }
+                    },
+
+                    OutputTerms = new List<string>(){"Фолиеводефицитная анемия"},
                 }
             };
 
