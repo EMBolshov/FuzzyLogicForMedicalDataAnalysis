@@ -1,0 +1,14 @@
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\RealDataGenerator.exe.config
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\RealDataGenerator.exe
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\RealDataGenerator.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\FuzzyLogicMedicalCore.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\System.ValueTuple.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\FuzzyLogicMedicalCore.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\bin\Debug\System.ValueTuple.xml
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\RealDataGenerator.csprojAssemblyReference.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\RealDataGenerator.csproj.CoreCompileInputs.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\RealDataGenerator.csproj.CopyComplete
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\RealDataGenerator.exe
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\RealDataGenerator.pdb

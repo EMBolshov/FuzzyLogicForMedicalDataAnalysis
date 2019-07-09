@@ -18,7 +18,8 @@ namespace FuzzyLogicTestingConsole
 
             foreach (var patient in patientList)
             {
-                var reportGenerator = new ReportGenerator(medicalDataManager.PathToReports + $"{patient.Guid}.txt");
+                Console.WriteLine("New generation \n");
+                var reportGenerator = new ReportGenerator(medicalDataManager.PathToReports + $"patient_{patient.Guid}.txt");
                 fakeDiagnoses.ForEach(x => x.PatientGuid = patient.Guid);
                 var fakeResults = medicalDataManager.GetFakeAnalysisResults(patient.Guid);
                 medicalDataManager.GetAnalysisResultsAffiliation(fakeResults);
@@ -46,10 +47,9 @@ namespace FuzzyLogicTestingConsole
                 }
 
                 reportGenerator.GenerateReport(patient, fakeResults, fakeDiagnoses);
-                Console.WriteLine("New generation \n");
             }
 
-            var statisticGenerator = new ReportGenerator(medicalDataManager.PathToReports + DateTime.Now.ToString("dd/MM/yyyy") + ".txt");
+            var statisticGenerator = new ReportGenerator(medicalDataManager.PathToReports + "A_" + DateTime.Now.ToString("dd/MM/yyyy") + ".txt");
             statisticGenerator.GenerateStatistics(patientList, diagnosesResultsForStatistic);
             Console.WriteLine("Done!");
             Console.ReadLine();

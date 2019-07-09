@@ -35,13 +35,29 @@ namespace FuzzyLogicMedicalCore.ReportGeneration
 
                 builder.AppendLine("Вероятности диагнозов:");
 
+                var isPositive = false;
+
                 foreach (var diagnosis in diagnoses)
                 {
-                    builder.AppendLine($"Диагноз {diagnosis.Name}, вероятность {decimal.Round(diagnosis.Affiliation, 2, MidpointRounding.AwayFromZero)}%");
+                    var probability = decimal.Round(diagnosis.Affiliation, 2, MidpointRounding.AwayFromZero);
+                    builder.AppendLine($"Диагноз {diagnosis.Name}, вероятность {probability}%");
+                    if (probability > 0)
+                    {
+                        isPositive = true;
+                    }
                 }
                 
                 var report = builder.ToString();
-                file.Write(report);
+
+                if (isPositive)
+                {
+                    file.Write(report);
+                }
+                else
+                {
+                    file.Dispose();
+                    File.Delete(_reportPath);
+                }
             }
         }
 

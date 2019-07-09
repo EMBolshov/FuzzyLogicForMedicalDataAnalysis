@@ -12,3 +12,17 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\ob
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.exe
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FakeDataGenerator\obj\Debug\FakeDataGenerator.pdb
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\obj\Debug\FakeDataGenerator.csprojAssemblyReference.cache
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\obj\Debug\FakeDataGenerator.csproj.CoreCompileInputs.cache
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\FakeDataGenerator.exe.config
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\FakeDataGenerator.exe
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\FakeDataGenerator.pdb
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\FuzzyLogicMedicalCore.dll
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\Newtonsoft.Json.dll
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\System.ValueTuple.dll
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\FuzzyLogicMedicalCore.pdb
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\Newtonsoft.Json.xml
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\bin\Debug\System.ValueTuple.xml
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\obj\Debug\FakeDataGenerator.csproj.CopyComplete
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\obj\Debug\FakeDataGenerator.exe
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FakeDataGenerator\obj\Debug\FakeDataGenerator.pdb

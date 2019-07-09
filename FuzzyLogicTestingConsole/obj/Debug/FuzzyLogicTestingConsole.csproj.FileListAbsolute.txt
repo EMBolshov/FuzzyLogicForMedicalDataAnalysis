@@ -24,3 +24,17 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingCon
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\System.ValueTuple.xml
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\Newtonsoft.Json.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\bin\Debug\Newtonsoft.Json.xml
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csprojAssemblyReference.cache
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csproj.CoreCompileInputs.cache
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicTestingConsole.exe.config
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicTestingConsole.exe
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicTestingConsole.pdb
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicMedicalCore.dll
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\Newtonsoft.Json.dll
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\System.ValueTuple.dll
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\FuzzyLogicMedicalCore.pdb
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\Newtonsoft.Json.xml
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\bin\Debug\System.ValueTuple.xml
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csproj.CopyComplete
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.exe
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis-develop\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.pdb
