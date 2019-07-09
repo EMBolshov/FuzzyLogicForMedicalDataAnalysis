@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using FuzzyLogicMedicalCore.FHIR;
-using FuzzyLogicMedicalCore.FuzzyLogic;
-using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
+using FuzzyLogicMedicalCore.BL.FHIR;
+using FuzzyLogicMedicalCore.BL.FuzzyLogic;
+using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
 using Newtonsoft.Json;
 
 namespace FuzzyLogicTestingConsole

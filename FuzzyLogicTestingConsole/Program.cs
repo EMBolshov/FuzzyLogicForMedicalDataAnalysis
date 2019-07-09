@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
-using FuzzyLogicMedicalCore.ReportGeneration;
+using FuzzyLogicMedicalCore.BL.MedicalFuzzyDataModel;
+using FuzzyLogicMedicalCore.BL.ReportGeneration;
 
 namespace FuzzyLogicTestingConsole
 {

@@ -56,9 +56,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FuzzyLogicCore\FuzzyLogicMedicalCore.csproj">
-      <Project>{711e73ff-9cbb-4cc1-811d-f99a70ae67f6}</Project>
-      <Name>FuzzyLogicMedicalCore</Name>
+    <ProjectReference Include="..\FuzzyLogicMedicalCore.BL\FuzzyLogicMedicalCore.BL.csproj">
+      <Project>{3d07a3c8-0267-45cc-980d-5b392195e880}</Project>
+      <Name>FuzzyLogicMedicalCore.BL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
