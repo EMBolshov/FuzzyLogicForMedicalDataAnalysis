@@ -13,32 +13,21 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
         {
             try
             {
-                var midValue = (MaxValue + MinValue) / 2;
-
-                if (CurrentValue == midValue)
+                if (CurrentValue <= MinValue)
                 {
                     Affiliation = 100.00m;
+                    return;
                 }
 
-                (decimal, decimal) firstPoint;
-                (decimal, decimal) secondPoint;
+                var firstPoint = (MinValue, 100.00m);
+                var secondPoint = (MaxValue, 0.00m);
 
-                if (CurrentValue > midValue)
-                {
-                    firstPoint = (midValue, 100.00m);
-                    secondPoint = (MaxValue, 0.00m);
+                var k = (secondPoint.Item2 - firstPoint.Item2) / (secondPoint.Item1 - firstPoint.Item1);
+                var b = firstPoint.Item2 - (firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2) 
+                                                               /(secondPoint.Item1 - firstPoint.Item1));
 
-                    var k = (secondPoint.Item2 - firstPoint.Item2)
-                            / (secondPoint.Item1 - firstPoint.Item1);
-                    var b = firstPoint.Item2 - firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
-                            / (secondPoint.Item1 - firstPoint.Item1);
-
-                    Affiliation = k * CurrentValue + b;
-                }
-                else
-                {
-                    Affiliation = 100m;
-                }
+                Affiliation = k * CurrentValue + b;
+                
 
                 if (Affiliation < 0m)
                 {

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FuzzyLogicMedicalCore.BL\FuzzyLogicMedicalCore.BL.csproj" />
+    <ProjectReference Include="..\FuzzyLogicTestingConsole.Core\FuzzyLogicTestingConsole.Core.csproj" />
   </ItemGroup>
 
 </Project>

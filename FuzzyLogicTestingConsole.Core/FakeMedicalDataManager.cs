@@ -64,14 +64,14 @@ namespace FuzzyLogicTestingConsole.Core
        
         public List<Rule> GetAllFakeRules()
         {
-            List<Rule> diagnoses;
+            List<Rule> rules;
             using (var file = File.OpenText(_pathToFolder + $"Rules.json"))
             {
                 var serializer = new JsonSerializer();
-                diagnoses = (List<Rule>)serializer.Deserialize(file, typeof(List<Rule>));
+                rules = (List<Rule>)serializer.Deserialize(file, typeof(List<Rule>));
             }
 
-            return diagnoses;
+            return rules;
         }
 
         public void GetPowerOfRules(List<Rule> rules, List<AnalysisResult> fakeResults)

@@ -15,3 +15,6 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCor
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL.Test\obj\Debug\netcoreapp2.1\FuzzyLogicMedicalCore.BL.Test.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL.Test\obj\Debug\netcoreapp2.1\FuzzyLogicMedicalCore.BL.Test.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL.Test\obj\Debug\netcoreapp2.1\FuzzyLogicMedicalCore.BL.Test.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL.Test\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL.Test\bin\Debug\netcoreapp2.1\FuzzyLogicTestingConsole.Core.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL.Test\bin\Debug\netcoreapp2.1\FuzzyLogicTestingConsole.Core.pdb

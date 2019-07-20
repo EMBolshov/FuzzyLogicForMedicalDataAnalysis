@@ -18,6 +18,7 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                 if (CurrentValue == midValue)
                 {
                     Affiliation = 100.00m;
+                    return;
                 }
 
                 (decimal, decimal) firstPoint;
@@ -34,10 +35,9 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                     secondPoint = (midValue, 100.00m);
                 }
 
-                var k = (secondPoint.Item2 - firstPoint.Item2)
-                        / (secondPoint.Item1 - firstPoint.Item1);
-                var b = firstPoint.Item2 - firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
-                        / (secondPoint.Item1 - firstPoint.Item1);
+                var k = (secondPoint.Item2 - firstPoint.Item2) / (secondPoint.Item1 - firstPoint.Item1);
+                var b = firstPoint.Item2 - (firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
+                                            / (secondPoint.Item1 - firstPoint.Item1));
 
                 Affiliation = k * CurrentValue + b;
 

@@ -18,7 +18,7 @@ namespace FuzzyLogicMedicalCore.BL.ReportGeneration
             _reportPath = reportPath;
         }
 
-        public void GenerateReport(Patient patient, List<AnalysisResult> analysisResults, List<Diagnosis> diagnoses)
+        public void GenerateReport(Patient patient, List<AnalysisResult> analysisResults, List<Diagnosis> diagnoses, bool force)
         {
             using (var file = File.AppendText(_reportPath))
             {
@@ -49,7 +49,7 @@ namespace FuzzyLogicMedicalCore.BL.ReportGeneration
                 
                 var report = builder.ToString();
 
-                if (isPositive)
+                if (isPositive || force)
                 {
                     file.Write(report);
                 }
