@@ -12,7 +12,7 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
         public void GetPower(List<AnalysisResult> results)
         {
-            var affiliations = new List<decimal>();
+            var affiliations = new Dictionary<string, decimal>();
 
             foreach (var inputTerm in InputTerms)
             {
@@ -24,17 +24,35 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                         {
                             case "Low":
                             {
-                                affiliations.Add(result.LowResult.Affiliation);
+                                if (!affiliations.ContainsKey(result.AnalysisName) ||
+                                    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
+                                    result.LowResult.Affiliation)
+                                {
+                                    affiliations[result.AnalysisName] = result.LowResult.Affiliation;
+                                }
+                                
                                 break;
                             }
                             case "Mid":
                             {
-                                affiliations.Add(result.MidResult.Affiliation);
+                                if (!affiliations.ContainsKey(result.AnalysisName) ||
+                                    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
+                                    result.MidResult.Affiliation)
+                                {
+                                    affiliations[result.AnalysisName] = result.MidResult.Affiliation;
+                                }
+
                                 break;
                             }
                             case "High":
                             {
-                                affiliations.Add(result.HighResult.Affiliation);
+                                if (!affiliations.ContainsKey(result.AnalysisName) ||
+                                    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
+                                    result.HighResult.Affiliation)
+                                {
+                                    affiliations[result.AnalysisName] = result.HighResult.Affiliation;
+                                }
+
                                 break;
                             }
                         }
@@ -46,7 +64,7 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
             if (affiliations.Count > 0)
             {
-                Power = affiliations.Min();
+                Power = affiliations.Values.Min();
                 affiliations.Clear();
             }
         }
