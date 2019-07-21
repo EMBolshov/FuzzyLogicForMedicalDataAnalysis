@@ -1,73 +1,69 @@
 ﻿using System;
-using FuzzyLogicMedicalCore;
-using FuzzyLogicMedicalCore.FHIR;
-using FuzzyLogicMedicalCore.MedicalFuzzyDataModel;
-using FuzzyLogicTestingConsole.Manager;
+using System.Collections.Generic;
+using FuzzyLogicMedicalCore.BL.FuzzyLogic;
+using FuzzyLogicMedicalCore.BL.ReportGeneration;
 
 namespace FuzzyLogicTestingConsole
 {
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
-            //TODO make this test
+            Console.WriteLine("Console started");
+            var medicalDataManager = new FakeMedicalDataManager();
+            var patientList = medicalDataManager.GetFakePatientList();
+            var fakeRules = medicalDataManager.GetAllFakeRules();
+            var fakeDiagnoses = medicalDataManager.GetFakeDiagnoses();
+            var diagnosesResultsForStatistic = new List<Diagnosis>();
 
-            var patientGuid = new Guid();
-
-            var temperature = new Observation()
+            foreach (var patient in patientList)
             {
-                IndicationName = "Temperature",
-                PatientReference = patientGuid,
-                ReferenceHigh = 37.0m,
-                ReferenceLow = 35.0m,
-                Value = 36.6m
+                Console.WriteLine("New generation \n");
+                var reportGenerator = new ReportGenerator(medicalDataManager.PathToReports + $"patient_{patient.Guid}.txt");
+                fakeDiagnoses.ForEach(x => x.PatientGuid = patient.Guid);
+                var fakeResults = medicalDataManager.GetFakeAnalysisResults(patient.Guid);
+                medicalDataManager.GetAnalysisResultsAffiliation(fakeResults);
+                medicalDataManager.GetPowerOfRules(fakeRules, fakeResults);
+
+                foreach (var result in fakeResults)
+                {
+                    Console.WriteLine($"AnalysisName: {result.AnalysisName}, " +
+                                      $"Low Affiliation {result.LowResult.Affiliation}, " +
+                                      $"Mid Affiliation {result.MidResult.Affiliation}, " +
+                                      $"High Affiliation {result.HighResult.Affiliation}");
+                }
+
+                foreach (var rule in fakeRules)
+                {
+                    Console.WriteLine($"Rule: {rule.Id}, Power: {rule.Power}");
+                    medicalDataManager.GetDiagnosisAffiliation(fakeDiagnoses, rule);
+                }
+
+                foreach (var fakeDiagnosis in fakeDiagnoses)
+                {
+                    fakeDiagnosis.GetAffiliation();
+                    diagnosesResultsForStatistic.Add(CloneDiagnosis(fakeDiagnosis));
+                    Console.WriteLine($"Diagnosis: {fakeDiagnosis.Name}, Probability: {fakeDiagnosis.Affiliation}");
+                }
+
+                reportGenerator.GenerateReport(patient, fakeResults, fakeDiagnoses);
+            }
+
+            var statisticGenerator = new ReportGenerator(medicalDataManager.PathToReports + "A_" + DateTime.Now.ToString("dd/MM/yyyy") + ".txt");
+            statisticGenerator.GenerateStatistics(patientList, diagnosesResultsForStatistic);
+            Console.WriteLine("Done!");
+            Console.ReadLine();
+        }
+
+        public static Diagnosis CloneDiagnosis(Diagnosis diagnosis)
+        {
+            return new Diagnosis()
+            {
+                Affiliation = diagnosis.Affiliation,
+                Name = diagnosis.Name,
+                PatientGuid = diagnosis.PatientGuid,
+                Rules = diagnosis.Rules
             };
-
-            //I can get reference values from database or with analysis results in FHIR resource
-
-            var iron = new Observation()
-            {
-                IndicationName = "Iron in blood",
-                PatientReference = patientGuid,
-                ReferenceHigh = 1.0m,
-                ReferenceLow = 0.0m,
-                Value = 1.1m
-            };
-
-            var whiteBloodCells = new Observation()
-            {
-                IndicationName = "White blood cells",
-                PatientReference = patientGuid,
-                ReferenceHigh = 10.0m,
-                ReferenceLow = 0.0m,
-                Value = 5m
-            }; 
-
-            var medicalDataManager = new MedicalDataManager();
-
-            //calculate affilation to each term in set
-            //in fuzzy51 assembler example used look-up table
-            //in my work I can calculate affiliation by myself using function kinda y = f(x)
-            //use rule engine to make decision for probability of diagnosis
-
-            var bloodCancer = new Diagnosis()
-            {
-                Name = "Blood cancer"
-            };
-
-            var anemia = new Diagnosis()
-            {
-                Name = "Anemia"
-            };
-
-            var flu = new Diagnosis()
-            {
-                Name = "Flu"
-            };
-
-            var patient = medicalDataManager.GetPatientById(patientGuid);
-            var fakeResults = medicalDataManager.GetFakeAnalysisResults(patientGuid);
-            
         }
     }
 }

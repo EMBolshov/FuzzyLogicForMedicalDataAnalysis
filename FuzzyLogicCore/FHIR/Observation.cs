@@ -10,7 +10,7 @@ namespace FuzzyLogicMedicalCore.FHIR
         public decimal ReferenceLow { get; set; }
         public decimal ReferenceHigh { get; set; }
         public decimal Value { get; set; }
-        public Guid PatientReference { get; set; }
+        public Guid PatientGuid { get; set; }
         public HighResult HighResult { get; set; }
         public MidResult MidResult { get; set; }
         public LowResult LowResult { get; set; }

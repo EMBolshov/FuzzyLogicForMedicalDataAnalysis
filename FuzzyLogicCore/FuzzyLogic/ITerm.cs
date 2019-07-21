@@ -5,6 +5,6 @@
         string Name { get; set; }
         decimal Affiliation { get; set; }
 
-        decimal CalculateAffiliation();
+        void GetAffiliation();
     }
 }
