@@ -13,6 +13,11 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
         public void GetPower(List<AnalysisResult> results)
         {
             var affiliations = new Dictionary<string, decimal>();
+            //добавлено на случай, если считаем по сумме
+            foreach (var result in results)
+            {
+                affiliations.Add(result.AnalysisName, 0m);
+            }
 
             foreach (var inputTerm in InputTerms)
             {
@@ -24,33 +29,36 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                         {
                             case "Low":
                             {
-                                if (!affiliations.ContainsKey(result.AnalysisName) ||
-                                    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
-                                    result.LowResult.Affiliation)
+                                //if (!affiliations.ContainsKey(result.AnalysisName) ||
+                                //    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
+                                //    result.LowResult.Affiliation)
                                 {
-                                    affiliations[result.AnalysisName] = result.LowResult.Affiliation;
+                                    //affiliations[result.AnalysisName] = result.LowResult.Affiliation;
+                                    affiliations[result.AnalysisName] += result.LowResult.Affiliation;
                                 }
                                 
                                 break;
                             }
                             case "Mid":
                             {
-                                if (!affiliations.ContainsKey(result.AnalysisName) ||
-                                    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
-                                    result.MidResult.Affiliation)
+                                //if (!affiliations.ContainsKey(result.AnalysisName) ||
+                                //    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
+                                //    result.MidResult.Affiliation)
                                 {
-                                    affiliations[result.AnalysisName] = result.MidResult.Affiliation;
+                                    //affiliations[result.AnalysisName] = result.MidResult.Affiliation;
+                                    affiliations[result.AnalysisName] += result.MidResult.Affiliation;
                                 }
 
                                 break;
                             }
                             case "High":
                             {
-                                if (!affiliations.ContainsKey(result.AnalysisName) ||
-                                    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
-                                    result.HighResult.Affiliation)
+                                //if (!affiliations.ContainsKey(result.AnalysisName) ||
+                                //    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
+                                //    result.HighResult.Affiliation)
                                 {
-                                    affiliations[result.AnalysisName] = result.HighResult.Affiliation;
+                                    //affiliations[result.AnalysisName] = result.HighResult.Affiliation;
+                                    affiliations[result.AnalysisName] += result.HighResult.Affiliation;
                                 }
 
                                 break;
@@ -66,6 +74,12 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
             {
                 Power = affiliations.Values.Min();
                 affiliations.Clear();
+            }
+            
+            //добавлено на случай, если считаем по сумме.
+            if (Power > 100)
+            {
+                Power = 100;
             }
         }
     }
