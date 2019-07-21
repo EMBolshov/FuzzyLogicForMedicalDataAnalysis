@@ -46,7 +46,7 @@ namespace FuzzyLogicTestingConsole
                     Console.WriteLine($"Diagnosis: {fakeDiagnosis.Name}, Probability: {fakeDiagnosis.Affiliation}");
                 }
 
-                reportGenerator.GenerateReport(patient, fakeResults, fakeDiagnoses);
+                reportGenerator.GenerateReport(patient, fakeResults, fakeDiagnoses, false);
             }
 
             var statisticGenerator = new ReportGenerator(medicalDataManager.PathToReports + "A_" + DateTime.Now.ToString("dd/MM/yyyy") + ".txt");
