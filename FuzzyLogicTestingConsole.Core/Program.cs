@@ -36,7 +36,7 @@ namespace FuzzyLogicTestingConsole.Core
 
                 foreach (var rule in fakeRules)
                 {
-                    Console.WriteLine($"Rule: {rule.Id}, Power: {rule.Power}");
+                    Console.WriteLine($"FuzzyRule: {rule.Id}, Power: {rule.Power}");
                     medicalDataManager.GetDiagnosisAffiliation(fakeDiagnoses, rule);
                 }
 

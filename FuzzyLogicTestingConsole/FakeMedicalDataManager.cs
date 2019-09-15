@@ -56,19 +56,19 @@ namespace FuzzyLogicTestingConsole
             return diagnoses;
         }
        
-        public List<Rule> GetAllFakeRules()
+        public List<FuzzyRule> GetAllFakeRules()
         {
-            List<Rule> diagnoses;
+            List<FuzzyRule> diagnoses;
             using (var file = File.OpenText(_pathToFolder + $"Rules.json"))
             {
                 var serializer = new JsonSerializer();
-                diagnoses = (List<Rule>)serializer.Deserialize(file, typeof(List<Rule>));
+                diagnoses = (List<FuzzyRule>)serializer.Deserialize(file, typeof(List<FuzzyRule>));
             }
 
             return diagnoses;
         }
 
-        public void GetPowerOfRules(List<Rule> rules, List<AnalysisResult> fakeResults)
+        public void GetPowerOfRules(List<FuzzyRule> rules, List<AnalysisResult> fakeResults)
         {
             foreach (var rule in rules)
             {
@@ -86,15 +86,15 @@ namespace FuzzyLogicTestingConsole
             }
         }
 
-        public void GetDiagnosisAffiliation(List<Diagnosis> diagnoses, Rule rule)
+        public void GetDiagnosisAffiliation(List<Diagnosis> diagnoses, FuzzyRule fuzzyRule)
         {
             foreach (var diagnosis in diagnoses)
             {
-                foreach (var outputTerm in rule.OutputTerms)
+                foreach (var outputTerm in fuzzyRule.OutputTerms)
                 {
                     if (diagnosis.Name == outputTerm)
                     {
-                        diagnosis.Rules.Add(rule);
+                        diagnosis.Rules.Add(fuzzyRule);
                     }
                 }
             }

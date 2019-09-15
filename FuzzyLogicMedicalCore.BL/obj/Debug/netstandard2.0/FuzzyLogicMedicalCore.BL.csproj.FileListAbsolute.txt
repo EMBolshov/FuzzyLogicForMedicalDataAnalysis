@@ -6,3 +6,4 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCor
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.AssemblyInfo.cs
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.csprojAssemblyReference.cache

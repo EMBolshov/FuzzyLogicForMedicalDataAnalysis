@@ -8,7 +8,7 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
     {
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
-        public List<Rule> Rules { get; set; }
+        public List<FuzzyRule> Rules { get; set; }
         public Guid PatientGuid { get; set; }
 
         public void GetAffiliation()
@@ -18,7 +18,7 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
         public Diagnosis()
         {
-            Rules = new List<Rule>();
+            Rules = new List<FuzzyRule>();
         }
     }
 }

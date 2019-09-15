@@ -15,7 +15,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
                  
             };
 
-            var rule = new Rule {Id = 1, InputTerms = new List<InputTerm>(), OutputTerms = new List<string>(), Power = 0};
+            var rule = new FuzzyRule {Id = 1, InputTerms = new List<InputTerm>(), OutputTerms = new List<string>(), Power = 0};
             Assert.IsTrue(true);
         }
     }
