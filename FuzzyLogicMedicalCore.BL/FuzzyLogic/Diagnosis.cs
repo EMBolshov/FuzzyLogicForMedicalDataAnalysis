@@ -13,7 +13,14 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
         public void GetAffiliation()
         {
-            Affiliation = Rules.Max(x => x.Power);
+            if (Rules.Count > 0)
+            {
+                Affiliation = Rules.Max(x => x.Power);
+            }
+            else
+            {
+                Affiliation = 0;
+            }
         }
 
         public Diagnosis()

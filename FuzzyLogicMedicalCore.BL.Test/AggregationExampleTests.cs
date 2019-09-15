@@ -40,7 +40,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
             //Available analyzes hardcoded
             CreateStrictRules();
             CreateDiagnoses();
-            CreatePatientsWithAnalyzesResults(1000);
+            CreatePatientsWithAnalyzesResults(500);
         }
 
         [TestMethod]
@@ -48,7 +48,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
         {
             //Get half of generated data
             //Set diagnosis to a patients using full analyzes results data
-            //Select all non-key analyzes results from previous patient results
+            //Select all non-key and few key analyzes results from previous patient results
             //Modify diagnosis by using fuzzy rules
 
             var trainingData = new List<AnalysisResult>();
@@ -64,7 +64,60 @@ namespace FuzzyLogicMedicalCore.BL.Test
 
             var testingData = trainingData.GetRange(trainingData.Count / 2 - 1, trainingData.Count / 2);
             trainingData = trainingData.Except(testingData).ToList();
-            
+
+            var rules = GetRules();
+            var patients = GetPatients();
+
+            //Training 
+            //TODO
+            var trainingPatientsGuids = trainingData.Select(x => x.PatientGuid).Distinct().ToList();
+            var trainingPatiens = patients.Where(x => trainingPatientsGuids.Contains(x.Guid)).ToList();
+
+            var sickPatients = new List<Patient>();
+            foreach (var patient in trainingPatiens)
+            {
+                var patientResults = trainingData.Where(x => x.PatientGuid == patient.Guid).ToList();
+                patient.AnalysisResults.AddRange(patientResults);
+
+                patient.Diagnoses = GetDiagnoses();
+                patient.Diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
+
+                foreach (var result in patient.AnalysisResults)
+                {
+                    result.LowResult.GetAffiliation();
+                    result.MidResult.GetAffiliation();
+                    result.HighResult.GetAffiliation();
+                }
+
+                foreach (var rule in rules)
+                {
+                    foreach (var diagnosis in patient.Diagnoses)
+                    {
+                        foreach (var outputTerm in rule.OutputTerms)
+                        {
+                            if (diagnosis.Name == outputTerm)
+                            {
+                                rule.GetPower(patient.AnalysisResults);
+                                diagnosis.Rules.Add(rule);
+                            }
+                        }
+                    }
+
+                    foreach (var diagnosis in patient.Diagnoses)
+                    {
+                        diagnosis.GetAffiliation();
+
+                        //debug
+                        if (diagnosis.Affiliation > 0)
+                        {
+                            sickPatients.Add(patient);
+                        }
+                    }
+                }
+            }
+
+            var sickCount = sickPatients.Count;
+            var stop = "";
         }
 
         [TestMethod]
@@ -108,6 +161,42 @@ namespace FuzzyLogicMedicalCore.BL.Test
             }
         }
 
+        private List<FuzzyRule> GetRules()
+        {
+            List<FuzzyRule> rules;
+            using (var file = File.OpenText(PathToFolder + $"Rules.json"))
+            {
+                var serializer = new JsonSerializer();
+                rules = (List<FuzzyRule>)serializer.Deserialize(file, typeof(List<FuzzyRule>));
+            }
+
+            return rules;
+        }
+
+        private List<Diagnosis> GetDiagnoses()
+        {
+            List<Diagnosis> diagnoses;
+            using (var file = File.OpenText(PathToFolder + $"Diagnoses.json"))
+            {
+                var serializer = new JsonSerializer();
+                diagnoses = (List<Diagnosis>)serializer.Deserialize(file, typeof(List<Diagnosis>));
+            }
+
+            return diagnoses;
+        }
+
+        private List<Patient> GetPatients()
+        {
+            List<Patient> patientList;
+            using (var file = File.OpenText(PathToFolder + "Patients.json"))
+            {
+                var serializer = new JsonSerializer();
+                patientList = (List<Patient>)serializer.Deserialize(file, typeof(List<Patient>));
+            }
+
+            return patientList;
+        }
+
         private void CreateStrictRules()
         {
             var allRules = new List<FuzzyRule>
@@ -120,47 +209,56 @@ namespace FuzzyLogicMedicalCore.BL.Test
                         new InputTerm()
                         {
                             AnalysisName = "Гемоглобин (HGB)",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Железо в сыворотке",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Гемоглобин (HGB)",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Гемоглобин (HGB)",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Ферритин",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Витамин B12",
-                            AnalysisTerm = "Mid"
+                            AnalysisTerm = "Mid",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Витамин B12",
-                            AnalysisTerm = "High"
+                            AnalysisTerm = "High",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Фолат сыворотки",
-                            AnalysisTerm = "Mid"
+                            AnalysisTerm = "Mid",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Фолат сыворотки",
-                            AnalysisTerm = "High"
+                            AnalysisTerm = "High",
+                            IsKey = true
                         }
                     },
 
@@ -174,47 +272,56 @@ namespace FuzzyLogicMedicalCore.BL.Test
                         new InputTerm()
                         {
                             AnalysisName = "Гемоглобин (HGB)",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Железо в сыворотке",
-                            AnalysisTerm = "Mid"
+                            AnalysisTerm = "Mid",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Железо в сыворотке",
-                            AnalysisTerm = "Low"
+                            AnalysisTerm = "Low",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Ферритин",
-                            AnalysisTerm = "Mid"
+                            AnalysisTerm = "Mid",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Ферритин",
-                            AnalysisTerm = "High"
+                            AnalysisTerm = "High",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Витамин B12",
-                            AnalysisTerm = "Mid"
+                            AnalysisTerm = "Mid",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Витамин B12",
-                            AnalysisTerm = "High"
+                            AnalysisTerm = "High",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Фолат сыворотки",
-                            AnalysisTerm = "Mid"
+                            AnalysisTerm = "Mid",
+                            IsKey = true
                         },
                         new InputTerm()
                         {
                             AnalysisName = "Фолат сыворотки",
-                            AnalysisTerm = "High"
+                            AnalysisTerm = "High",
+                            IsKey = true
                         },
                     },
                     OutputTerms = new List<string>(){"Анемия хронических заболеваний (АХЗ)"},

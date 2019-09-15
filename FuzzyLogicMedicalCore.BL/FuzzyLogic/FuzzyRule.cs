@@ -12,11 +12,11 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
         public void GetPower(List<AnalysisResult> results)
         {
-            var affiliations = new Dictionary<string, decimal>();
+            var affiliations = new Dictionary<AnalysisResult, decimal>();
 
             foreach (var result in results)
             {
-                affiliations.Add(result.AnalysisName, 0m);
+                affiliations.Add(result, 0m);
             }
 
             foreach (var inputTerm in InputTerms)
@@ -30,7 +30,14 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                             case "Low":
                             {
                                 {
-                                    affiliations[result.AnalysisName] += result.LowResult.Affiliation;
+                                    if (result.IsKey && result.LowResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += 100;
+                                    }
+                                    else if (result.LowResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += result.LowResult.Affiliation;
+                                    }
                                 }
                                 
                                 break;
@@ -38,7 +45,14 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                             case "Mid":
                             {
                                 {
-                                    affiliations[result.AnalysisName] += result.MidResult.Affiliation;
+                                    if (result.IsKey && result.MidResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += 100;
+                                    }
+                                    else if(result.MidResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += result.MidResult.Affiliation;
+                                    }
                                 }
 
                                 break;
@@ -46,7 +60,14 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                             case "High":
                             {
                                 {
-                                    affiliations[result.AnalysisName] += result.HighResult.Affiliation;
+                                    if (result.IsKey && result.HighResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += 100;
+                                    }
+                                    else if (result.HighResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += result.HighResult.Affiliation;
+                                    }
                                 }
 
                                 break;
@@ -58,7 +79,9 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
             Power = 0;
 
-            if (affiliations.Count > 0)
+
+            var positiveAffiliations = affiliations.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
+            if (positiveAffiliations.Count > 0)
             {
                 Power = affiliations.Values.Min();
                 affiliations.Clear();
