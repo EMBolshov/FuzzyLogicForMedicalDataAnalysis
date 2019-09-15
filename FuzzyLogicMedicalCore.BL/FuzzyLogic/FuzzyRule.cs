@@ -79,9 +79,8 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
             Power = 0;
 
-
-            var positiveAffiliations = affiliations.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
-            if (positiveAffiliations.Count > 0)
+            //var positiveAffiliations = affiliations.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
+            if (affiliations.Count > 0)
             {
                 Power = affiliations.Values.Min();
                 affiliations.Clear();

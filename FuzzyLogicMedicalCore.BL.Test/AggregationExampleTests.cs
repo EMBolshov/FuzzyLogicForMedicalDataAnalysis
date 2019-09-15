@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using FuzzyLogicMedicalCore.BL.FHIR;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
+using FuzzyLogicMedicalCore.BL.ReportGeneration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 
@@ -40,7 +41,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
             //Available analyzes hardcoded
             CreateStrictRules();
             CreateDiagnoses();
-            CreatePatientsWithAnalyzesResults(500);
+            CreatePatientsWithAnalyzesResults(600);
         }
 
         [TestMethod]
@@ -62,17 +63,18 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 }
             }
 
-            var testingData = trainingData.GetRange(trainingData.Count / 2 - 1, trainingData.Count / 2);
+            var testingData = trainingData.GetRange(trainingData.Count / 2, trainingData.Count / 2);
             trainingData = trainingData.Except(testingData).ToList();
 
             var rules = GetRules();
             var patients = GetPatients();
-
+            
             //Training 
             //TODO
+            
             var trainingPatientsGuids = trainingData.Select(x => x.PatientGuid).Distinct().ToList();
-            var trainingPatiens = patients.Where(x => trainingPatientsGuids.Contains(x.Guid)).ToList();
-
+            var trainingPatients = patients.Where(x => trainingPatientsGuids.Contains(x.Guid)).ToList();
+            /*
             var sickPatients = new List<Patient>();
             foreach (var patient in trainingPatiens)
             {
@@ -114,9 +116,89 @@ namespace FuzzyLogicMedicalCore.BL.Test
                         }
                     }
                 }
-            }
+            }          
 
             var sickCount = sickPatients.Count;
+            */
+
+            /*
+            trainingPatients.Clear();
+            var resultList = new List<AnalysisResult>()
+            {
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Гемоглобин (HGB)", 117m, 160m, 105m),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Железо в сыворотке", 6.6m, 26m, 6.7m),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Ферритин", 10m, 120m, 90m),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Витамин B12", 191m, 663m, 258m),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Фолат сыворотки", 7m, 39.7m, 9m),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Средний объем эритроцита", 7m, 39.7m, 9m, false),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Гематокрит", 7m, 39.7m, 9m, false),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Эритроциты", 7m, 39.7m, 9m, false),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "ОЖСС", 7m, 39.7m, 9m, false),
+                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Трансферин", 7m, 39.7m, 9m, false)
+
+            };
+            
+            
+            var patientTest = new Patient
+            {
+                FirstName = "test",
+                LastName = "test",
+                MiddleName = "test",
+                Guid = trainingPatientsGuids.FirstOrDefault(),
+                AnalysisResults = resultList
+            };
+
+            trainingPatients.Add(patientTest);
+            */
+
+            foreach (var patient in trainingPatients)
+            {
+                var patientResults = trainingData.Where(x => x.PatientGuid == patient.Guid).ToList();
+                patient.AnalysisResults.AddRange(patientResults);
+
+                patient.Diagnoses = GetDiagnoses();
+                patient.Diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
+
+                var reportGenerator = new ReportGenerator(
+                    "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\" +
+                    $"GeneratedTestDataAggregation\\Reports\\IntegrationTestFullResults_JDA_patient_{patient.Guid}.txt");
+                
+                foreach (var result in patient.AnalysisResults)
+                {
+                    result.LowResult.GetAffiliation();
+                    result.MidResult.GetAffiliation();
+                    result.HighResult.GetAffiliation();
+                }
+
+                foreach (var rule in rules)
+                {
+                    rule.GetPower(patient.AnalysisResults);
+                }
+
+                foreach (var rule in rules)
+                {
+                    foreach (var diagnosis in patient.Diagnoses)
+                    {
+                        foreach (var outputTerm in rule.OutputTerms)
+                        {
+                            if (diagnosis.Name == outputTerm)
+                            {
+                                diagnosis.Rules.Add(rule);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var diagnosis in patient.Diagnoses)
+                {
+                    diagnosis.GetAffiliation();
+                }
+
+
+                reportGenerator.GenerateReport(patient, patient.AnalysisResults,
+                    patient.Diagnoses, false);
+            }
+
             var stop = "";
         }
 
@@ -137,6 +219,12 @@ namespace FuzzyLogicMedicalCore.BL.Test
 
             files = Directory.GetFiles(PathToFolder, "*.json");
             Assert.IsTrue(files == null || files.Length == 0);
+
+            files = Directory.GetFiles(PathToFolder + @"\Reports", "*.txt");
+            foreach (var file in files)
+            {
+                File.Delete(file);
+            }
         }
 
         private void CreateDiagnoses()
@@ -259,6 +347,109 @@ namespace FuzzyLogicMedicalCore.BL.Test
                             AnalysisName = "Фолат сыворотки",
                             AnalysisTerm = "High",
                             IsKey = true
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гематокрит",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гематокрит",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гематокрит",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Средний объем эритроцита",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Средний объем эритроцита",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Средний объем эритроцита",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Эритроциты",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Эритроциты",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Эритроциты",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "ОЖСС",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "ОЖСС",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "ОЖСС",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Трансферин",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Трансферин",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Трансферин",
+                            AnalysisTerm = "Low",
+                            IsKey = false
                         }
                     },
 
@@ -322,7 +513,111 @@ namespace FuzzyLogicMedicalCore.BL.Test
                             AnalysisName = "Фолат сыворотки",
                             AnalysisTerm = "High",
                             IsKey = true
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гематокрит",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гематокрит",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Гематокрит",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Средний объем эритроцита",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Средний объем эритроцита",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Средний объем эритроцита",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Эритроциты",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Эритроциты",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Эритроциты",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "ОЖСС",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "ОЖСС",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "ОЖСС",
+                            AnalysisTerm = "Low",
+                            IsKey = false
                         },
+                        new InputTerm()
+                        {
+                            AnalysisName = "Трансферин",
+                            AnalysisTerm = "High",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Трансферин",
+                            AnalysisTerm = "Mid",
+                            IsKey = false
+                        }
+                        ,
+                        new InputTerm()
+                        {
+                            AnalysisName = "Трансферин",
+                            AnalysisTerm = "Low",
+                            IsKey = false
+                        }
                     },
                     OutputTerms = new List<string>(){"Анемия хронических заболеваний (АХЗ)"},
                 }
@@ -455,6 +750,21 @@ namespace FuzzyLogicMedicalCore.BL.Test
             result.LowResult = new LowResult(currentValue) { MaxValue = lowMax, MinValue = lowMin };
             result.MidResult = new MidResult(currentValue) { MaxValue = midMax, MinValue = midMin };
             result.HighResult = new HighResult(currentValue) { MaxValue = highMax, MinValue = highMin };
+        }
+
+        private AnalysisResult CreateAnalysisResult(Guid patientGuid, string analysisName,
+            decimal refLo, decimal refHi, decimal current, bool isKey = true)
+        {
+            return new AnalysisResult
+            {
+                IsKey = isKey,
+                AnalysisName = analysisName,
+                PatientGuid = patientGuid,
+                CurrentValue = current,
+                LowResult = new LowResult(current) { MinValue = refLo, MaxValue = (refHi + refLo) / 2 },
+                MidResult = new MidResult(current) { MinValue = refLo, MaxValue = refHi },
+                HighResult = new HighResult(current) { MinValue = (refHi + refLo) / 2, MaxValue = refHi }
+            };
         }
 
         // ReSharper disable once InconsistentNaming
