@@ -74,82 +74,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
             
             var trainingPatientsGuids = trainingData.Select(x => x.PatientGuid).Distinct().ToList();
             var trainingPatients = patients.Where(x => trainingPatientsGuids.Contains(x.Guid)).ToList();
-            /*
             var sickPatients = new List<Patient>();
-            foreach (var patient in trainingPatiens)
-            {
-                var patientResults = trainingData.Where(x => x.PatientGuid == patient.Guid).ToList();
-                patient.AnalysisResults.AddRange(patientResults);
-
-                patient.Diagnoses = GetDiagnoses();
-                patient.Diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
-
-                foreach (var result in patient.AnalysisResults)
-                {
-                    result.LowResult.GetAffiliation();
-                    result.MidResult.GetAffiliation();
-                    result.HighResult.GetAffiliation();
-                }
-
-                foreach (var rule in rules)
-                {
-                    foreach (var diagnosis in patient.Diagnoses)
-                    {
-                        foreach (var outputTerm in rule.OutputTerms)
-                        {
-                            if (diagnosis.Name == outputTerm)
-                            {
-                                rule.GetPower(patient.AnalysisResults);
-                                diagnosis.Rules.Add(rule);
-                            }
-                        }
-                    }
-
-                    foreach (var diagnosis in patient.Diagnoses)
-                    {
-                        diagnosis.GetAffiliation();
-
-                        //debug
-                        if (diagnosis.Affiliation > 0)
-                        {
-                            sickPatients.Add(patient);
-                        }
-                    }
-                }
-            }          
-
-            var sickCount = sickPatients.Count;
-            */
-
-            /*
-            trainingPatients.Clear();
-            var resultList = new List<AnalysisResult>()
-            {
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Гемоглобин (HGB)", 117m, 160m, 105m),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Железо в сыворотке", 6.6m, 26m, 6.7m),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Ферритин", 10m, 120m, 90m),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Витамин B12", 191m, 663m, 258m),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Фолат сыворотки", 7m, 39.7m, 9m),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Средний объем эритроцита", 7m, 39.7m, 9m, false),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Гематокрит", 7m, 39.7m, 9m, false),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Эритроциты", 7m, 39.7m, 9m, false),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "ОЖСС", 7m, 39.7m, 9m, false),
-                CreateAnalysisResult(trainingPatientsGuids.FirstOrDefault(), "Трансферин", 7m, 39.7m, 9m, false)
-
-            };
-            
-            
-            var patientTest = new Patient
-            {
-                FirstName = "test",
-                LastName = "test",
-                MiddleName = "test",
-                Guid = trainingPatientsGuids.FirstOrDefault(),
-                AnalysisResults = resultList
-            };
-
-            trainingPatients.Add(patientTest);
-            */
 
             foreach (var patient in trainingPatients)
             {
@@ -193,11 +118,33 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 {
                     diagnosis.GetAffiliation();
                 }
-
-
+                
                 reportGenerator.GenerateReport(patient, patient.AnalysisResults,
                     patient.Diagnoses, false);
+
+                if (patient.Diagnoses.Any(x => x.Affiliation > 0))
+                {
+                    sickPatients.Add(patient);
+                }
             }
+
+            var ahzPatients = sickPatients.Where(x =>
+                x.Diagnoses.Any(y => y.Name == "Анемия хронических заболеваний (АХЗ)"
+                                  && y.Affiliation > 0)).ToList();
+            var ahzPatientsLowGematocrit = ahzPatients.SelectMany(x =>
+                x.AnalysisResults.Where(y => y.AnalysisName == "Гематокрит"
+                                     && y.LowResult.Affiliation > 0).ToList()).ToList();
+            var ahzPatientsLowGematocritCount = ahzPatientsLowGematocrit.Count;
+
+            var ahzPatientsMidGematocrit = ahzPatients.SelectMany(x =>
+                x.AnalysisResults.Where(y => y.AnalysisName == "Гематокрит"
+                                             && y.MidResult.Affiliation > 0).ToList()).ToList();
+            var ahzPatientsMidGematocritCount = ahzPatientsMidGematocrit.Count;
+
+            var ahzPatientsHighGematocrit = ahzPatients.SelectMany(x =>
+                x.AnalysisResults.Where(y => y.AnalysisName == "Гематокрит"
+                                             && y.HighResult.Affiliation > 0).ToList()).ToList();
+            var ahzPatientsHighGematocritCount = ahzPatientsHighGematocrit.Count;
 
             var stop = "";
         }
