@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using FuzzyLogicMedicalCore.BL.FHIR;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 using Newtonsoft.Json;

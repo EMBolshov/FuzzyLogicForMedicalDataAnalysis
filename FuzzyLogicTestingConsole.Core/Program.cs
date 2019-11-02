@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 using FuzzyLogicMedicalCore.BL.ReportGeneration;
-using Microsoft.Extensions.Configuration;
 
 namespace FuzzyLogicTestingConsole.Core
 {

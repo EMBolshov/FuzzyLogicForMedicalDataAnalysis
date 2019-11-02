@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApi</name>
+    </assembly>
+    <members>
+        <member name="T:WebApi.Controllers.ProcessingController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.ProcessingController.Get(System.Int32)">
+            <summary>
+            Temp
+            </summary>
+            <param name="id">paramTest</param>
+            <remarks>QWEQWE</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.ProcessingController.Post(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+    </members>
+</doc>
