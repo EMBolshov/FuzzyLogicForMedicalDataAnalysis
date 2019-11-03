@@ -3,7 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Repository;
 using Swashbuckle.AspNetCore.Swagger;
+using WebApi.Implementations;
+using WebApi.Interfaces;
+using WebApi.POCO;
+
 #pragma warning disable 1591
 
 namespace WebApi
@@ -18,7 +23,8 @@ namespace WebApi
         {
             Environment = environment;
             Configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json")
+                .SetBasePath(environment.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
         }
         
@@ -34,6 +40,10 @@ namespace WebApi
 
                 c.IncludeXmlComments(_appPath);
             });
+            services.AddScoped<IDiagnosisProvider, DiagnosisProvider>();
+            services.AddScoped<IMainProcessingRepository, MainProcessingRepository>();
+            services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
+            services.Configure<Config>(Configuration.GetSection("Config"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

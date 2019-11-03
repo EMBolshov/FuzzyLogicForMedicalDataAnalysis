@@ -1,29 +1,34 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Repository;
 using WebApi.Implementations;
 using WebApi.Interfaces;
+using WebApi.POCO;
 
 namespace WebApi.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [ApiController]
     public class DiagnosisController : ControllerBase
     {
         private readonly IDiagnosisProvider _diagnosisProvider;
-        private readonly IMainProcessingRepository _mainProcessingRepository;
-        private readonly string _mainRepoConnectionString;
-        private readonly IConfiguration _config;
-
-        public DiagnosisController()
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="config"></param>
+        public DiagnosisController(IDiagnosisProvider diagnosisProvider)
         {
-            _mainRepoConnectionString = "";
-            _mainProcessingRepository = new MainProcessingRepository(_mainRepoConnectionString);
-            _diagnosisProvider = new DiagnosisProvider(_mainProcessingRepository);
+            _diagnosisProvider = diagnosisProvider;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="name"></param>
         [HttpPost]
         public void CreateNewDiagnosis([FromBody] string name)
         {
