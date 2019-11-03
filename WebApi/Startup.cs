@@ -10,14 +10,18 @@ namespace WebApi
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
+        public IHostingEnvironment Environment { get; set; }
         private string _appPath;
 
+        public Startup(IConfiguration configuration, IHostingEnvironment environment)
+        {
+            Environment = environment;
+            Configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build();
+        }
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
