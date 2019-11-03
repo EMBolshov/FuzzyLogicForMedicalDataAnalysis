@@ -16,7 +16,7 @@ namespace Repository
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "INSERT INTO public.Diagnosis (Name) " +
+                var sql = "INSERT INTO Diagnosis (Name) " +
                           $"VALUES ('{diagnosisName}')";
                 context.Execute(sql);
             }
