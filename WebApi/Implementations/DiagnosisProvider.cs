@@ -20,7 +20,7 @@ namespace WebApi.Implementations
         /// 
         /// </summary>
         /// <param name="repo"></param>
-        public DiagnosisProvider(IOptions<Config> config, IMainProcessingRepository repo)
+        public DiagnosisProvider(IMainProcessingRepository repo)
         {
             _repo = repo;
         }

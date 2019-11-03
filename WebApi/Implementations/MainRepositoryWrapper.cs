@@ -17,7 +17,7 @@ namespace WebApi.Implementations
         /// <param name="config"></param>
         public MainRepositoryWrapper(IOptions<Config> config)
         {
-            var mainRepoConnectionString = config.Value.MainRepoConnectionString;
+            var mainRepoConnectionString = config.Value.MainProcessingConnectionString;
             _repo = new MainProcessingRepository(mainRepoConnectionString);
         }
 

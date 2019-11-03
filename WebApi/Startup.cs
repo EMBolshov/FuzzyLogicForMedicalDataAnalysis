@@ -40,10 +40,11 @@ namespace WebApi
 
                 c.IncludeXmlComments(_appPath);
             });
-            services.AddScoped<IDiagnosisProvider, DiagnosisProvider>();
-            services.AddScoped<IMainProcessingRepository, MainProcessingRepository>();
-            services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
+
             services.Configure<Config>(Configuration.GetSection("Config"));
+            services.AddTransient<IMainProcessingRepository, MainRepositoryWrapper>();
+            services.AddTransient<IDiagnosisProvider, DiagnosisProvider>();
+            //services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

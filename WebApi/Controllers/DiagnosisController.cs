@@ -11,15 +11,16 @@ namespace WebApi.Controllers
     /// <summary>
     /// 
     /// </summary>
+    [Route("api/[controller]")]
     [ApiController]
     public class DiagnosisController : ControllerBase
     {
         private readonly IDiagnosisProvider _diagnosisProvider;
-        
+
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="config"></param>
+        /// <param name="diagnosisProvider"></param>
         public DiagnosisController(IDiagnosisProvider diagnosisProvider)
         {
             _diagnosisProvider = diagnosisProvider;
@@ -29,10 +30,10 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="name"></param>
-        [HttpPost]
-        public void CreateNewDiagnosis([FromBody] string name)
+        [HttpPost("CreateNewDiagnosis")]
+        public void CreateNewDiagnosis([FromBody] CreateDiagnosisDto dto)
         {
-            _diagnosisProvider.CreateNewDiagnosis(name);
+            _diagnosisProvider.CreateNewDiagnosis(dto.DiagnosisName);
         }
     }
 }
