@@ -19,9 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{D3A2DBC2-608E-4029-BD6D-6CEBEF98747B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POCO.Domain", "POCO.Domain\POCO.Domain.csproj", "{DE6CE591-AE55-4671-86C6-A46B3F2D8C83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "POCO.Domain", "POCO.Domain\POCO.Domain.csproj", "{DE6CE591-AE55-4671-86C6-A46B3F2D8C83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{2B9E860A-3CF0-45CE-A567-E7598737938A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{2B9E860A-3CF0-45CE-A567-E7598737938A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{854166E1-F323-4716-90C3-CBB39878A433}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -163,6 +165,22 @@ Global
 		{2B9E860A-3CF0-45CE-A567-E7598737938A}.Release|x64.Build.0 = Release|Any CPU
 		{2B9E860A-3CF0-45CE-A567-E7598737938A}.Release|x86.ActiveCfg = Release|Any CPU
 		{2B9E860A-3CF0-45CE-A567-E7598737938A}.Release|x86.Build.0 = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|ARM.Build.0 = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|x64.Build.0 = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Debug|x86.Build.0 = Debug|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|Any CPU.Build.0 = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|ARM.ActiveCfg = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|ARM.Build.0 = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|x64.ActiveCfg = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|x64.Build.0 = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|x86.ActiveCfg = Release|Any CPU
+		{854166E1-F323-4716-90C3-CBB39878A433}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

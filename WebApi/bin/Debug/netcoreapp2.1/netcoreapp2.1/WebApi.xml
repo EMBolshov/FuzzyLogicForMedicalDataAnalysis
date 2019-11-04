@@ -21,6 +21,11 @@
             </summary>
             <param name="name"></param>
         </member>
+        <member name="M:WebApi.Controllers.DiagnosisController.GetAllDiagnoses">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:WebApi.Controllers.ProcessingController">
             <summary>
             

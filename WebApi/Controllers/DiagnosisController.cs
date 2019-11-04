@@ -35,5 +35,14 @@ namespace WebApi.Controllers
         {
             _diagnosisProvider.CreateNewDiagnosis(dto.DiagnosisName);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [HttpGet("GetAllDiagnoses")]
+        public void GetAllDiagnoses()
+        {
+            _diagnosisProvider.GetAllDiagnoses();
+        }
     }
 }
