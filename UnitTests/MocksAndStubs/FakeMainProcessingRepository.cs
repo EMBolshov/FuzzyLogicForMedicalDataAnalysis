@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Transactions;
+﻿using System;
+using System.Collections.Generic;
 using POCO.Domain;
+using POCO.Domain.Dto;
 using Repository;
 using WebApi.POCO;
 
@@ -9,9 +10,9 @@ namespace UnitTests.MocksAndStubs
     public class FakeMainProcessingRepository : IMainProcessingRepository
     {
         //TODO static list?
-        public void CreateNewDiagnosis(CreateDiagnosisDto diagnosisDto)
+        public void CreateDiagnosis(CreateDiagnosisDto diagnosisDto)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public List<Diagnosis> GetAllDiagnoses()
@@ -25,14 +26,24 @@ namespace UnitTests.MocksAndStubs
             return result;
         }
 
-        public void CreateNewPatient(CreatePatientDto patientDto)
+        public void CreatePatient(CreatePatientDto patientDto)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public List<Patient> GetAllPatients()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public void CreateAnalysisResult(CreateAnalysisResultDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid)
+        {
+            throw new NotImplementedException();
         }
     }
 }

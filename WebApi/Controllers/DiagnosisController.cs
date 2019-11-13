@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
-using Repository;
-using WebApi.Implementations;
+using POCO.Domain.Dto;
 using WebApi.Interfaces;
-using WebApi.POCO;
 
 namespace WebApi.Controllers
 {
@@ -26,7 +24,7 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="dto"></param>
-        [HttpPost("CreateNewDiagnosis")]
+        [HttpPost("CreateDiagnosis")]
         public void CreateNewDiagnosis([FromBody] CreateDiagnosisDto dto)
         {
             _diagnosisProvider.CreateNewDiagnosis(dto);

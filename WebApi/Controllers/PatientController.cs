@@ -22,7 +22,7 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         /// <param name="dto"></param>
-        [HttpPost("CreateNewPatient")]
+        [HttpPost("CreatePatient")]
         public void CreateNewDiagnosis([FromBody] CreatePatientDto dto)
         {
             _patientProvider.CreateNewPatient(dto);

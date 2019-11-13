@@ -17,7 +17,7 @@ namespace WebApi.Implementations
 
         public void CreateNewPatient(CreatePatientDto dto)
         {
-            _repo.CreateNewPatient(dto);
+            _repo.CreatePatient(dto);
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Options;
 using POCO.Domain;
+using POCO.Domain.Dto;
 using Repository;
 using WebApi.POCO;
 
@@ -16,9 +18,9 @@ namespace WebApi.Implementations
             _repo = new MainProcessingRepository(mainRepoConnectionString);
         }
 
-        public void CreateNewDiagnosis(CreateDiagnosisDto diagnosisDto)
+        public void CreateDiagnosis(CreateDiagnosisDto diagnosisDto)
         {
-            _repo.CreateNewDiagnosis(diagnosisDto);
+            _repo.CreateDiagnosis(diagnosisDto);
         }
 
         public List<Diagnosis> GetAllDiagnoses()
@@ -26,14 +28,24 @@ namespace WebApi.Implementations
             return _repo.GetAllDiagnoses();
         }
 
-        public void CreateNewPatient(CreatePatientDto dto)
+        public void CreatePatient(CreatePatientDto dto)
         {
-            _repo.CreateNewPatient(dto);
+            _repo.CreatePatient(dto);
         }
 
         public List<Patient> GetAllPatients()
         {
             return _repo.GetAllPatients();
+        }
+
+        public void CreateAnalysisResult(CreateAnalysisResultDto dto)
+        {
+            _repo.CreateAnalysisResult(dto);
+        }
+
+        public List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid)
+        {
+            return _repo.GetAnalysisResultsByPatientGuid(patientGuid);
         }
     }
 }

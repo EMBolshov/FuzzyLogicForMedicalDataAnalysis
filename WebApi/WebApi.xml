@@ -15,7 +15,7 @@
             </summary>
             <param name="diagnosisProvider"></param>
         </member>
-        <member name="M:WebApi.Controllers.DiagnosisController.CreateNewDiagnosis(WebApi.POCO.CreateDiagnosisDto)">
+        <member name="M:WebApi.Controllers.DiagnosisController.CreateDiagnosis(WebApi.POCO.CreateDiagnosisDto)">
             <summary>
             
             </summary>
@@ -62,7 +62,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:WebApi.Implementations.DiagnosisDbProvider.CreateNewDiagnosis(System.String)">
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.CreateDiagnosis(System.String)">
             <summary>
             
             </summary>
@@ -79,7 +79,7 @@
             </summary>
             <param name="config"></param>
         </member>
-        <member name="M:WebApi.Implementations.MainRepositoryWrapper.CreateNewDiagnosis(System.String)">
+        <member name="M:WebApi.Implementations.MainRepositoryWrapper.CreateDiagnosis(System.String)">
             <summary>
             
             </summary>

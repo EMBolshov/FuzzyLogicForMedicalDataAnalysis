@@ -1,4 +1,4 @@
-﻿namespace WebApi.POCO
+﻿namespace POCO.Domain.Dto
 {
     public class CreateDiagnosisDto
     {

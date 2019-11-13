@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dapper;
 using Npgsql;
 using POCO.Domain;
+using POCO.Domain.Dto;
 using WebApi.POCO;
 
 namespace Repository
@@ -17,7 +18,7 @@ namespace Repository
         }
 
         //TODO
-        public void CreateNewDiagnosis(CreateDiagnosisDto dto)
+        public void CreateDiagnosis(CreateDiagnosisDto dto)
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
@@ -39,7 +40,7 @@ namespace Repository
         }
 
         //TODO
-        public void CreateNewPatient(CreatePatientDto dto)
+        public void CreatePatient(CreatePatientDto dto)
         {
             //TODO
         }
@@ -70,6 +71,18 @@ namespace Repository
             };
 
             return result;
+        }
+
+        //todo
+        public void CreateAnalysisResult(CreateAnalysisResultDto dto)
+        {
+            throw new NotImplementedException();
+        }
+
+        //todo
+        public List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid)
+        {
+            throw new NotImplementedException();
         }
     }
 }
