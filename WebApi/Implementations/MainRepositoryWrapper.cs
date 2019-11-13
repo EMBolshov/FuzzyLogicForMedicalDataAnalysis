@@ -1,33 +1,39 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Collections.Generic;
+using Microsoft.Extensions.Options;
+using POCO.Domain;
 using Repository;
 using WebApi.POCO;
 
 namespace WebApi.Implementations
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class MainRepositoryWrapper : IMainProcessingRepository
     {
         private readonly IMainProcessingRepository _repo;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="config"></param>
+        
         public MainRepositoryWrapper(IOptions<Config> config)
         {
             var mainRepoConnectionString = config.Value.MainProcessingConnectionString;
             _repo = new MainProcessingRepository(mainRepoConnectionString);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="diagnosisName"></param>
-        public void CreateNewDiagnosis(string diagnosisName)
+        public void CreateNewDiagnosis(CreateDiagnosisDto diagnosisDto)
         {
-            _repo.CreateNewDiagnosis(diagnosisName);
+            _repo.CreateNewDiagnosis(diagnosisDto);
+        }
+
+        public List<Diagnosis> GetAllDiagnoses()
+        {
+            return _repo.GetAllDiagnoses();
+        }
+
+        public void CreateNewPatient(CreatePatientDto dto)
+        {
+            _repo.CreateNewPatient(dto);
+        }
+
+        public List<Patient> GetAllPatients()
+        {
+            return _repo.GetAllPatients();
         }
     }
 }

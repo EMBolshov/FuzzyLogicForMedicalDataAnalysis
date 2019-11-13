@@ -1,19 +1,38 @@
-﻿using System.Transactions;
+﻿using System.Collections.Generic;
+using System.Transactions;
+using POCO.Domain;
 using Repository;
+using WebApi.POCO;
 
 namespace UnitTests.MocksAndStubs
 {
     public class FakeMainProcessingRepository : IMainProcessingRepository
     {
-        //TODO 
-        public void CreateNewDiagnosis(string diagnosisName)
+        //TODO static list?
+        public void CreateNewDiagnosis(CreateDiagnosisDto diagnosisDto)
         {
-            using (var scope = new TransactionScope())
+            throw new System.NotImplementedException();
+        }
+
+        public List<Diagnosis> GetAllDiagnoses()
+        {
+            var result = new List<Diagnosis>
             {
-                var sql = "INSERT INTO Diagnosis (Name) " +
-                          $"VALUES ('{diagnosisName}')";
-                
-            }
+                new Diagnosis() {Name = "Diagnosis1", IcdCode = "1-11", Loinc = "111"},
+                new Diagnosis() {Name = "Diagnosis2", IcdCode = "2-22", Loinc = "222"}
+            };
+            //TODO: remove stub
+            return result;
+        }
+
+        public void CreateNewPatient(CreatePatientDto patientDto)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<Patient> GetAllPatients()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

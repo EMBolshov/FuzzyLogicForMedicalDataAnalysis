@@ -41,9 +41,11 @@ namespace WebApi
                 c.IncludeXmlComments(_appPath);
             });
 
+            //todo: AddTransient vs AddScoped
             services.Configure<Config>(Configuration.GetSection("Config"));
             services.AddTransient<IMainProcessingRepository, MainRepositoryWrapper>();
-            services.AddTransient<IDiagnosisProvider, DiagnosisProvider>();
+            services.AddTransient<IDiagnosisProvider, DiagnosisDbProvider>();
+            services.AddScoped<IPatientProvider, PatientDbProvider>();
             //services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
         }
 

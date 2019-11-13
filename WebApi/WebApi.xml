@@ -9,7 +9,7 @@
             
             </summary>
         </member>
-        <member name="M:WebApi.Controllers.DiagnosisController.#ctor(WebApi.Interfaces.IDiagnosisProvider)">
+        <member name="M:WebApi.Controllers.DiagnosisController.#ctor(WebApi.Interfaces.IDiagnosisDbProvider)">
             <summary>
             
             </summary>
@@ -45,28 +45,28 @@
             </summary>
             <param name="value"></param>
         </member>
-        <member name="T:WebApi.Implementations.DiagnosisProvider">
+        <member name="T:WebApi.Implementations.DiagnosisDbProvider">
             <summary>
             
             </summary>
         </member>
-        <member name="M:WebApi.Implementations.DiagnosisProvider.#ctor(Repository.IMainProcessingRepository)">
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.#ctor(Repository.IMainProcessingRepository)">
             <summary>
             
             </summary>
             <param name="repo"></param>
         </member>
-        <member name="M:WebApi.Implementations.DiagnosisProvider.GetAllDiagnoses">
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.GetAllDiagnoses">
             <summary>
             
             </summary>
             <returns></returns>
         </member>
-        <member name="M:WebApi.Implementations.DiagnosisProvider.CreateNewDiagnosis(System.String)">
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.CreateNewDiagnosis(System.String)">
             <summary>
             
             </summary>
-            <param name="diagnosisName"></param>
+            <param name="dto"></param>
         </member>
         <member name="T:WebApi.Implementations.MainRepositoryWrapper">
             <summary>
@@ -83,7 +83,7 @@
             <summary>
             
             </summary>
-            <param name="diagnosisName"></param>
+            <param name="dto"></param>
         </member>
         <member name="T:WebApi.POCO.Config">
             <summary>

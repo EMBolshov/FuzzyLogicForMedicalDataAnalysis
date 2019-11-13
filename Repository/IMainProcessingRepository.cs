@@ -1,7 +1,14 @@
-﻿namespace Repository
+﻿using System.Collections.Generic;
+using POCO.Domain;
+using WebApi.POCO;
+
+namespace Repository
 {
     public interface IMainProcessingRepository
     {
-        void CreateNewDiagnosis(string diagnosisName);
+        void CreateNewDiagnosis(CreateDiagnosisDto diagnosisDto);
+        List<Diagnosis> GetAllDiagnoses();
+        void CreateNewPatient(CreatePatientDto patientDto);
+        List<Patient> GetAllPatients();
     }
 }

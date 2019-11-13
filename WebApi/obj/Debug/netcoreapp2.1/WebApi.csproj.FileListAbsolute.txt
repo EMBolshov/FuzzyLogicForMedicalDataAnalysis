@@ -16,7 +16,6 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\net
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\WebApi.runtimeconfig.dev.json
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\WebApi.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\WebApi.pdb
-C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\WebApi.xml
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.csprojAssemblyReference.cache
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\POCO.Domain.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\Repository.dll
