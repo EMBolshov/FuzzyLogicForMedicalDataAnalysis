@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using POCO.Domain.Dto;
 using WebApi.Interfaces;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using POCO.Domain.Dto;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Interfaces;
 
 namespace WebApi.Controllers

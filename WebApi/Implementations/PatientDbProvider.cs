@@ -3,7 +3,6 @@ using POCO.Domain;
 using POCO.Domain.Dto;
 using Repository;
 using WebApi.Interfaces;
-using WebApi.POCO;
 
 namespace WebApi.Implementations
 {
