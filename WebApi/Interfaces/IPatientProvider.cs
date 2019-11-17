@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using POCO.Domain;
+using POCO.Domain.Dto;
 using WebApi.POCO;
 
 namespace WebApi.Interfaces

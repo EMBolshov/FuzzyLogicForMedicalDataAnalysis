@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using POCO.Domain;
 using POCO.Domain.Dto;
-using WebApi.POCO;
 
 namespace Repository
 {
@@ -14,5 +13,7 @@ namespace Repository
         List<Patient> GetAllPatients();
         void CreateAnalysisResult(CreateAnalysisResultDto dto);
         List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid);
+        void CreateRule(CreateRuleDto ruleDto);
+        List<Rule> GetAllRules();
     }
 }

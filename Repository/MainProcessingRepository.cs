@@ -4,7 +4,6 @@ using Dapper;
 using Npgsql;
 using POCO.Domain;
 using POCO.Domain.Dto;
-using WebApi.POCO;
 
 namespace Repository
 {
@@ -81,6 +80,16 @@ namespace Repository
 
         //todo
         public List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateRule(CreateRuleDto ruleDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Rule> GetAllRules()
         {
             throw new NotImplementedException();
         }

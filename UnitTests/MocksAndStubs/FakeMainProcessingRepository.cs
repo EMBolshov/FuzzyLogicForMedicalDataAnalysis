@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using POCO.Domain;
 using POCO.Domain.Dto;
 using Repository;
-using WebApi.POCO;
 
 namespace UnitTests.MocksAndStubs
 {

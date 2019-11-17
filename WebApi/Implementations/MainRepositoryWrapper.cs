@@ -47,5 +47,15 @@ namespace WebApi.Implementations
         {
             return _repo.GetAnalysisResultsByPatientGuid(patientGuid);
         }
+
+        public void CreateRule(CreateRuleDto ruleDto)
+        {
+            _repo.CreateRule(ruleDto);
+        }
+
+        public List<Rule> GetAllRules()
+        {
+            return _repo.GetAllRules();
+        }
     }
 }
