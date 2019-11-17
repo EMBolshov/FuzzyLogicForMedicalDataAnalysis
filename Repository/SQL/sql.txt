@@ -1,0 +1,89 @@
+﻿CREATE DATABASE "MainProcessingDb"
+
+----------------------------------------------------------------------------
+CREATE TABLE "Rule"
+(
+  "Id" bigint NOT NULL,
+  "Guid" uuid NOT NULL,
+  "DiagnosisName" character varying(250) NOT NULL,
+  "Analysis" character varying(250) NOT NULL,  
+  "Power" decimal NULL,
+  "InputTermName" character varying(250) NOT NULL,
+  "IsRemoved" boolean NOT NULL DEFAULT false,
+  CONSTRAINT "PK_Rule" PRIMARY KEY ("Id")  
+)
+WITH (
+  OIDS=FALSE
+);
+
+----------------------------------------------------------------------------
+
+CREATE TABLE "Diagnosis"
+(
+  "Id" bigint NOT NULL,
+  "Name" character varying(250) NOT NULL,
+  "Guid" uuid NOT NULL,  
+  "MkbCode" character varying(250) NULL, 
+  "Loinc" character varying(250) NULL, 
+  "IsRemoved" boolean NOT NULL DEFAULT false,
+  CONSTRAINT "PK_Diagnosis" PRIMARY KEY ("Id"),
+  CONSTRAINT unq_diagnosis_name UNIQUE ("Name")
+)
+WITH (
+  OIDS=FALSE
+);
+
+----------------------------------------------------------------------------
+
+CREATE TABLE "AnalysisResult"
+(
+  "Id" bigint NOT NULL,  
+  "Guid" uuid NOT NULL,  
+  "PatientGuid" uuid NOT NULL, 
+  "InsertedDate" timestamp without time zone NOT NULL,
+  "AnalysisName" character varying(1024) NOT NULL, 
+  "TestName" character varying(1024) NOT NULL, 
+  "ReportedName" character varying(1024) NOT NULL,
+  "Entry" decimal NOT NULL,
+  "FormattedEntry" character varying(1024) NULL, 
+  "ReferenceLow" decimal NULL,
+  "ReferenceHigh" decimal NULL,
+  "IsRemoved" boolean NOT NULL DEFAULT false,
+  CONSTRAINT "PK_AnalysisResult" PRIMARY KEY ("Id")
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+
+----------------------------------------------------------------------------
+
+CREATE TABLE "Patient"
+(
+  "Id" bigint NOT NULL,  
+  "Guid" uuid NOT NULL,    
+  "InsertedDate" timestamp without time zone NOT NULL,
+  "FirstName" character varying(250) NULL, 
+  "MiddleName" character varying(250) NULL, 
+  "LastName" character varying(250) NULL, 
+  "Age" int NOT NULL,
+  "Gender" character varying(10) NOT NULL,   
+  "IsRemoved" boolean NOT NULL DEFAULT false,
+  CONSTRAINT "PK_Patient" PRIMARY KEY ("Id")
+)
+WITH (
+  OIDS=FALSE
+);
+
+----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+

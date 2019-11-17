@@ -292,7 +292,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
             };
         }
 
-        public List<Rule> CreateRules()
+        public List<FuzzyRule> CreateRules()
         {
             var medicalDataManager = new FakeMedicalDataManager();
             return medicalDataManager.GetAllFakeRules();

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 {
-    public class Rule
+    public class FuzzyRule
     {
         public int Id { get; set; }
         public List<InputTerm> InputTerms { get; set; } 
@@ -12,11 +12,11 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
         public void GetPower(List<AnalysisResult> results)
         {
-            var affiliations = new Dictionary<string, decimal>();
-            //добавлено на случай, если считаем по сумме
+            var affiliations = new Dictionary<AnalysisResult, decimal>();
+
             foreach (var result in results)
             {
-                affiliations.Add(result.AnalysisName, 0m);
+                affiliations.Add(result, 0m);
             }
 
             foreach (var inputTerm in InputTerms)
@@ -29,36 +29,45 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
                         {
                             case "Low":
                             {
-                                //if (!affiliations.ContainsKey(result.AnalysisName) ||
-                                //    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
-                                //    result.LowResult.Affiliation)
                                 {
-                                    //affiliations[result.AnalysisName] = result.LowResult.Affiliation;
-                                    affiliations[result.AnalysisName] += result.LowResult.Affiliation;
+                                    if (result.IsKey && result.LowResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += 100;
+                                    }
+                                    else if (result.LowResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += result.LowResult.Affiliation;
+                                    }
                                 }
                                 
                                 break;
                             }
                             case "Mid":
                             {
-                                //if (!affiliations.ContainsKey(result.AnalysisName) ||
-                                //    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
-                                //    result.MidResult.Affiliation)
                                 {
-                                    //affiliations[result.AnalysisName] = result.MidResult.Affiliation;
-                                    affiliations[result.AnalysisName] += result.MidResult.Affiliation;
+                                    if (result.IsKey && result.MidResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += 100;
+                                    }
+                                    else if(result.MidResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += result.MidResult.Affiliation;
+                                    }
                                 }
 
                                 break;
                             }
                             case "High":
                             {
-                                //if (!affiliations.ContainsKey(result.AnalysisName) ||
-                                //    affiliations.FirstOrDefault(x => x.Key == result.AnalysisName).Value <
-                                //    result.HighResult.Affiliation)
                                 {
-                                    //affiliations[result.AnalysisName] = result.HighResult.Affiliation;
-                                    affiliations[result.AnalysisName] += result.HighResult.Affiliation;
+                                    if (result.IsKey && result.HighResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += 100;
+                                    }
+                                    else if (result.HighResult.Affiliation > 0)
+                                    {
+                                        affiliations[result] += result.HighResult.Affiliation;
+                                    }
                                 }
 
                                 break;
@@ -70,13 +79,13 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
 
             Power = 0;
 
+            //var positiveAffiliations = affiliations.Where(x => x.Value > 0).ToDictionary(x => x.Key, x => x.Value);
             if (affiliations.Count > 0)
             {
                 Power = affiliations.Values.Min();
                 affiliations.Clear();
             }
             
-            //добавлено на случай, если считаем по сумме.
             if (Power > 100)
             {
                 Power = 100;

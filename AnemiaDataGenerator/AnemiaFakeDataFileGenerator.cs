@@ -176,9 +176,9 @@ namespace RealDataGenerator
 
         public void MakeRules()
         {
-            var allRules = new List<Rule>
+            var allRules = new List<FuzzyRule>
             {
-                new Rule()
+                new FuzzyRule()
                 {
                     Id = 1,
                     InputTerms = new List<InputTerm>()
@@ -232,7 +232,7 @@ namespace RealDataGenerator
 
                     OutputTerms = new List<string>(){"Железодефицитная анемия (ЖДА)"},
                 },
-                new Rule()
+                new FuzzyRule()
                 {
                     Id = 2,
                     InputTerms = new List<InputTerm>()
@@ -286,7 +286,7 @@ namespace RealDataGenerator
 
                     OutputTerms = new List<string>(){"Анемия хронических заболеваний (АХЗ)"},
                 },
-                new Rule()
+                new FuzzyRule()
                 {
                     Id = 3,
                     InputTerms = new List<InputTerm>()
@@ -335,7 +335,7 @@ namespace RealDataGenerator
 
                     OutputTerms = new List<string>(){"B12-дефицитная анемия"},
                 },
-                new Rule()
+                new FuzzyRule()
                 {
                     Id = 4,
                     InputTerms = new List<InputTerm>()
