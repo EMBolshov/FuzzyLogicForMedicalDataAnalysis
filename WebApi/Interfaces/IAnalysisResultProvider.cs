@@ -21,5 +21,9 @@ namespace WebApi.Interfaces
         /// </summary>
         /// <param name="dto"></param>
         void CreateNewAnalysisResult(CreateAnalysisResultDto dto);
+
+        void LoadAnalysisResultsFromFile(string path);
+
+        void LoadPatientsFromFile(string path);
     }
 }

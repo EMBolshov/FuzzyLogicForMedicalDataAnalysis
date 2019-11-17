@@ -41,7 +41,9 @@ CREATE TABLE "AnalysisResult"
   "Guid" uuid NOT NULL,  
   "PatientGuid" uuid NOT NULL, 
   "InsertedDate" timestamp without time zone NOT NULL,
-  "AnalysisName" character varying(250) NOT NULL, 
+  "AnalysisName" character varying(1024) NOT NULL, 
+  "TestName" character varying(1024) NOT NULL, 
+  "ReportedName" character varying(1024) NOT NULL,
   "Entry" decimal NOT NULL,
   "FormattedEntry" character varying(1024) NULL, 
   "ReferenceLow" decimal NULL,
@@ -52,6 +54,8 @@ CREATE TABLE "AnalysisResult"
 WITH (
   OIDS=FALSE
 );
+
+
 
 ----------------------------------------------------------------------------
 

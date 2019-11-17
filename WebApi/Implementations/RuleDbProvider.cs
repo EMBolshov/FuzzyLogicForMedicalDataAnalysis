@@ -11,6 +11,11 @@ namespace WebApi.Implementations
     {
         private readonly IMainProcessingRepository _repo;
 
+        public RuleDbProvider(IMainProcessingRepository repo)
+        {
+            _repo = repo;
+        }
+
         public List<Rule> GetAllRules()
         {
             return _repo.GetAllRules();

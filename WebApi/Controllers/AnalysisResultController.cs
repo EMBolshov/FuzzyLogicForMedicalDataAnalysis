@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <param name="dto"></param>
         [HttpPost("CreateAnalysisResult")]
-        public void CreateNewDiagnosis([FromBody] CreateAnalysisResultDto dto)
+        public void CreateNewAnalysisResult([FromBody] CreateAnalysisResultDto dto)
         {
             _analysisResultProvider.CreateNewAnalysisResult(dto);
         }
@@ -33,7 +33,7 @@ namespace WebApi.Controllers
         /// 
         /// </summary>
         [HttpGet("GetAnalysisResultsByPatientGuid")]
-        public void GetAllDiagnoses(Guid patientGuid)
+        public void GetAnalysisResultsByPatientGuid(Guid patientGuid)
         {
             _analysisResultProvider.GetAnalysisResultsByPatientGuid(patientGuid);
         }

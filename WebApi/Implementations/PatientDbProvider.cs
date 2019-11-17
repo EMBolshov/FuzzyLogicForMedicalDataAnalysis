@@ -11,6 +11,11 @@ namespace WebApi.Implementations
     {
         private readonly IMainProcessingRepository _repo;
 
+        public PatientDbProvider(IMainProcessingRepository repo)
+        {
+            _repo = repo;
+        }
+
         public List<Patient> GetAllPatients()
         {
             return _repo.GetAllPatients();

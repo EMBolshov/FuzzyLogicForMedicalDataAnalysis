@@ -14,6 +14,18 @@
           "lib/netstandard2.0/Dapper.dll": {}
         }
       },
+      "FileHelpers/3.4.1": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "2.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/FileHelpers.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FileHelpers.dll": {}
+        }
+      },
       "Microsoft.AspNet.WebApi.Client/5.2.6": {
         "type": "package",
         "dependencies": {
@@ -4472,6 +4484,22 @@
         "lib/net461/Dapper.xml",
         "lib/netstandard2.0/Dapper.dll",
         "lib/netstandard2.0/Dapper.xml"
+      ]
+    },
+    "FileHelpers/3.4.1": {
+      "sha512": "7mETxuw4ChoYLYChbWtSEDlZebOzZQrkUfFkl14P57PalDayQWU0gJeOiQG4Vpl64YgDdj4LxakyI5J0NYnR6Q==",
+      "type": "package",
+      "path": "filehelpers/3.4.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "filehelpers.3.4.1.nupkg.sha512",
+        "filehelpers.nuspec",
+        "lib/net40/FileHelpers.dll",
+        "lib/net40/FileHelpers.xml",
+        "lib/net45/FileHelpers.dll",
+        "lib/net45/FileHelpers.xml",
+        "lib/netstandard2.0/FileHelpers.dll"
       ]
     },
     "Microsoft.AspNet.WebApi.Client/5.2.6": {
@@ -12094,6 +12122,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.1": [
       "Dapper >= 2.0.30",
+      "FileHelpers >= 3.4.1",
       "Microsoft.AspNetCore.App >= 2.1.1",
       "Microsoft.AspNetCore.Razor.Design >= 2.1.2",
       "Microsoft.NETCore.App >= 2.1.0",
@@ -12153,6 +12182,10 @@
           "Dapper": {
             "target": "Package",
             "version": "[2.0.30, )"
+          },
+          "FileHelpers": {
+            "target": "Package",
+            "version": "[3.4.1, )"
           },
           "Microsoft.AspNetCore.App": {
             "suppressParent": "All",

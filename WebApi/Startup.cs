@@ -48,6 +48,7 @@ namespace WebApi
             services.AddScoped<IPatientProvider, PatientDbProvider>();
             services.AddScoped<IAnalysisResultProvider, AnalysisResultDbProvider>();
             services.AddScoped<IRuleProvider, RuleDbProvider>();
+            services.AddScoped<IFileParser, FileParser>();
             //services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
         }
 

@@ -145,8 +145,6 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 x.AnalysisResults.Where(y => y.AnalysisName == "Гематокрит"
                                              && y.HighResult.Affiliation > 0).ToList()).ToList();
             var ahzPatientsHighGematocritCount = ahzPatientsHighGematocrit.Count;
-
-            var stop = "";
         }
 
         [TestMethod]
