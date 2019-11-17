@@ -8,17 +8,24 @@ namespace FuzzyLogicMedicalCore.BL.FuzzyLogic
     {
         public string Name { get; set; }
         public decimal Affiliation { get; set; }
-        public List<Rule> Rules { get; set; }
+        public List<FuzzyRule> Rules { get; set; }
         public Guid PatientGuid { get; set; }
 
         public void GetAffiliation()
         {
-            Affiliation = Rules.Max(x => x.Power);
+            if (Rules.Count > 0)
+            {
+                Affiliation = Rules.Max(x => x.Power);
+            }
+            else
+            {
+                Affiliation = 0;
+            }
         }
 
         public Diagnosis()
         {
-            Rules = new List<Rule>();
+            Rules = new List<FuzzyRule>();
         }
     }
 }

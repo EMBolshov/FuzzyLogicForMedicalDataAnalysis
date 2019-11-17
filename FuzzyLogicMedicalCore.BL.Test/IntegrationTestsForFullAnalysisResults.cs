@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FuzzyLogicMedicalCore.BL.Test
 {
     [TestClass]
-    public class IntegrationTests
+    public class IntegrationTestsForFullAnalysisResults
     {
         [TestMethod]
         // ReSharper disable once InconsistentNaming
@@ -24,13 +24,13 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 CreateAnalysisResult(patient.Guid, "Железо в сыворотке", 6.6m, 26m, 6.7m),
                 CreateAnalysisResult(patient.Guid, "Ферритин", 10m, 120m, 90m),
                 CreateAnalysisResult(patient.Guid, "Витамин B12", 191m, 663m, 258m),
-                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 9m),
+                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 9m)
             };
             var rules = CreateRules();
             var diagnoses = CreateDiagnoses();
-            var reportGenerator = new ReportGenerator("C:\\Users\\ПК\\source\\repos\\" +
-                                                      "FuzzyLogicForMedicalDataAnalysis\\" +
-                                                      $"TestResults\\IntegrationTest_AHZ_patient_{patient.Guid}.txt");
+            var reportGenerator = new ReportGenerator(
+                "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\" +
+                $"TestResults\\IntegrationTestFullResults_AHZ_patient_{patient.Guid}.txt");
 
             //Act
             diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
@@ -89,13 +89,13 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 CreateAnalysisResult(patient.Guid, "Железо в сыворотке", 6.6m, 26m, 10.1m),
                 CreateAnalysisResult(patient.Guid, "Ферритин", 10m, 120m, 62m),
                 CreateAnalysisResult(patient.Guid, "Витамин B12", 191m, 663m, 101.6m),
-                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 7.5m),
+                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 7.5m)
             };
             var rules = CreateRules();
             var diagnoses = CreateDiagnoses();
-            var reportGenerator = new ReportGenerator("C:\\Users\\ПК\\source\\repos\\" +
-                                                      "FuzzyLogicForMedicalDataAnalysis\\" +
-                                                      $"TestResults\\IntegrationTest_B12_patient_{patient.Guid}.txt");
+            var reportGenerator = new ReportGenerator(
+                "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\" +
+                $"TestResults\\IntegrationTestFullResults_B12_patient_{patient.Guid}.txt");
 
             //Act
             diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
@@ -154,13 +154,13 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 CreateAnalysisResult(patient.Guid, "Железо в сыворотке", 11m, 28m, 7.1m),
                 CreateAnalysisResult(patient.Guid, "Ферритин", 20m, 250m, 15m),
                 CreateAnalysisResult(patient.Guid, "Витамин B12", 191m, 663m, 263m),
-                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 9.7m),
+                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 9.7m)
             };
             var rules = CreateRules();
             var diagnoses = CreateDiagnoses();
-            var reportGenerator = new ReportGenerator("C:\\Users\\ПК\\source\\repos\\" +
-                                                      "FuzzyLogicForMedicalDataAnalysis\\" +
-                                                      $"TestResults\\IntegrationTest_JDA_patient_{patient.Guid}.txt");
+            var reportGenerator = new ReportGenerator(
+                "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\" +
+                $"TestResults\\IntegrationTestFullResults_JDA_patient_{patient.Guid}.txt");
 
             //Act
             diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
@@ -220,13 +220,13 @@ namespace FuzzyLogicMedicalCore.BL.Test
                 CreateAnalysisResult(patient.Guid, "Железо в сыворотке", 11m, 28m, 11.3m),
                 CreateAnalysisResult(patient.Guid, "Ферритин", 20m, 250m, 67m),
                 CreateAnalysisResult(patient.Guid, "Витамин B12", 191m, 663m, 314.8m),
-                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 4m),
+                CreateAnalysisResult(patient.Guid, "Фолат сыворотки", 7m, 39.7m, 4m)
             };
             var rules = CreateRules();
             var diagnoses = CreateDiagnoses();
-            var reportGenerator = new ReportGenerator("C:\\Users\\ПК\\source\\repos\\" +
-                                                      "FuzzyLogicForMedicalDataAnalysis\\" +
-                                                      $"TestResults\\IntegrationTest_Fol_patient_{patient.Guid}.txt");
+            var reportGenerator = new ReportGenerator(
+                "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\" +
+                $"TestResults\\IntegrationTestFullResults_Fol_patient_{patient.Guid}.txt");
 
             //Act
             diagnoses.ForEach(x => x.PatientGuid = patient.Guid);
@@ -301,7 +301,7 @@ namespace FuzzyLogicMedicalCore.BL.Test
             };
         }
 
-        public List<Rule> CreateRules()
+        public List<FuzzyRule> CreateRules()
         {
             var medicalDataManager = new FakeMedicalDataManager();
             return medicalDataManager.GetAllFakeRules();

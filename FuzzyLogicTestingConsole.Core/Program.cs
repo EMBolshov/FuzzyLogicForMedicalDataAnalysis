@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 using FuzzyLogicMedicalCore.BL.ReportGeneration;
-using Microsoft.Extensions.Configuration;
 
 namespace FuzzyLogicTestingConsole.Core
 {
@@ -36,7 +35,7 @@ namespace FuzzyLogicTestingConsole.Core
 
                 foreach (var rule in fakeRules)
                 {
-                    Console.WriteLine($"Rule: {rule.Id}, Power: {rule.Power}");
+                    Console.WriteLine($"FuzzyRule: {rule.Id}, Power: {rule.Power}");
                     medicalDataManager.GetDiagnosisAffiliation(fakeDiagnoses, rule);
                 }
 

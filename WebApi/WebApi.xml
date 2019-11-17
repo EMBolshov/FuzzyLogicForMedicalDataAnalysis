@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WebApi</name>
+    </assembly>
+    <members>
+        <member name="T:WebApi.Controllers.DiagnosisController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.DiagnosisController.#ctor(WebApi.Interfaces.IDiagnosisDbProvider)">
+            <summary>
+            
+            </summary>
+            <param name="diagnosisProvider"></param>
+        </member>
+        <member name="M:WebApi.Controllers.DiagnosisController.CreateDiagnosis(WebApi.POCO.CreateDiagnosisDto)">
+            <summary>
+            
+            </summary>
+            <param name="name"></param>
+        </member>
+        <member name="M:WebApi.Controllers.DiagnosisController.GetAllDiagnoses">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WebApi.Controllers.ProcessingController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Controllers.ProcessingController.Get(System.Int32)">
+            <summary>
+            Temp
+            </summary>
+            <param name="id">paramTest</param>
+            <remarks>QWEQWE</remarks>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Controllers.ProcessingController.Post(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="T:WebApi.Implementations.DiagnosisDbProvider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.#ctor(Repository.IMainProcessingRepository)">
+            <summary>
+            
+            </summary>
+            <param name="repo"></param>
+        </member>
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.GetAllDiagnoses">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WebApi.Implementations.DiagnosisDbProvider.CreateDiagnosis(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
+        </member>
+        <member name="T:WebApi.Implementations.MainRepositoryWrapper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:WebApi.Implementations.MainRepositoryWrapper.#ctor(Microsoft.Extensions.Options.IOptions{WebApi.POCO.Config})">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:WebApi.Implementations.MainRepositoryWrapper.CreateDiagnosis(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="dto"></param>
+        </member>
+        <member name="T:WebApi.POCO.Config">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WebApi.POCO.Config.MainProcessingConnectionString">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WebApi.POCO.CreateDiagnosisDto">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WebApi.POCO.DatabaseOptions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:WebApi.POCO.DatabaseOptions.ConnectionString">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

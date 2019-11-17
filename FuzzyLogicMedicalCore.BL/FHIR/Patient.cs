@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 
 namespace FuzzyLogicMedicalCore.BL.FHIR
 {
@@ -11,5 +13,12 @@ namespace FuzzyLogicMedicalCore.BL.FHIR
         public string LastName { get; set; }
         public string Gender { get; set; }
         public int Age { get; set; }
+        public List<AnalysisResult> AnalysisResults { get; set; }
+        public List<Diagnosis> Diagnoses { get; set; }
+
+        public Patient()
+        {
+            AnalysisResults = new List<AnalysisResult>();
+        }
     }
 }
