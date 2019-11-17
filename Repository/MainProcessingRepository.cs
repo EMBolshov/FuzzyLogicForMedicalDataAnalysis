@@ -31,8 +31,8 @@ namespace Repository
         {
             var result = new List<Diagnosis>
             {
-                new Diagnosis() {Name = "Diagnosis1", IcdCode = "1-11", Loinc = "111"},
-                new Diagnosis() {Name = "Diagnosis2", IcdCode = "2-22", Loinc = "222"}
+                new Diagnosis() {Name = "Diagnosis1", MkbCode = "1-11", Loinc = "111"},
+                new Diagnosis() {Name = "Diagnosis2", MkbCode = "2-22", Loinc = "222"}
             };
             //TODO: remove stub
             return result;
