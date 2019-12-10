@@ -13,7 +13,7 @@ namespace WebApi.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-        List<Rule> GetAllRules();
+        List<Rule> GetAllActiveRules();
 
         /// <summary>
         /// 

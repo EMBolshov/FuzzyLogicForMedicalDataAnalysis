@@ -15,9 +15,9 @@ namespace WebApi.Implementations
             _repo = repo;
         }
 
-        public List<Rule> GetAllRules()
+        public List<Rule> GetAllActiveRules()
         {
-            return _repo.GetAllRules();
+            return _repo.GetAllActiveRules();
         }
 
         public void CreateRule(CreateRuleDto dto)

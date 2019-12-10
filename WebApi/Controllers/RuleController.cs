@@ -5,7 +5,7 @@ using WebApi.Interfaces;
 namespace WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// CRUD for rules
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -19,22 +19,19 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Create new rule
         /// </summary>
         /// <param name="dto"></param>
         [HttpPost("CreateRule")]
-        public void CreateNewDiagnosis([FromBody] CreateRuleDto dto)
+        public void CreateNewRule([FromBody] CreateRuleDto dto)
         {
             _ruleProvider.CreateRule(dto);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        [HttpGet("GetAllRules")]
-        public void GetAllRules()
+        [HttpGet("GetAllActiveRules")]
+        public void GetAllActiveRules()
         {
-            _ruleProvider.GetAllRules();
+            _ruleProvider.GetAllActiveRules();
         }
     }
 }

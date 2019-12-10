@@ -50,7 +50,7 @@ namespace UnitTests.MocksAndStubs
             throw new NotImplementedException();
         }
 
-        public List<Rule> GetAllRules()
+        public List<Rule> GetAllActiveRules()
         {
             throw new NotImplementedException();
         }

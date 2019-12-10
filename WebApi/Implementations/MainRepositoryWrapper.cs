@@ -53,9 +53,9 @@ namespace WebApi.Implementations
             _repo.CreateRule(ruleDto);
         }
 
-        public List<Rule> GetAllRules()
+        public List<Rule> GetAllActiveRules()
         {
-            return _repo.GetAllRules();
+            return _repo.GetAllActiveRules();
         }
     }
 }

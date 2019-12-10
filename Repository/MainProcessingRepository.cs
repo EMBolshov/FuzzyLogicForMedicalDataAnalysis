@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Dapper;
 using Npgsql;
 using POCO.Domain;
@@ -86,12 +87,29 @@ namespace Repository
 
         public void CreateRule(CreateRuleDto ruleDto)
         {
-            throw new NotImplementedException();
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "INSERT INTO Rule (Guid, DiagnosisName, Analysis, Power, InputTermName, IsRemoved) " +
+                          $"VALUES ('{ruleDto.Guid}', '{ruleDto.DiagnosisName}', '{ruleDto.Analysis}', " +
+                          $"'{ruleDto.Power}', '{ruleDto.InputTermName}', '{ruleDto.IsRemoved}')";
+
+                context.Execute(sql);
+            }
         }
 
-        public List<Rule> GetAllRules()
+        public List<Rule> GetAllActiveRules()
         {
-            throw new NotImplementedException();
+            List<Rule> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "SELECT Id, Guid, DiagnosisName, Analysis, Power, InputTermName, IsRemoved " +
+                          "FROM Rule WHERE IsRemoved = False";
+
+                result = context.Query<Rule>(sql).ToList();
+            }
+
+            return result;
         }
     }
 }
