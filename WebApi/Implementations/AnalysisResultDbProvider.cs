@@ -28,6 +28,11 @@ namespace WebApi.Implementations
             _repo.CreateAnalysisResult(dto);
         }
 
+        public void RemoveAnalysisResult(Guid analysisResultGuid)
+        {
+            _repo.RemoveAnalysisResultByGuid(analysisResultGuid);
+        }
+
         public void LoadAnalysisResultsFromFile(string path)
         {
             var analysisResults = _parser.GetAnalysisResultsFromCsv(path);

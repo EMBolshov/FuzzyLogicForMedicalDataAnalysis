@@ -25,12 +25,22 @@ namespace UnitTests.MocksAndStubs
             return result;
         }
 
+        public void RemoveDiagnosisByGuid(Guid diagnosisGuid)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CreatePatient(CreatePatientDto patientDto)
         {
             throw new NotImplementedException();
         }
 
         public List<Patient> GetAllPatients()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemovePatientByGuid(Guid patientGuid)
         {
             throw new NotImplementedException();
         }
@@ -45,12 +55,22 @@ namespace UnitTests.MocksAndStubs
             throw new NotImplementedException();
         }
 
+        public void RemoveAnalysisResultByGuid(Guid analysisResultGuid)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CreateRule(CreateRuleDto ruleDto)
         {
             throw new NotImplementedException();
         }
 
         public List<Rule> GetAllActiveRules()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveRuleByGuid(Guid ruleGuid)
         {
             throw new NotImplementedException();
         }

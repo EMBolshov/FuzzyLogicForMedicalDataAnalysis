@@ -9,11 +9,15 @@ namespace Repository
     {
         void CreateDiagnosis(CreateDiagnosisDto diagnosisDto);
         List<Diagnosis> GetAllDiagnoses();
+        void RemoveDiagnosisByGuid(Guid diagnosisGuid);
         void CreatePatient(CreatePatientDto patientDto);
         List<Patient> GetAllPatients();
+        void RemovePatientByGuid(Guid patientGuid);
         void CreateAnalysisResult(CreateAnalysisResultDto dto);
         List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid);
+        void RemoveAnalysisResultByGuid(Guid analysisResultGuid);
         void CreateRule(CreateRuleDto ruleDto);
         List<Rule> GetAllActiveRules();
+        void RemoveRuleByGuid(Guid ruleGuid);
     }
 }

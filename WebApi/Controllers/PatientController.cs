@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using POCO.Domain;
 using POCO.Domain.Dto;
 using WebApi.Interfaces;
 
 namespace WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// CRUD for patient
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -19,22 +22,32 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Insert new patient into DB
         /// </summary>
-        /// <param name="dto"></param>
-        [HttpPost("CreatePatient")]
-        public void CreateNewDiagnosis([FromBody] CreatePatientDto dto)
+        /// <param name="dto">DTO with all patient info</param>
+        [HttpPost("CreateNewPatient")]
+        public void CreateNewPatient([FromBody] CreatePatientDto dto)
         {
             _patientProvider.CreateNewPatient(dto);
         }
 
         /// <summary>
-        /// 
+        /// Get all patients from DB with IsRemoved = false
         /// </summary>
         [HttpGet("GetAllPatients")]
-        public void GetAllDiagnoses()
+        public List<Patient> GetAllPatients()
         {
-            _patientProvider.GetAllPatients();
+            return _patientProvider.GetAllPatients();
+        }
+
+        /// <summary>
+        /// Set IsRemoved = true for patient by GUID
+        /// </summary>
+        /// <param name="patientGuid">Patient's GUID</param>
+        [HttpPost("RemovePatient")]
+        public void RemovePatient([FromBody] Guid patientGuid)
+        {
+            _patientProvider.RemovePatient(patientGuid);
         }
     }
 }

@@ -28,6 +28,11 @@ namespace WebApi.Implementations
             return _repo.GetAllDiagnoses();
         }
 
+        public void RemoveDiagnosisByGuid(Guid diagnosisGuid)
+        {
+            _repo.RemoveDiagnosisByGuid(diagnosisGuid);
+        }
+
         public void CreatePatient(CreatePatientDto dto)
         {
             _repo.CreatePatient(dto);
@@ -36,6 +41,11 @@ namespace WebApi.Implementations
         public List<Patient> GetAllPatients()
         {
             return _repo.GetAllPatients();
+        }
+
+        public void RemovePatientByGuid(Guid patientGuid)
+        {
+            _repo.RemovePatientByGuid(patientGuid);
         }
 
         public void CreateAnalysisResult(CreateAnalysisResultDto dto)
@@ -48,6 +58,11 @@ namespace WebApi.Implementations
             return _repo.GetAnalysisResultsByPatientGuid(patientGuid);
         }
 
+        public void RemoveAnalysisResultByGuid(Guid analysisResultGuid)
+        {
+            _repo.RemoveAnalysisResultByGuid(analysisResultGuid);
+        }
+
         public void CreateRule(CreateRuleDto ruleDto)
         {
             _repo.CreateRule(ruleDto);
@@ -56,6 +71,11 @@ namespace WebApi.Implementations
         public List<Rule> GetAllActiveRules()
         {
             return _repo.GetAllActiveRules();
+        }
+
+        public void RemoveRuleByGuid(Guid ruleGuid)
+        {
+            _repo.RemoveRuleByGuid(ruleGuid);
         }
     }
 }

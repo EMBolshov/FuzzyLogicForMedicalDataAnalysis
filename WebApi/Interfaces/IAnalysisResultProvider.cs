@@ -10,17 +10,11 @@ namespace WebApi.Interfaces
     /// </summary>
     public interface IAnalysisResultProvider
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dto"></param>
         void CreateNewAnalysisResult(CreateAnalysisResultDto dto);
+
+        void RemoveAnalysisResult(Guid analysisResultGuid);
 
         void LoadAnalysisResultsFromFile(string path);
 

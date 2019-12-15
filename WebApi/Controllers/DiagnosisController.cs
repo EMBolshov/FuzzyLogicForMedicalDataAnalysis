@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using POCO.Domain;
 using POCO.Domain.Dto;
 using WebApi.Interfaces;
 
 namespace WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// CRUD for diagnosis
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -19,22 +22,32 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Insert new diagnosis in DB
         /// </summary>
-        /// <param name="dto"></param>
-        [HttpPost("CreateDiagnosis")]
+        /// <param name="dto">DTO with all diagnosis info</param>
+        [HttpPost("CreateNewDiagnosis")]
         public void CreateNewDiagnosis([FromBody] CreateDiagnosisDto dto)
         {
             _diagnosisProvider.CreateNewDiagnosis(dto);
         }
 
         /// <summary>
-        /// 
+        /// Get all diagnosis with IsRemoved = false
         /// </summary>
         [HttpGet("GetAllDiagnoses")]
-        public void GetAllDiagnoses()
+        public List<Diagnosis> GetAllDiagnoses()
         {
-            _diagnosisProvider.GetAllDiagnoses();
+            return _diagnosisProvider.GetAllDiagnoses();
+        }
+
+        /// <summary>
+        /// Set IsRemoved = true for diagnosis in DB
+        /// </summary>
+        /// <param name="diagnosisGuid">Diagnosis's GUID</param>
+        [HttpPost("RemoveDiagnosis")]
+        public void RemoveDiagnosis([FromBody] Guid diagnosisGuid)
+        {
+            _diagnosisProvider.RemoveDiagnosis(diagnosisGuid);
         }
     }
 }

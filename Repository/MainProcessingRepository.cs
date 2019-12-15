@@ -16,73 +16,127 @@ namespace Repository
         {
             _connectionString = connectionString;
         }
-
-        //TODO
+        
         public void CreateDiagnosis(CreateDiagnosisDto dto)
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "INSERT INTO Diagnosis (Name) " +
-                          $"VALUES ('{dto.DiagnosisName}')";
+                var sql = "INSERT INTO Diagnosis (Name, Guid, MkbCode, IsRemoved) " +
+                          $"VALUES ('{dto.DiagnosisName}, {dto.Guid}, {dto.MkbCode}, {dto.IsRemoved}')";
+
                 context.Execute(sql);
             }
         }
 
         public List<Diagnosis> GetAllDiagnoses()
         {
-            var result = new List<Diagnosis>
+            List<Diagnosis> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
             {
-                new Diagnosis() {Name = "Diagnosis1", MkbCode = "1-11", Loinc = "111"},
-                new Diagnosis() {Name = "Diagnosis2", MkbCode = "2-22", Loinc = "222"}
-            };
-            //TODO: remove stub
+                var sql = "SELECT Id, Name, Guid, MkbCode, IsRemoved " +
+                          "FROM Diagnosis WHERE IsRemoved = False";
+
+                result = context.Query<Diagnosis>(sql).ToList();
+            }
+
             return result;
         }
 
-        //TODO
+        public void RemoveDiagnosisByGuid(Guid diagnosisGuid)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "UPDATE Diagnosis set IsRemoved = \'true\' " +
+                          $"WHERE Guid = {diagnosisGuid}";
+
+                context.Execute(sql);
+            }
+        }
+
         public void CreatePatient(CreatePatientDto dto)
         {
-            //TODO
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "INSERT INTO Patient (Guid, InsertedDate, FirstName, " +
+                          "MiddleName, LastName, Age, Gender, IsRemoved) " +
+                          $"VALUES ('{dto.Guid}, {dto.InsertedDate}, {dto.FirstName}, " +
+                          $"{dto.MiddleName}, {dto.LastName}, {dto.Age}, {dto.Gender}, " +
+                          $"{dto.IsRemoved}')";
+
+                context.Execute(sql);
+            }
         }
 
         public List<Patient> GetAllPatients()
         {
-            //todo remove stub
-            var result = new List<Patient>()
+            List<Patient> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
             {
-                new Patient()
-                {
-                    Guid = Guid.NewGuid(),
-                    MiddleName = "MiddleName1",
-                    FirstName = "FirstName1",
-                    LastName = "LastName1",
-                    Age = 23,
-                    Gender = "Male"
-                },
-                new Patient()
-                {
-                    Guid = Guid.NewGuid(),
-                    MiddleName = "MiddleName2",
-                    FirstName = "FirstName2",
-                    LastName = "LastName2",
-                    Age = 35,
-                    Gender = "Female"
-                }
-            };
+                var sql = "SELECT Id, Guid, InsertedDate, FirstName, " +
+                          "MiddleName, LastName, Age, Gender, IsRemoved " +
+                          "FROM Patient WHERE IsRemoved = False";
+
+                result = context.Query<Patient>(sql).ToList();
+            }
 
             return result;
         }
 
-        //todo
-        public void CreateAnalysisResult(CreateAnalysisResultDto dto)
+        public void RemovePatientByGuid(Guid patientGuid)
         {
-            throw new NotImplementedException();
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "UPDATE Patient set IsRemoved = \'true\' " +
+                          $"WHERE Guid = {patientGuid}";
+
+                context.Execute(sql);
+            }
         }
 
-        //todo
+        public void CreateAnalysisResult(CreateAnalysisResultDto dto)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "INSERT INTO AnalysisResult (Guid, PatientGuid, InsertedDate, " +
+                          "AnalysisName, TestName, Loinc, ReportedName, Entry, " +
+                          "FormattedEntry, ReferenceLow, ReferenceHigh, IsRemoved) " +
+                          $"VALUES ('{dto.Guid}, {dto.PatientGuid}, {dto.InsertedDate}, " +
+                          $"{dto.AnalysisName}, {dto.TestName}, {dto.Loinc}, {dto.ReportedName}, " +
+                          $"{dto.Entry}, {dto.FormattedEntry}, {dto.ReferenceLow}, " +
+                          $"{dto.ReferenceHigh}, {dto.IsRemoved}')";
+
+                context.Execute(sql);
+            }
+        }
+        
         public List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid)
         {
-            throw new NotImplementedException();
+            List<AnalysisResult> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "Id, Guid, PatientGuid, InsertedDate, " +
+                          "AnalysisName, TestName, Loinc, ReportedName, Entry, " +
+                          "FormattedEntry, ReferenceLow, ReferenceHigh, IsRemoved " +
+                          "FROM AnalysisResult WHERE IsRemoved = False";
+
+                result = context.Query<AnalysisResult>(sql).ToList();
+            }
+
+            return result;
+        }
+
+        public void RemoveAnalysisResultByGuid(Guid analysisResultGuid)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "UPDATE AnalysisResult set IsRemoved = \'true\' " +
+                          $"WHERE Guid = {analysisResultGuid}";
+
+                context.Execute(sql);
+            }
         }
 
         public void CreateRule(CreateRuleDto ruleDto)
@@ -110,6 +164,17 @@ namespace Repository
             }
 
             return result;
+        }
+
+        public void RemoveRuleByGuid(Guid ruleGuid)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "UPDATE Rule set IsRemoved = \'true\' " +
+                          $"WHERE Guid = {ruleGuid}";
+
+                context.Execute(sql);
+            }
         }
     }
 }

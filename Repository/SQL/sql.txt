@@ -24,7 +24,6 @@ CREATE TABLE "Diagnosis"
   "Name" character varying(250) NOT NULL,
   "Guid" uuid NOT NULL,  
   "MkbCode" character varying(250) NULL, 
-  "Loinc" character varying(250) NULL, 
   "IsRemoved" boolean NOT NULL DEFAULT false,
   CONSTRAINT "PK_Diagnosis" PRIMARY KEY ("Id"),
   CONSTRAINT unq_diagnosis_name UNIQUE ("Name")
@@ -43,6 +42,7 @@ CREATE TABLE "AnalysisResult"
   "InsertedDate" timestamp without time zone NOT NULL,
   "AnalysisName" character varying(1024) NOT NULL, 
   "TestName" character varying(1024) NOT NULL, 
+  "Loinc" character varying(250) NULL, 
   "ReportedName" character varying(1024) NOT NULL,
   "Entry" decimal NOT NULL,
   "FormattedEntry" character varying(1024) NULL, 

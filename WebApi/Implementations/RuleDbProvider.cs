@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using POCO.Domain;
 using POCO.Domain.Dto;
 using Repository;
@@ -23,6 +24,11 @@ namespace WebApi.Implementations
         public void CreateRule(CreateRuleDto dto)
         {
             _repo.CreateRule(dto);
+        }
+
+        public void RemoveRule(Guid ruleGuid)
+        {
+            _repo.RemoveRuleByGuid(ruleGuid);
         }
     }
 }

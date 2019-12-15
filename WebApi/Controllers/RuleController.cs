@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using POCO.Domain;
 using POCO.Domain.Dto;
 using WebApi.Interfaces;
 
@@ -19,19 +22,32 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Create new rule
+        /// Insert new rule in DB
         /// </summary>
-        /// <param name="dto"></param>
-        [HttpPost("CreateRule")]
+        /// <param name="dto">DTO with all rule info</param>
+        [HttpPost("CreateNewRule")]
         public void CreateNewRule([FromBody] CreateRuleDto dto)
         {
             _ruleProvider.CreateRule(dto);
         }
 
+        /// <summary>
+        /// Returns list with all rules where IsRemoved = false
+        /// </summary>
         [HttpGet("GetAllActiveRules")]
-        public void GetAllActiveRules()
+        public List<Rule> GetAllActiveRules()
         {
-            _ruleProvider.GetAllActiveRules();
+            return _ruleProvider.GetAllActiveRules();
+        }
+
+        /// <summary>
+        /// Set IsRemoved = true for rule by GUID
+        /// </summary>
+        /// <param name="ruleGuid">Rule's GUID</param>
+        [HttpPost("RemoveRule")]
+        public void RemoveRule([FromBody] Guid ruleGuid)
+        {
+            _ruleProvider.RemoveRule(ruleGuid);
         }
     }
 }
