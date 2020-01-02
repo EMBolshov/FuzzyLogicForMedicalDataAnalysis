@@ -12,10 +12,13 @@ namespace POCO.Domain
         public string TestName { get; set; }
         public string ReportedName { get; set; }
         public decimal Entry { get; set; }
+        public string Loinc { get; set; }
         public string FormattedEntry { get; set; }
-        //todo: Make reference provider
+        //TODO: Make reference provider
         public decimal ReferenceLow { get; set; }
         public decimal ReferenceHigh { get; set; }
+        //TODO: Fuzzyfication
+        public decimal Confidence { get; set; }
         public bool IsRemoved { get; set; }
     }
 }

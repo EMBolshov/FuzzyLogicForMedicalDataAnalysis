@@ -8,7 +8,6 @@ namespace POCO.Domain
         public string Name { get; set; }
         public Guid Guid { get; set; }
         public string MkbCode { get; set; }
-        public string Loinc { get; set; }
         public bool IsRemoved { get; set; }
     }
 }

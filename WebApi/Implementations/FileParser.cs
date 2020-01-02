@@ -10,10 +10,17 @@ namespace WebApi.Implementations
 {
     public class FileParser : IFileParser
     {
+        private readonly INamingMapper _mapper;
+
+        public FileParser(INamingMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         public List<AnalysisResult> GetAnalysisResultsFromCsv(string path)
         {
             var result = new List<AnalysisResult>();
-            var engine = new FileHelperEngine<PatientAnalysisResultCsvFormat>();
+            var fileHelperEngine = new FileHelperEngine<PatientAnalysisResultCsvFormat>();
             var specialTestNames = new List<string>
             {
                 "OAK_22_ПОКАЗАТЕЛЯ_EXT_IPU",
@@ -24,7 +31,7 @@ namespace WebApi.Implementations
                 "РЕЦЕПТОР_ТРАНСФЕРРИН_ДИАЛАБ"
             };
 
-            var fileResult = engine.ReadFile(path).ToList();
+            var fileResult = fileHelperEngine.ReadFile(path).ToList();
 
             fileResult.ForEach(record =>
             {
@@ -39,14 +46,16 @@ namespace WebApi.Implementations
                     ReferenceHigh = record.ReferenceHigh,
                     ReferenceLow = record.ReferenceLow,
                     ReportedName = record.ReportedName,
+                    Confidence = 1m,
                     IsRemoved = false
                 };
 
                 var testName = specialTestNames.Contains(record.AnalysisName)
-                    ? ChangeTestName(record.ReportedName)
-                    : MapTestNameByAnalysisName(record.AnalysisName);
+                    ? _mapper.ChangeTestName(record.ReportedName)
+                    : _mapper.MapTestNameByAnalysisName(record.AnalysisName);
 
                 analysisResult.TestName = testName;
+                analysisResult.Loinc = _mapper.MapTestNameWithLoinc(testName);
 
                 result.Add(analysisResult);
             });
@@ -78,39 +87,6 @@ namespace WebApi.Implementations
             });
 
             return result;
-        }
-
-        private string MapTestNameByAnalysisName(string analysisName)
-        {
-            switch (analysisName)
-            {
-                case "ФЕРРИТИН_COBAS":
-                    return "Ферритин";
-                case "ЖЕЛЕЗО_СЫВ_COBAS":
-                case "ЖЕЛЕЗО_СЫВ_ХРОМОЛАБ":
-                    return "Железо в сыворотке";
-                case "ВИТАМИН_B12_ЕВРОТЕСТ":
-                case "ВИТАМИН_В12_COBAS":
-                    return "Витамин В12";
-                case "ФОЛИЕВАЯ_КИСЛОТА_COBAS":
-                    return "Фолат сыворотки";
-                default:
-                    throw new ArgumentOutOfRangeException(
-                        $"Don't know how to map analysis with name {analysisName} with TestName");
-            }
-        }
-
-        private string ChangeTestName(string testName)
-        {
-            switch (testName)
-            {
-                case "Концентрация":
-                    return "Tрансферрин";
-                case "Коэффициент насыщения трансферрина железом":
-                    return "Насыщение трансферрина";
-                default:
-                    return testName;
-            }
         }
     }
 }

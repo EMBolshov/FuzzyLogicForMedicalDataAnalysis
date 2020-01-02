@@ -33,14 +33,14 @@ namespace WebApi.Implementations
             _repo.RemoveAnalysisResultByGuid(analysisResultGuid);
         }
 
-        public void LoadAnalysisResultsFromFile(string path)
+        public List<AnalysisResult> LoadAnalysisResultsFromFile(string path)
         {
-            var analysisResults = _parser.GetAnalysisResultsFromCsv(path);
+            return _parser.GetAnalysisResultsFromCsv(path);
         }
 
-        public void LoadPatientsFromFile(string path)
+        public List<Patient> LoadPatientsFromFile(string path)
         {
-            var patients = _parser.GetPatientsFromCsv(path);
+            return _parser.GetPatientsFromCsv(path);
         }
     }
 }

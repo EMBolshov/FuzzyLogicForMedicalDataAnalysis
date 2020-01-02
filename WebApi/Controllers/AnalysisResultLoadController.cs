@@ -18,23 +18,23 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// 
+        /// C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv
         /// </summary>
         /// <param name="path"></param>
-        [HttpGet("LoadAnalysisResultsFromFile")]
-        public void LoadAnalysisResultsFromFile(string path)
+        [HttpGet("LoadAnalysisResultsFromFileToLearningDb")]
+        public void LoadAnalysisResultsFromFileToLearningDb(string path)
         {
-            _analysisResultProvider.LoadAnalysisResultsFromFile(path);
+            var analysisResults = _analysisResultProvider.LoadAnalysisResultsFromFile(path);
         }
 
         /// <summary>
-        /// 
+        /// C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv
         /// </summary>
         /// <param name="path"></param>
-        [HttpGet("LoadPatientsFromFile")]
-        public void LoadPatientsFromFile(string path)
+        [HttpGet("LoadPatientsFromFileToLearningDb")]
+        public void LoadPatientsFromFileToLearningDb(string path)
         {
-            _analysisResultProvider.LoadPatientsFromFile(path);
+            var patients = _analysisResultProvider.LoadPatientsFromFile(path);
         }
     }
 }

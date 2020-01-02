@@ -48,6 +48,7 @@ CREATE TABLE "AnalysisResult"
   "FormattedEntry" character varying(1024) NULL, 
   "ReferenceLow" decimal NULL,
   "ReferenceHigh" decimal NULL,
+  "Confidence" decimal NOT NULL,
   "IsRemoved" boolean NOT NULL DEFAULT false,
   CONSTRAINT "PK_AnalysisResult" PRIMARY KEY ("Id")
 )

@@ -49,6 +49,7 @@ namespace WebApi
             services.AddScoped<IAnalysisResultProvider, AnalysisResultDbProvider>();
             services.AddScoped<IRuleProvider, RuleDbProvider>();
             services.AddScoped<IFileParser, FileParser>();
+            services.AddSingleton<INamingMapper, AnalysisAndTestsNamingMapper>();
             //services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
         }
 

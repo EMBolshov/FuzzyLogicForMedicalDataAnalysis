@@ -5,9 +5,6 @@ using POCO.Domain.Dto;
 
 namespace WebApi.Interfaces
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public interface IAnalysisResultProvider
     {
         List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid);
@@ -16,8 +13,8 @@ namespace WebApi.Interfaces
 
         void RemoveAnalysisResult(Guid analysisResultGuid);
 
-        void LoadAnalysisResultsFromFile(string path);
+        List<AnalysisResult> LoadAnalysisResultsFromFile(string path);
 
-        void LoadPatientsFromFile(string path);
+        List<Patient> LoadPatientsFromFile(string path);
     }
 }
