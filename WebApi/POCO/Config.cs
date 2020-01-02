@@ -1,13 +1,8 @@
 ﻿namespace WebApi.POCO
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class Config
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public string MainProcessingConnectionString { get; set; }
+        public string LearningDbConnectionString { get; set; }
     }
 }
