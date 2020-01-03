@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using POCO.Domain;
 using POCO.Domain.Dto;
-using WebApi.Interfaces;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
@@ -17,11 +16,11 @@ namespace WebApi.Controllers
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
 
-        public AnalysisResultController(IAnalysisResultProvider analysisResultProvider)
+        public AnalysisResultController(Startup.AnalysisResultServiceResolver analysisResultServiceResolver)
         {
-            _analysisResultProvider = analysisResultProvider;
+            _analysisResultProvider = analysisResultServiceResolver("Main");
         }
-
+        
         /// <summary>
         /// Insert new AnalysisResult into DB
         /// </summary>

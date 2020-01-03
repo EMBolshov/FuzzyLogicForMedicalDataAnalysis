@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using POCO.Domain;
 using POCO.Domain.Dto;
-using WebApi.Interfaces;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
@@ -17,9 +16,9 @@ namespace WebApi.Controllers
     {
         private readonly IDiagnosisProvider _diagnosisProvider;
         
-        public DiagnosisController(IDiagnosisProvider diagnosisProvider)
+        public DiagnosisController(Startup.DiagnosisServiceResolver diagnosisServiceResolver)
         {
-            _diagnosisProvider = diagnosisProvider;
+            _diagnosisProvider = diagnosisServiceResolver("Main");
         }
 
         /// <summary>

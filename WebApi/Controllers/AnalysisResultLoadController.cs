@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Interfaces;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
 {
     /// <summary>
-    /// 
+    /// Load AnalysisResults and Patients from csv to learning db
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
@@ -13,9 +12,9 @@ namespace WebApi.Controllers
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
 
-        public AnalysisResultLoadController(IAnalysisResultProvider analysisResultProvider)
+        public AnalysisResultLoadController(Startup.AnalysisResultServiceResolver analysisResultServiceResolver)
         {
-            _analysisResultProvider = analysisResultProvider;
+            _analysisResultProvider = analysisResultServiceResolver("Learning");
         }
 
         /// <summary>

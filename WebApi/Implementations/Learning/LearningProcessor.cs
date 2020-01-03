@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using POCO.Domain;
+using POCO.Domain.Dto;
 using WebApi.Interfaces.Learning;
 using WebApi.Interfaces.MainProcessing;
 
@@ -31,6 +32,16 @@ namespace WebApi.Implementations.Learning
         {
             var patients = GetAllPatients();
             patients.ForEach(ProcessForPatient);
+        }
+
+        public void CreateRule(CreateRuleDto dto)
+        {
+            _learningRuleProvider.CreateRule(dto);
+        }
+
+        public void CreateNewDiagnosis(CreateDiagnosisDto dto)
+        {
+            _learningDiagnosisProvider.CreateNewDiagnosis(dto);
         }
 
         private List<Patient> GetAllPatients()

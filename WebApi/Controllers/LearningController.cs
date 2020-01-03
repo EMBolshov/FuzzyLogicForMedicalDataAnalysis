@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApi.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using POCO.Domain;
+using POCO.Domain.Dto;
 using WebApi.Interfaces.Learning;
 
 namespace WebApi.Controllers
@@ -25,6 +28,26 @@ namespace WebApi.Controllers
         public void Learn()
         {
             _learningProcessor.ProcessForAllPatients();
+        }
+
+        /// <summary>
+        /// Insert new rule in learning DB
+        /// </summary>
+        /// <param name="dto">DTO with all rule info</param>
+        [HttpPost("CreateNewRule")]
+        public void CreateNewRule([FromBody] CreateRuleDto dto)
+        {
+            _learningProcessor.CreateRule(dto);
+        }
+
+        /// <summary>
+        /// Insert new diagnosis in learning DB
+        /// </summary>
+        /// <param name="dto">DTO with all diagnosis info</param>
+        [HttpPost("CreateNewDiagnosis")]
+        public void CreateNewDiagnosis([FromBody] CreateDiagnosisDto dto)
+        {
+            _learningProcessor.CreateNewDiagnosis(dto);
         }
     }
 }
