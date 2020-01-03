@@ -17,3 +17,5 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\UnitTests\obj\Debug\
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\UnitTests\obj\Debug\netcoreapp2.1\UnitTests.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\UnitTests\obj\Debug\netcoreapp2.1\UnitTests.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\UnitTests\obj\Debug\netcoreapp2.1\UnitTests.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\UnitTests\bin\Debug\netcoreapp2.1\WebApi.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\UnitTests\bin\Debug\netcoreapp2.1\WebApi.pdb

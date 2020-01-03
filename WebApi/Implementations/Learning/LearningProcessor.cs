@@ -27,11 +27,22 @@ namespace WebApi.Implementations.Learning
             _learningPatientProvider = patientServiceResolver("Learning");
             _learningRuleProvider = ruleServiceResolver("Learning");
         }
+
+        public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider, IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider)
+        {
+            _learningAnalysisResultProvider = learningAnalysisResultProvider;
+            _learningDiagnosisProvider = learningDiagnosisProvider;
+            _learningPatientProvider = learningPatientProvider;
+            _learningRuleProvider = learningRuleProvider;
+        }
         
-        public void ProcessForAllPatients()
+        public List<ProcessedResult> ProcessForAllPatients()
         {
             var patients = GetAllPatients();
-            patients.ForEach(ProcessForPatient);
+            var results = new List<ProcessedResult>(); 
+            patients.ForEach(patient => results.AddRange(ProcessForPatient(patient)));
+
+            return results;
         }
 
         public void CreateRule(CreateRuleDto dto)
@@ -50,7 +61,7 @@ namespace WebApi.Implementations.Learning
         }
 
         //TODO: refactor
-        private void ProcessForPatient(Patient patient)
+        private List<ProcessedResult> ProcessForPatient(Patient patient)
         {
             var processedResults = new List<ProcessedResult>();
             var allAnalysisResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
@@ -110,6 +121,8 @@ namespace WebApi.Implementations.Learning
                     });
                 }
             }
+
+            return processedResults;
         }
 
         //TODO: Fuzzyfication

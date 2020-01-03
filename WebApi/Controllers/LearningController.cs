@@ -27,7 +27,7 @@ namespace WebApi.Controllers
         [HttpGet("Learn")]
         public void Learn()
         {
-            _learningProcessor.ProcessForAllPatients();
+            var results = _learningProcessor.ProcessForAllPatients();
         }
 
         /// <summary>
