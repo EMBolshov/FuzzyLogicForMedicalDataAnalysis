@@ -10,6 +10,7 @@ using WebApi.Implementations.Helpers;
 using WebApi.Implementations.Learning;
 using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces.Helpers;
+using WebApi.Interfaces.Learning;
 using WebApi.Interfaces.MainProcessing;
 using WebApi.POCO;
 
@@ -66,6 +67,7 @@ namespace WebApi
             //services.AddSingleton<IRuleProvider, RuleLearningDbProvider>();
             services.AddSingleton<IFileParser, FileParser>();
             services.AddSingleton<INamingMapper, AnalysisAndTestsNamingMapper>();
+            services.AddSingleton<ILearningProcessor, LearningProcessor>();
 
             services.AddTransient<MainRepositoryWrapper>();
             services.AddTransient<LearningRepositoryWrapper>();
