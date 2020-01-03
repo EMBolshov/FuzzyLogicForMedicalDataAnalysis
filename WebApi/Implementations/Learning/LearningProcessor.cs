@@ -111,7 +111,7 @@ namespace WebApi.Implementations.Learning
                     }
                 }
 
-                if (fuzzyResults.All(x => x.Confidence > 0))
+                if (fuzzyResults.Count > 0 && fuzzyResults.All(x => x.Confidence > 0))
                 {
                     processedResults.Add(new ProcessedResult
                     {
