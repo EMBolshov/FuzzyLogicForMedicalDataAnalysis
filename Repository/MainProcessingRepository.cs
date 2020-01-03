@@ -22,7 +22,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "INSERT INTO \"Diagnosis\" (\"Name\", \"Guid\", \"MkbCode\", \"IsRemoved\") " +
-                          $"VALUES ('{dto.DiagnosisName}, {dto.Guid}, {dto.MkbCode}, {dto.IsRemoved}')";
+                          $"VALUES ('{dto.DiagnosisName}', '{dto.Guid}', '{dto.MkbCode}', '{dto.IsRemoved}')";
 
                 context.Execute(sql);
             }
@@ -35,7 +35,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "SELECT \"Id\", \"Name\", \"Guid\", \"MkbCode\", \"IsRemoved\" " +
-                          "FROM \"Diagnosis\" WHERE \"IsRemoved\" = False";
+                          "FROM \"Diagnosis\" WHERE \"IsRemoved\" = 'False'";
 
                 result = context.Query<Diagnosis>(sql).ToList();
             }
@@ -48,7 +48,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "UPDATE \"Diagnosis\" set \"IsRemoved\" = \'true\' " +
-                          $"WHERE \"Guid\" = {diagnosisGuid}";
+                          $"WHERE \"Guid\" = '{diagnosisGuid}'";
 
                 context.Execute(sql);
             }
@@ -60,9 +60,9 @@ namespace Repository
             {
                 var sql = "INSERT INTO \"Patient\" (\"Guid\", \"InsertedDate\", \"FirstName\", " +
                           "\"MiddleName\", \"LastName\", \"Age\", \"Gender\", \"IsRemoved\") " +
-                          $"VALUES ('{dto.Guid}, {dto.InsertedDate}, {dto.FirstName}, " +
-                          $"{dto.MiddleName}, {dto.LastName}, {dto.Age}, {dto.Gender}, " +
-                          $"{dto.IsRemoved}')";
+                          $"VALUES ('{dto.Guid}', '{dto.InsertedDate}', '{dto.FirstName}', " +
+                          $"'{dto.MiddleName}', '{dto.LastName}', '{dto.Age}', '{dto.Gender}', " +
+                          $"'{dto.IsRemoved}')";
 
                 context.Execute(sql);
             }
@@ -76,7 +76,7 @@ namespace Repository
             {
                 var sql = "SELECT \"Id\", \"Guid\", \"InsertedDate\", \"FirstName\", " +
                           "\"MiddleName\", \"LastName\", \"Age\", \"Gender\", \"IsRemoved\" " +
-                          "FROM \"Patient\" WHERE \"IsRemoved\" = False";
+                          "FROM \"Patient\" WHERE \"IsRemoved\" = 'False'";
 
                 result = context.Query<Patient>(sql).ToList();
             }
@@ -89,7 +89,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "UPDATE \"Patient\" set \"IsRemoved\" = \'true\' " +
-                          $"WHERE \"Guid\" = {patientGuid}";
+                          $"WHERE \"Guid\" = '{patientGuid}'";
 
                 context.Execute(sql);
             }
@@ -102,10 +102,10 @@ namespace Repository
                 var sql = "INSERT INTO \"AnalysisResult\" (\"Guid\", \"PatientGuid\", \"InsertedDate\", " +
                           "\"AnalysisName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
                           "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"IsRemoved\") " +
-                          $"VALUES ('{dto.Guid}, {dto.PatientGuid}, {dto.InsertedDate}, " +
-                          $"{dto.AnalysisName}, {dto.TestName}, {dto.Loinc}, {dto.ReportedName}, " +
-                          $"{dto.Entry}, {dto.FormattedEntry}, {dto.ReferenceLow}, " +
-                          $"{dto.ReferenceHigh}, {dto.IsRemoved}')";
+                          $"VALUES ('{dto.Guid}', '{dto.PatientGuid}', '{dto.InsertedDate}', " +
+                          $"'{dto.AnalysisName}', '{dto.TestName}', '{dto.Loinc}', '{dto.ReportedName}', " +
+                          $"'{dto.Entry}', '{dto.FormattedEntry}', '{dto.ReferenceLow}', " +
+                          $"'{dto.ReferenceHigh}', '{dto.IsRemoved}')";
 
                 context.Execute(sql);
             }
@@ -120,7 +120,7 @@ namespace Repository
                 var sql = "SELECT \"Id\", \"Guid\", \"PatientGuid\", \"InsertedDate\", " +
                           "\"AnalysisName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
                           "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"IsRemoved\" " +
-                          "FROM \"AnalysisResult\" WHERE \"IsRemoved\" = False";
+                          "FROM \"AnalysisResult\" WHERE \"IsRemoved\" = 'False'";
 
                 result = context.Query<AnalysisResult>(sql).ToList();
             }
@@ -133,7 +133,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "UPDATE \"AnalysisResult\" set \"IsRemoved\" = \'true\' " +
-                          $"WHERE \"Guid\" = {analysisResultGuid}";
+                          $"WHERE \"Guid\" = '{analysisResultGuid}'";
 
                 context.Execute(sql);
             }
@@ -158,7 +158,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "SELECT Id, Guid, DiagnosisName, Analysis, Power, InputTermName, IsRemoved " +
-                          "FROM Rule WHERE IsRemoved = False";
+                          "FROM Rule WHERE IsRemoved = 'False'";
 
                 result = context.Query<Rule>(sql).ToList();
             }
@@ -171,7 +171,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "UPDATE Rule set IsRemoved = \'true\' " +
-                          $"WHERE Guid = {ruleGuid}";
+                          $"WHERE Guid = '{ruleGuid}'";
 
                 context.Execute(sql);
             }

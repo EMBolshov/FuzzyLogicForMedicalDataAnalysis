@@ -3,7 +3,7 @@
 ----------------------------------------------------------------------------
 CREATE TABLE "Rule"
 (
-  "Id" bigint NOT NULL,
+  "Id" SERIAL,
   "Guid" uuid NOT NULL,
   "DiagnosisName" character varying(250) NOT NULL,
   "Analysis" character varying(250) NOT NULL,  
@@ -20,7 +20,7 @@ WITH (
 
 CREATE TABLE "Diagnosis"
 (
-  "Id" bigint NOT NULL,
+  "Id" SERIAL,
   "Name" character varying(250) NOT NULL,
   "Guid" uuid NOT NULL,  
   "MkbCode" character varying(250) NULL, 
@@ -36,7 +36,7 @@ WITH (
 
 CREATE TABLE "AnalysisResult"
 (
-  "Id" bigint NOT NULL,  
+  "Id" SERIAL,  
   "Guid" uuid NOT NULL,  
   "PatientGuid" uuid NOT NULL, 
   "InsertedDate" timestamp without time zone NOT NULL,
@@ -62,7 +62,7 @@ WITH (
 
 CREATE TABLE "Patient"
 (
-  "Id" bigint NOT NULL,  
+  "Id" SERIAL,  
   "Guid" uuid NOT NULL,    
   "InsertedDate" timestamp without time zone NOT NULL,
   "FirstName" character varying(250) NULL, 
