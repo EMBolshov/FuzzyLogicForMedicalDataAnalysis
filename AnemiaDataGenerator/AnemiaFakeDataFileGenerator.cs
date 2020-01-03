@@ -7,7 +7,7 @@ using FuzzyLogicMedicalCore.BL.FHIR;
 using FuzzyLogicMedicalCore.BL.FuzzyLogic;
 using Newtonsoft.Json;
 
-namespace RealDataGenerator
+namespace AnemiaDataGenerator
 {
     public class AnemiaFakeDataFileGenerator
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using POCO.Domain;
 using POCO.Domain.Dto;
 using Repository;
-using WebApi.Interfaces;
+using WebApi.Interfaces.MainProcessing;
 
-namespace WebApi.Implementations
+namespace WebApi.Implementations.MainProcessing
 {
     public class RuleDbProvider : IRuleProvider
     {

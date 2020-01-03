@@ -6,7 +6,7 @@ using POCO.Domain.Dto;
 using Repository;
 using WebApi.POCO;
 
-namespace WebApi.Implementations
+namespace WebApi.Implementations.MainProcessing
 {
     public class MainRepositoryWrapper : IMainProcessingRepository
     {

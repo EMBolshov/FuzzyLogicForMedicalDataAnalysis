@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Interfaces;
+using WebApi.Interfaces.Learning;
 
 namespace WebApi.Controllers
 {
@@ -9,5 +11,20 @@ namespace WebApi.Controllers
     [ApiController]
     public class LearningController : ControllerBase
     {
+        private readonly ILearningProcessor _learningProcessor;
+
+        public LearningController(ILearningProcessor learningProcessor)
+        {
+            _learningProcessor = learningProcessor;
+        }
+
+        /// <summary>
+        /// Learn
+        /// </summary>
+        [HttpGet("Learn")]
+        public void Learn()
+        {
+            _learningProcessor.ProcessForAllPatients();
+        }
     }
 }

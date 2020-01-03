@@ -1,4 +1,4 @@
-﻿namespace RealDataGenerator
+﻿namespace AnemiaDataGenerator
 {
     internal class Program
     {

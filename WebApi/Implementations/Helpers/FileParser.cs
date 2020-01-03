@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using FileHelpers;
 using POCO.Domain;
-using WebApi.Interfaces;
+using WebApi.Interfaces.Helpers;
 using WebApi.POCO;
 
-namespace WebApi.Implementations
+namespace WebApi.Implementations.Helpers
 {
     public class FileParser : IFileParser
     {

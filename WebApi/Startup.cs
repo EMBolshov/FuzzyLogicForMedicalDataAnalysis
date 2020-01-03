@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Repository;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApi.Implementations;
+using WebApi.Implementations.Helpers;
+using WebApi.Implementations.Learning;
+using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces;
+using WebApi.Interfaces.Helpers;
+using WebApi.Interfaces.MainProcessing;
 using WebApi.POCO;
 
 #pragma warning disable 1591
@@ -17,6 +23,13 @@ namespace WebApi
     {
         public IConfiguration Configuration { get; }
         public IHostingEnvironment Environment { get; set; }
+
+        public delegate IMainProcessingRepository RepositoryServiceResolver(string key);
+        public delegate IAnalysisResultProvider AnalysisResultServiceResolver(string key);
+        public delegate IPatientProvider PatientServiceResolver(string key);
+        public delegate IDiagnosisProvider DiagnosisServiceResolver(string key);
+        public delegate IRuleProvider RuleServiceResolver(string key);
+
         private string _appPath;
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
@@ -43,13 +56,99 @@ namespace WebApi
 
             //todo: AddTransient vs AddScoped
             services.Configure<Config>(Configuration.GetSection("Config"));
-            services.AddTransient<IMainProcessingRepository, MainRepositoryWrapper>();
-            services.AddTransient<IDiagnosisProvider, DiagnosisDbProvider>();
-            services.AddScoped<IPatientProvider, PatientDbProvider>();
-            services.AddScoped<IAnalysisResultProvider, AnalysisResultDbProvider>();
-            services.AddScoped<IRuleProvider, RuleDbProvider>();
-            services.AddScoped<IFileParser, FileParser>();
+            //services.AddScoped<IMainProcessingRepository, MainRepositoryWrapper>();
+            //services.AddSingleton<IDiagnosisProvider, DiagnosisDbProvider>();
+            //services.AddSingleton<IPatientProvider, PatientDbProvider>();
+            //services.AddSingleton<IAnalysisResultProvider, AnalysisResultDbProvider>();
+            //services.AddSingleton<IRuleProvider, RuleDbProvider>();
+            //services.AddScoped<IMainProcessingRepository, LearningRepositoryWrapper>();
+            //services.AddSingleton<IDiagnosisProvider, DiagnosisLearningDbProvider>();
+            //services.AddSingleton<IPatientProvider, PatientLearningDbProvider>();
+            //services.AddSingleton<IAnalysisResultProvider, AnalysisResultLearningDbProvider>();
+            //services.AddSingleton<IRuleProvider, RuleLearningDbProvider>();
+            services.AddSingleton<IFileParser, FileParser>();
             services.AddSingleton<INamingMapper, AnalysisAndTestsNamingMapper>();
+
+            services.AddTransient<MainRepositoryWrapper>();
+            services.AddTransient<LearningRepositoryWrapper>();
+
+            services.AddTransient<RepositoryServiceResolver>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case "Main":
+                        return serviceProvider.GetService<MainRepositoryWrapper>();
+                    case "Learning":
+                        return serviceProvider.GetService<LearningRepositoryWrapper>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+
+            services.AddTransient<AnalysisResultDbProvider>();
+            services.AddTransient<AnalysisResultLearningDbProvider>();
+
+            services.AddTransient<AnalysisResultServiceResolver>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case "Main":
+                        return serviceProvider.GetService<AnalysisResultDbProvider>();
+                    case "Learning":
+                        return serviceProvider.GetService<AnalysisResultLearningDbProvider>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+
+            services.AddTransient<PatientDbProvider>();
+            services.AddTransient<PatientLearningDbProvider>();
+
+            services.AddTransient<PatientServiceResolver>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case "Main":
+                        return serviceProvider.GetService<PatientDbProvider>();
+                    case "Learning":
+                        return serviceProvider.GetService<PatientLearningDbProvider>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+
+            services.AddTransient<DiagnosisDbProvider>();
+            services.AddTransient<DiagnosisLearningDbProvider>();
+
+            services.AddTransient<DiagnosisServiceResolver>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case "Main":
+                        return serviceProvider.GetService<DiagnosisDbProvider>();
+                    case "Learning":
+                        return serviceProvider.GetService<DiagnosisLearningDbProvider>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+
+            services.AddTransient<RuleDbProvider>();
+            services.AddTransient<RuleLearningDbProvider>();
+
+            services.AddTransient<RuleServiceResolver>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case "Main":
+                        return serviceProvider.GetService<RuleDbProvider>();
+                    case "Learning":
+                        return serviceProvider.GetService<RuleLearningDbProvider>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+
             //services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
         }
 

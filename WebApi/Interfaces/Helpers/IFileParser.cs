@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using POCO.Domain;
 
-namespace WebApi.Interfaces
+namespace WebApi.Interfaces.Helpers
 {
     public interface IFileParser
     {

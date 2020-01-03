@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using POCO.Domain;
 using POCO.Domain.Dto;
 using Repository;
-using WebApi.Interfaces;
+using WebApi.Interfaces.MainProcessing;
 
-namespace WebApi.Implementations
+namespace WebApi.Implementations.Learning
 {
-    public class PatientDbProvider : IPatientProvider
+    public class PatientLearningDbProvider : IPatientProvider
     {
         private readonly IMainProcessingRepository _repo;
 
-        public PatientDbProvider(IMainProcessingRepository repo)
+        public PatientLearningDbProvider(Startup.RepositoryServiceResolver repositoryServiceResolver)
         {
-            _repo = repo;
+            _repo = repositoryServiceResolver("Learning");
         }
 
         public List<Patient> GetAllPatients()

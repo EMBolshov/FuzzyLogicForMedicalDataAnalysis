@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using POCO.Domain;
-using WebApi.Interfaces;
+using WebApi.Interfaces.Learning;
+using WebApi.Interfaces.MainProcessing;
 
-namespace WebApi.Implementations
+namespace WebApi.Implementations.Learning
 {
     public class LearningProcessor : ILearningProcessor
     {
@@ -15,12 +16,15 @@ namespace WebApi.Implementations
         private IEnumerable<Rule> LearningRules => _learningRuleProvider.GetAllActiveRules();
         private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
 
-        public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider, IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider)
+        public LearningProcessor(Startup.RuleServiceResolver ruleServiceResolver, 
+            Startup.DiagnosisServiceResolver diagnosisServiceResolver, 
+            Startup.AnalysisResultServiceResolver analysisResultServiceResolver, 
+            Startup.PatientServiceResolver patientServiceResolver)
         {
-            _learningAnalysisResultProvider = learningAnalysisResultProvider;
-            _learningDiagnosisProvider = learningDiagnosisProvider;
-            _learningPatientProvider = learningPatientProvider;
-            _learningRuleProvider = learningRuleProvider;
+            _learningAnalysisResultProvider = analysisResultServiceResolver("Learning");
+            _learningDiagnosisProvider = diagnosisServiceResolver("Learning");
+            _learningPatientProvider = patientServiceResolver("Learning");
+            _learningRuleProvider = ruleServiceResolver("Learning");
         }
         
         public void ProcessForAllPatients()

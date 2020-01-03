@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using POCO.Domain;
 using POCO.Domain.Dto;
 
-namespace WebApi.Interfaces
+namespace WebApi.Interfaces.MainProcessing
 {
     public interface IAnalysisResultProvider
     {
