@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Dapper;
 using Npgsql;
@@ -101,11 +102,13 @@ namespace Repository
             {
                 var sql = "INSERT INTO \"AnalysisResult\" (\"Guid\", \"PatientGuid\", \"InsertedDate\", " +
                           "\"AnalysisName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
-                          "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"IsRemoved\") " +
+                          "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"Confidence\", \"IsRemoved\") " +
                           $"VALUES ('{dto.Guid}', '{dto.PatientGuid}', '{dto.InsertedDate}', " +
                           $"'{dto.AnalysisName}', '{dto.TestName}', '{dto.Loinc}', '{dto.ReportedName}', " +
-                          $"'{dto.Entry}', '{dto.FormattedEntry}', '{dto.ReferenceLow}', " +
-                          $"'{dto.ReferenceHigh}', '{dto.IsRemoved}')";
+                          $"'{dto.Entry.ToString(CultureInfo.InvariantCulture).Replace(',','.')}', " +
+                          $"'{dto.FormattedEntry}', '{dto.ReferenceLow.ToString(CultureInfo.InvariantCulture).Replace(',', '.')}', " +
+                          $"'{dto.ReferenceHigh.ToString(CultureInfo.InvariantCulture).Replace(',', '.')}', " +
+                          $"'{dto.Confidence}', '{dto.IsRemoved}')";
 
                 context.Execute(sql);
             }

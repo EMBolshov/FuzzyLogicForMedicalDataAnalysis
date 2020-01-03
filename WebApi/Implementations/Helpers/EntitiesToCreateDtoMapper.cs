@@ -19,6 +19,7 @@ namespace WebApi.Implementations.Helpers
                 ReportedName = source.ReportedName,
                 ReferenceHigh = source.ReferenceHigh,
                 ReferenceLow = source.ReferenceLow,
+                Confidence = source.Confidence,
                 TestName = source.TestName,
                 FormattedEntry = source.FormattedEntry,
                 InsertedDate = source.InsertedDate

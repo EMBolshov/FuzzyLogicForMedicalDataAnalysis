@@ -26,7 +26,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv</param>
         [HttpGet("LoadAnalysisResultsFromFileToLearningDb")]
         public void LoadAnalysisResultsFromFileToLearningDb(string path)
         {
@@ -41,7 +41,7 @@ namespace WebApi.Controllers
         /// <summary>
         /// C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="path">C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv</param>
         [HttpGet("LoadPatientsFromFileToLearningDb")]
         public void LoadPatientsFromFileToLearningDb(string path)
         {

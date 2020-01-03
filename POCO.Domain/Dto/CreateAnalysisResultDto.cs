@@ -15,6 +15,7 @@ namespace POCO.Domain.Dto
         public string FormattedEntry { get; set; }
         public decimal ReferenceLow { get; set; }
         public decimal ReferenceHigh { get; set; }
+        public decimal Confidence { get; set; }
         public bool IsRemoved { get; set; }
     }
 }
