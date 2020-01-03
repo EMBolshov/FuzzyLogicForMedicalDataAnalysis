@@ -53,21 +53,12 @@ namespace WebApi
                 c.IncludeXmlComments(_appPath);
             });
 
-            //todo: AddTransient vs AddScoped
+            //todo: AddTransient vs AddScoped 
             services.Configure<Config>(Configuration.GetSection("Config"));
-            //services.AddScoped<IMainProcessingRepository, MainRepositoryWrapper>();
-            //services.AddSingleton<IDiagnosisProvider, DiagnosisDbProvider>();
-            //services.AddSingleton<IPatientProvider, PatientDbProvider>();
-            //services.AddSingleton<IAnalysisResultProvider, AnalysisResultDbProvider>();
-            //services.AddSingleton<IRuleProvider, RuleDbProvider>();
-            //services.AddScoped<IMainProcessingRepository, LearningRepositoryWrapper>();
-            //services.AddSingleton<IDiagnosisProvider, DiagnosisLearningDbProvider>();
-            //services.AddSingleton<IPatientProvider, PatientLearningDbProvider>();
-            //services.AddSingleton<IAnalysisResultProvider, AnalysisResultLearningDbProvider>();
-            //services.AddSingleton<IRuleProvider, RuleLearningDbProvider>();
             services.AddSingleton<IFileParser, FileParser>();
             services.AddSingleton<INamingMapper, AnalysisAndTestsNamingMapper>();
             services.AddSingleton<ILearningProcessor, LearningProcessor>();
+            services.AddSingleton<IEntitiesToCreateDtoMapper, EntitiesToCreateDtoMapper>();
 
             services.AddTransient<MainRepositoryWrapper>();
             services.AddTransient<LearningRepositoryWrapper>();
@@ -148,8 +139,6 @@ namespace WebApi
                         throw new KeyNotFoundException();
                 }
             });
-
-            //services.Configure<DatabaseOptions>(Configuration.GetSection("ProcessingDb:DefaultConnection"));
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

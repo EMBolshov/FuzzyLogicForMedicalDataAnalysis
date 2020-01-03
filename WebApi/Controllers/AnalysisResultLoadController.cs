@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
@@ -11,10 +12,15 @@ namespace WebApi.Controllers
     public class AnalysisResultLoadController : ControllerBase
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
+        private readonly IPatientProvider _patientProvider;
+        private readonly IEntitiesToCreateDtoMapper _dtoMapper;
 
-        public AnalysisResultLoadController(Startup.AnalysisResultServiceResolver analysisResultServiceResolver)
+        public AnalysisResultLoadController(Startup.AnalysisResultServiceResolver analysisResultServiceResolver,
+            Startup.PatientServiceResolver patientServiceResolver, IEntitiesToCreateDtoMapper dtoMapper)
         {
             _analysisResultProvider = analysisResultServiceResolver("Learning");
+            _patientProvider = patientServiceResolver("Learning");
+            _dtoMapper = dtoMapper;
         }
 
         /// <summary>
@@ -25,6 +31,11 @@ namespace WebApi.Controllers
         public void LoadAnalysisResultsFromFileToLearningDb(string path)
         {
             var analysisResults = _analysisResultProvider.LoadAnalysisResultsFromFile(path);
+            foreach (var analysisResult in analysisResults)
+            {
+                var dto = _dtoMapper.AnalysisResultToDto(analysisResult);
+                _analysisResultProvider.CreateNewAnalysisResult(dto);
+            }
         }
 
         /// <summary>
@@ -35,6 +46,11 @@ namespace WebApi.Controllers
         public void LoadPatientsFromFileToLearningDb(string path)
         {
             var patients = _analysisResultProvider.LoadPatientsFromFile(path);
+            foreach (var patient in patients)
+            {
+                var dto = _dtoMapper.PatientToCreatePatientDto(patient);
+                _patientProvider.CreateNewPatient(dto);
+            }
         }
     }
 }
