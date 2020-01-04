@@ -14,7 +14,8 @@ namespace WebApi.Implementations.Helpers
     {
         public void GenerateReport(ProcessedResult processedResult, Patient patient, List<AnalysisResult> analysisResults, List<Diagnosis> diagnoses, string path)
         {
-            using (var file = File.AppendText(Path.Combine(path, $"_{Guid.NewGuid()}.txt")))
+            var newPath = Path.Combine(path, $"_{Guid.NewGuid()}.txt");
+            using (var file = File.AppendText(newPath))
             {
                 var builder = new StringBuilder();
                 builder.AppendLine($"Пациент: {patient.FirstName} {patient.MiddleName} {patient.LastName}");
@@ -28,17 +29,28 @@ namespace WebApi.Implementations.Helpers
                 }
 
                 builder.AppendLine("Вероятности диагнозов:");
-                
+
+                var positiveResult = false;
+
                 foreach (var diagnosis in diagnoses)
                 {
                     var probability = decimal.Round(processedResult.Value, 2, MidpointRounding.AwayFromZero);
                     builder.AppendLine($"Диагноз {diagnosis.Name}, код МКБ-10 {diagnosis.MkbCode}");
                     var thisDiagnosisProbability = processedResult.DiagnosisGuid == diagnosis.Guid ? probability : 0m;
                     builder.AppendLine($"Вероятность {thisDiagnosisProbability} относительных единиц.");
+                    positiveResult = thisDiagnosisProbability > 0 && diagnosis.Name == "Анемия хронических заболеваний";
                 }
 
                 var report = builder.ToString();
-                file.Write(report);
+                if (positiveResult)
+                {
+                    file.Write(report);
+                }
+                else
+                {
+                    file.Dispose();
+                    File.Delete(Path.Combine(newPath));
+                }
             }
         }
     }
