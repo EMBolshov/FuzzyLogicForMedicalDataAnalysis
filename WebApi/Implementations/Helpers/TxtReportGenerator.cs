@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Text;
 using POCO.Domain;
@@ -8,6 +9,7 @@ using Guid = System.Guid;
 
 namespace WebApi.Implementations.Helpers
 {
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class TxtReportGenerator : IReportGenerator
     {
         public void GenerateReport(ProcessedResult processedResult, Patient patient, List<AnalysisResult> analysisResults, List<Diagnosis> diagnoses, string path)

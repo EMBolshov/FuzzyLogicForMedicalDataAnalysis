@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using POCO.Domain;
 using POCO.Domain.Dto;
@@ -9,6 +10,7 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.Learning
 {
+    [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class LearningProcessor : ILearningProcessor
     {
         private readonly IAnalysisResultProvider _learningAnalysisResultProvider;
@@ -80,57 +82,12 @@ namespace WebApi.Implementations.Learning
             foreach (var diagnosis in LearningDiagnoses)
             {
                 var rules = LearningRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
-                var analysisToProcess = rules.Select(x => x.Test).ToList();
-                var analysisResults = allAnalysisResults.Where(x => analysisToProcess.Contains(x.TestName)).ToList();
+                var testsToProcess = rules.Select(x => x.Test).ToList();
+                var analysisResults = allAnalysisResults.Where(x => testsToProcess.Contains(x.TestName)).ToList();
 
-                var fuzzyResults = new List<FuzzyAnalysisResult>();
-
-                foreach (var analysisResult in analysisResults)
+                if (analysisResults.Any())
                 {
-                    fuzzyResults.Add(new FuzzyAnalysisResult
-                    {
-                        TestName = analysisResult.TestName,
-                        InputTermName = "Low",
-                        Confidence = GetLowResultConfidence(analysisResult)
-                    });
-
-                    fuzzyResults.Add(new FuzzyAnalysisResult
-                    {
-                        TestName = analysisResult.TestName,
-                        InputTermName = "Normal",
-                        Confidence = GetNormalResultConfidence(analysisResult)
-                    });
-
-                    fuzzyResults.Add(new FuzzyAnalysisResult
-                    {
-                        TestName = analysisResult.TestName,
-                        InputTermName = "High",
-                        Confidence = GetHighResultConfidence(analysisResult)
-                    });
-                }
-
-                fuzzyResults = fuzzyResults.Where(x => x.Confidence > 0m).ToList();
-
-                foreach (var fuzzyResult in fuzzyResults)
-                {
-                    foreach (var rule in LearningRules)
-                    {
-                        if (fuzzyResult.TestName == rule.Test)
-                        {
-                            //For learning data all core rules power must be 1, non-core rules power must be 0
-                            fuzzyResult.Confidence *= rule.Power;
-                        }
-                    }
-                }
-
-                if (fuzzyResults.Count > 0 && fuzzyResults.All(x => x.Confidence > 0))
-                {
-                    processedResults.Add(new ProcessedResult
-                    {
-                        PatientGuid = patient.Guid,
-                        DiagnosisGuid = diagnosis.Guid,
-                        Value = fuzzyResults.Select(x => x.Confidence).Average()
-                    });
+                    processedResults.Add(GetProcessedResultValue(analysisResults, diagnosis, rules));
                 }
             }
 
@@ -141,6 +98,119 @@ namespace WebApi.Implementations.Learning
             }
 
             return processedResults;
+        }
+
+        private ProcessedResult GetProcessedResultValue(List<AnalysisResult> analysisResults, Diagnosis diagnosis, List<Rule> rules)
+        {
+            var value = 0m;
+            var countedTests = 0;
+
+            var fuzzyResults = FuzzyficateResults(analysisResults);
+
+            var distinctRules = rules.GroupBy(x => x.Test).Select(x => x.First()).ToList();
+
+            foreach (var rule in distinctRules)
+            {
+                if (rules.Count(x => x.Test == rule.Test) == 1)
+                {
+                    var currentRuleValue = 0m;
+                    if (fuzzyResults.Any(x => x.TestName == rule.Test))
+                    {
+                        currentRuleValue = fuzzyResults
+                                               .First(x => x.TestName == rule.Test && x.InputTermName == rule.InputTermName)
+                                               .Confidence * rule.Power;
+                    }
+
+                    if (currentRuleValue > 0)
+                    {
+                        value += currentRuleValue;
+                        countedTests++;
+                    }
+                    else
+                    {
+                        return new ProcessedResult
+                        {
+                            DiagnosisGuid = diagnosis.Guid,
+                            PatientGuid = analysisResults.First().PatientGuid,
+                            Value = 0m
+                        };
+                    }
+                }
+                else
+                {
+                    var nonSingleRules = rules.Where(x => x.Test == rule.Test).ToList();
+                    var currentRuleValue = 0m;
+                    foreach (var nonSingleRule in nonSingleRules)
+                    {
+                        if (fuzzyResults.Any(x => x.TestName == nonSingleRule.Test))
+                        {
+                            currentRuleValue += fuzzyResults
+                                                   .First(x => x.TestName == nonSingleRule.Test && x.InputTermName == nonSingleRule.InputTermName)
+                                                   .Confidence * nonSingleRule.Power;
+                        }
+                    }
+
+                    if (currentRuleValue > 0)
+                    {
+                        if (currentRuleValue > 1)
+                        {
+                            currentRuleValue = 1;
+                        }
+
+                        value += currentRuleValue;
+                        countedTests++;
+                    }
+                    else
+                    {
+                        return new ProcessedResult
+                        {
+                            DiagnosisGuid = diagnosis.Guid,
+                            PatientGuid = analysisResults.First().PatientGuid,
+                            Value = 0m
+                        };
+                    }
+                }
+            }
+
+            var result = new ProcessedResult
+            {
+                DiagnosisGuid = diagnosis.Guid,
+                PatientGuid = analysisResults.First().PatientGuid,
+                Value = value / countedTests
+            };
+
+            return result;
+        }
+
+        private List<FuzzyAnalysisResult> FuzzyficateResults(List<AnalysisResult> analysisResults)
+        {
+            var fuzzyResults = new List<FuzzyAnalysisResult>();
+
+            foreach (var analysisResult in analysisResults)
+            {
+                fuzzyResults.Add(new FuzzyAnalysisResult
+                {
+                    TestName = analysisResult.TestName,
+                    InputTermName = "Low",
+                    Confidence = GetLowResultConfidence(analysisResult)
+                });
+
+                fuzzyResults.Add(new FuzzyAnalysisResult
+                {
+                    TestName = analysisResult.TestName,
+                    InputTermName = "Normal",
+                    Confidence = GetNormalResultConfidence(analysisResult)
+                });
+
+                fuzzyResults.Add(new FuzzyAnalysisResult
+                {
+                    TestName = analysisResult.TestName,
+                    InputTermName = "High",
+                    Confidence = GetHighResultConfidence(analysisResult)
+                });
+            }
+
+            return fuzzyResults;
         }
 
         //TODO: Fuzzyfication

@@ -46,8 +46,10 @@ namespace UnitTests.LearningProcessorTests
 
             //Assert
             Assert.IsTrue(results.Count > 0);
-            Assert.IsTrue(results.First().PatientGuid == patient.Guid);
-            Assert.IsTrue(results.First().DiagnosisGuid == diagnoses.ElementAt(1).Guid);
+            results = results.OrderBy(x => x.Value).ToList();
+            Assert.IsTrue(results.All(x => x.PatientGuid == patient.Guid));
+            Assert.IsTrue(results.Any(x => x.DiagnosisGuid == diagnoses.ElementAt(1).Guid));
+            Assert.IsTrue(results.First(x => x.Value > 0).DiagnosisGuid == diagnoses.ElementAt(1).Guid);
         }
 
         private Patient CreatePatient()
