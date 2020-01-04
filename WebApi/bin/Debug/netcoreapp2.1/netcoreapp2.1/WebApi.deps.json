@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "2fb93dab7413accdc3b01067d2ff8b9e43129592"
+    "signature": "43b2a14e5e39617ff96b93bab8f68580b104a5e4"
   },
   "compilationOptions": {
     "defines": [
@@ -27,7 +27,6 @@
           "Dapper": "2.0.30",
           "FileHelpers": "3.4.1",
           "Microsoft.AspNetCore.App": "2.1.1",
-          "Microsoft.AspNetCore.Razor.Design": "2.1.2",
           "Microsoft.NETCore.App": "2.1.0",
           "POCO.Domain": "1.0.0",
           "Repository": "1.0.0",
@@ -68,7 +67,6 @@
           "lib/netstandard2.0/FileHelpers.dll": {}
         }
       },
-      "Microsoft.AspNetCore.Razor.Design/2.1.2": {},
       "Microsoft.Bcl.AsyncInterfaces/1.0.0": {
         "runtime": {
           "lib/netstandard2.0/Microsoft.Bcl.AsyncInterfaces.dll": {
@@ -513,7 +511,7 @@
           "Microsoft.AspNetCore.NodeServices": "2.1.1",
           "Microsoft.AspNetCore.Owin": "2.1.1",
           "Microsoft.AspNetCore.Razor": "2.1.1",
-          "Microsoft.AspNetCore.Razor.Design": "2.1.2",
+          "Microsoft.AspNetCore.Razor.Design": "2.1.1",
           "Microsoft.AspNetCore.Razor.Language": "2.1.1",
           "Microsoft.AspNetCore.Razor.Runtime": "2.1.1",
           "Microsoft.AspNetCore.ResponseCaching": "2.1.1",
@@ -1099,7 +1097,7 @@
           "Microsoft.AspNetCore.Mvc.RazorPages": "2.1.1",
           "Microsoft.AspNetCore.Mvc.TagHelpers": "2.1.1",
           "Microsoft.AspNetCore.Mvc.ViewFeatures": "2.1.1",
-          "Microsoft.AspNetCore.Razor.Design": "2.1.2",
+          "Microsoft.AspNetCore.Razor.Design": "2.1.1",
           "Microsoft.Extensions.Caching.Memory": "2.1.1",
           "Microsoft.Extensions.DependencyInjection": "2.1.1"
         },
@@ -1302,6 +1300,9 @@
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.dll": {}
         },
+        "compileOnly": true
+      },
+      "Microsoft.AspNetCore.Razor.Design/2.1.1": {
         "compileOnly": true
       },
       "Microsoft.AspNetCore.Razor.Language/2.1.1": {
@@ -3324,13 +3325,6 @@
       "path": "filehelpers/3.4.1",
       "hashPath": "filehelpers.3.4.1.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Razor.Design/2.1.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-fe1+dpy+eM4IX1zodsvkihO1Spuj0NecfStWzvkYoMo7/ziOsqSv4vFK36ZpBfHa4gpdCEwaU46EPzdq+ZDYhQ==",
-      "path": "microsoft.aspnetcore.razor.design/2.1.2",
-      "hashPath": "microsoft.aspnetcore.razor.design.2.1.2.nupkg.sha512"
-    },
     "Microsoft.Bcl.AsyncInterfaces/1.0.0": {
       "type": "package",
       "serviceable": true,
@@ -3956,6 +3950,13 @@
       "sha512": "sha512-2yYunEgYC7hOyasvMiiH+a8250l+l1R79jB6VarZ6I8fiXDNCrJ/mEEn9TS0vDidAzesOshFigepa6+qI5Cb0w==",
       "path": "microsoft.aspnetcore.razor/2.1.1",
       "hashPath": "microsoft.aspnetcore.razor.2.1.1.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Razor.Design/2.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1XHObHLx6A0/57ZmLG9gfKMO/Z/gQjRXPFWQDMlPZGYwcfgufvSdmI2+RYvR5DGkbba9HIHC35ClNQ2yVNIohw==",
+      "path": "microsoft.aspnetcore.razor.design/2.1.1",
+      "hashPath": "microsoft.aspnetcore.razor.design.2.1.1.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Razor.Language/2.1.1": {
       "type": "package",

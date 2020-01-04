@@ -142,6 +142,7 @@ namespace WebApi
             });
 
             services.AddTransient<TxtReportGenerator>();
+            services.AddTransient<HtmlReportGenerator>();
             
             services.AddTransient<ReportGeneratorResolver>(serviceProvider => key =>
             {
@@ -149,6 +150,8 @@ namespace WebApi
                 {
                     case "Txt":
                         return serviceProvider.GetService<TxtReportGenerator>();
+                    case "Html":
+                        return serviceProvider.GetService<HtmlReportGenerator>();
                     default:
                         throw new KeyNotFoundException();
                 }

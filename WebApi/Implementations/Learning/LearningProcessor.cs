@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using POCO.Domain;
 using POCO.Domain.Dto;
+using WebApi.Implementations.Helpers;
 using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.Learning;
 using WebApi.Interfaces.MainProcessing;
@@ -91,12 +92,17 @@ namespace WebApi.Implementations.Learning
                 }
             }
 
-            foreach (var processedResult in processedResults)
+            var reportModel = new ReportModel
             {
-                _reportGenerator.GenerateReport(processedResult, patient,
-                    allAnalysisResults, LearningDiagnoses.ToList(), "TestReports");
-            }
+                ProcessedResults = processedResults,
+                Patient = patient,
+                AnalysisResults = allAnalysisResults,
+                Diagnoses = LearningDiagnoses.ToList(),
+                Path = "TestReports"
+            };
 
+            _reportGenerator.GenerateReport(reportModel);
+            
             return processedResults;
         }
 

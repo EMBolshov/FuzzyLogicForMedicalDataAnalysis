@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Text;
 using POCO.Domain;
 using WebApi.Interfaces.Helpers;
@@ -12,33 +13,38 @@ namespace WebApi.Implementations.Helpers
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
     public class TxtReportGenerator : IReportGenerator
     {
-        public void GenerateReport(ProcessedResult processedResult, Patient patient, List<AnalysisResult> analysisResults, List<Diagnosis> diagnoses, string path)
+        public void GenerateReport(ReportModel model)
         {
-            var newPath = Path.Combine(path, $"_{Guid.NewGuid()}.txt");
+            var newPath = Path.Combine(model.Path, $"_{Guid.NewGuid()}.txt");
             using (var file = File.AppendText(newPath))
             {
                 var builder = new StringBuilder();
-                builder.AppendLine($"Пациент: {patient.FirstName} {patient.MiddleName} {patient.LastName}");
+                builder.AppendLine($"Пациент: {model.Patient.FirstName} {model.Patient.MiddleName} {model.Patient.LastName}");
                 builder.AppendLine("Результаты анализов:");
-                foreach (var analysis in analysisResults)
+                foreach (var analysis in model.AnalysisResults)
                 {
                     builder.AppendLine($"Тест: {analysis.TestName}, LOINC: {analysis.Loinc}");
-                    builder.AppendLine($"Ваш показатель: {decimal.Round(analysis.Entry, 2, MidpointRounding.AwayFromZero)} ед. изм.");
-                    builder.AppendLine($"Нижняя граница нормы: {decimal.Round(analysis.ReferenceLow, 2, MidpointRounding.AwayFromZero)} ед. изм.");
-                    builder.AppendLine($"Верхняя граница нормы: {decimal.Round(analysis.ReferenceHigh, 2, MidpointRounding.AwayFromZero)} ед. изм.");
+                    var resultValue = decimal.Round(analysis.Entry, 2, MidpointRounding.AwayFromZero);
+                    var referenceLow = decimal.Round(analysis.ReferenceLow, 2, MidpointRounding.AwayFromZero);
+                    var referenceHigh = decimal.Round(analysis.ReferenceHigh, 2, MidpointRounding.AwayFromZero);
+                    builder.AppendLine($"Ваш показатель: {resultValue} ед. изм.");
+                    var resultValueInterpretation = GetResultValueInterpretation(resultValue, referenceLow, referenceHigh);
+                    builder.AppendLine(resultValueInterpretation);
+                    builder.AppendLine($"Нижняя граница нормы: {referenceLow} ед. изм.");
+                    builder.AppendLine($"Верхняя граница нормы: {referenceHigh} ед. изм.");
                 }
 
                 builder.AppendLine("Вероятности диагнозов:");
 
                 var positiveResult = false;
 
-                foreach (var diagnosis in diagnoses)
+                foreach (var diagnosis in model.Diagnoses)
                 {
+                    var processedResult = model.ProcessedResults.First(x => x.DiagnosisGuid == diagnosis.Guid);
                     var probability = decimal.Round(processedResult.Value, 2, MidpointRounding.AwayFromZero);
                     builder.AppendLine($"Диагноз {diagnosis.Name}, код МКБ-10 {diagnosis.MkbCode}");
-                    var thisDiagnosisProbability = processedResult.DiagnosisGuid == diagnosis.Guid ? probability : 0m;
-                    builder.AppendLine($"Вероятность {thisDiagnosisProbability} относительных единиц.");
-                    positiveResult = thisDiagnosisProbability > 0 && diagnosis.Name == "Анемия хронических заболеваний";
+                    builder.AppendLine($"Вероятность {probability} относительных единиц.");
+                    positiveResult = probability > 0;
                 }
 
                 var report = builder.ToString();
@@ -52,6 +58,15 @@ namespace WebApi.Implementations.Helpers
                     File.Delete(Path.Combine(newPath));
                 }
             }
+        }
+
+        private string GetResultValueInterpretation(decimal resultValue, decimal referenceLow, decimal referenceHigh)
+        {
+            if (resultValue < referenceLow)
+            {
+                return "Ниже нормы";
+            }
+            return resultValue < referenceHigh ? "В норме" : "Выше нормы";
         }
     }
 }

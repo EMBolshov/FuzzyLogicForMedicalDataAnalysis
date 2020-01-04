@@ -22,3 +22,12 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\net
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\POCO.Domain.pdb
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\Repository.pdb
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.csproj.CopyComplete
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.TagHelpers.input.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.TagHelpers.output.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.RazorCoreGenerate.cache
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.RazorTargetAssemblyInfo.cs
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\Razor\Templates\Report.g.cshtml.cs
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\WebApi.Views.dll
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\WebApi.Views.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\obj\Debug\netcoreapp2.1\WebApi.Views.pdb
+C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\bin\debug\netcoreapp2.1\netcoreapp2.1\Templates\Report.cshtml
