@@ -2,6 +2,7 @@
 using System.Linq;
 using POCO.Domain;
 using POCO.Domain.Dto;
+using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.Learning;
 using WebApi.Interfaces.MainProcessing;
 
@@ -13,6 +14,7 @@ namespace WebApi.Implementations.Learning
         private readonly IDiagnosisProvider _learningDiagnosisProvider;
         private readonly IPatientProvider _learningPatientProvider;
         private readonly IRuleProvider _learningRuleProvider;
+        private readonly IReportGenerator _reportGenerator;
 
         private IEnumerable<Rule> LearningRules => _learningRuleProvider.GetAllActiveRules();
         private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
@@ -20,20 +22,24 @@ namespace WebApi.Implementations.Learning
         public LearningProcessor(Startup.RuleServiceResolver ruleServiceResolver, 
             Startup.DiagnosisServiceResolver diagnosisServiceResolver, 
             Startup.AnalysisResultServiceResolver analysisResultServiceResolver, 
-            Startup.PatientServiceResolver patientServiceResolver)
+            Startup.PatientServiceResolver patientServiceResolver,
+            Startup.ReportGeneratorResolver reportGeneratorResolver)
         {
             _learningAnalysisResultProvider = analysisResultServiceResolver("Learning");
             _learningDiagnosisProvider = diagnosisServiceResolver("Learning");
             _learningPatientProvider = patientServiceResolver("Learning");
             _learningRuleProvider = ruleServiceResolver("Learning");
+            _reportGenerator = reportGeneratorResolver("Txt");
         }
 
-        public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider, IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider)
+        public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
+            IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider, IReportGenerator reportGenerator)
         {
             _learningAnalysisResultProvider = learningAnalysisResultProvider;
             _learningDiagnosisProvider = learningDiagnosisProvider;
             _learningPatientProvider = learningPatientProvider;
             _learningRuleProvider = learningRuleProvider;
+            _reportGenerator = reportGenerator;
         }
         
         public List<ProcessedResult> ProcessForAllPatients()
@@ -41,7 +47,6 @@ namespace WebApi.Implementations.Learning
             var patients = GetAllPatients();
             var results = new List<ProcessedResult>(); 
             patients.ForEach(patient => results.AddRange(ProcessForPatient(patient)));
-
             return results;
         }
 
@@ -120,6 +125,12 @@ namespace WebApi.Implementations.Learning
                         Value = fuzzyResults.Select(x => x.Confidence).Average()
                     });
                 }
+            }
+
+            foreach (var processedResult in processedResults)
+            {
+                _reportGenerator.GenerateReport(processedResult, patient,
+                    allAnalysisResults, LearningDiagnoses.ToList(), "TestReports");
             }
 
             return processedResults;

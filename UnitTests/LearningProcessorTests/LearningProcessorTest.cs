@@ -5,7 +5,9 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using POCO.Domain;
+using WebApi.Implementations.Helpers;
 using WebApi.Implementations.Learning;
+using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.MainProcessing;
 
 namespace UnitTests.LearningProcessorTests
@@ -34,9 +36,11 @@ namespace UnitTests.LearningProcessorTests
             var rules = CreateRules();
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
+
+            var mockReportGenerator = new TxtReportGenerator();
             
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object, 
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
             
             //Act
             var results = sut.ProcessForAllPatients();

@@ -28,6 +28,7 @@ namespace WebApi
         public delegate IPatientProvider PatientServiceResolver(string key);
         public delegate IDiagnosisProvider DiagnosisServiceResolver(string key);
         public delegate IRuleProvider RuleServiceResolver(string key);
+        public delegate IReportGenerator ReportGeneratorResolver(string key);
 
         private string _appPath;
 
@@ -135,6 +136,19 @@ namespace WebApi
                         return serviceProvider.GetService<RuleDbProvider>();
                     case "Learning":
                         return serviceProvider.GetService<RuleLearningDbProvider>();
+                    default:
+                        throw new KeyNotFoundException();
+                }
+            });
+
+            services.AddTransient<TxtReportGenerator>();
+            
+            services.AddTransient<ReportGeneratorResolver>(serviceProvider => key =>
+            {
+                switch (key)
+                {
+                    case "Txt":
+                        return serviceProvider.GetService<TxtReportGenerator>();
                     default:
                         throw new KeyNotFoundException();
                 }
