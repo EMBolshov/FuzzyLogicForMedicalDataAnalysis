@@ -24,13 +24,36 @@ namespace WebApi.Implementations.Helpers
             builder.AppendLine("<!DOCTYPE html>");
             builder.AppendLine("<html lang=\"ru\")");
             var rendered = builder.ToString();
-            rendered += GetCss();
             return rendered;
         }
 
         private string GetCss()
         {
-            return "";
+            var builder = new StringBuilder();
+            builder.AppendLine("<style>");
+            builder.AppendLine("body { " +
+                               "background-color: powderblue; " +
+                               "padding: 0; " +
+                               "margin: 0; " +
+                               "font-family: Arial, sans-serif;}");
+            builder.AppendLine("p {color: read;}");
+            builder.AppendLine("h3 {color: blue;}");
+            builder.AppendLine("table { " +
+                               "font - family: arial, sans - serif; " +
+                               "border - collapse: collapse; " +
+                               "width: 100 %; " +
+                               "background-color: rgba(255, 255, 255, 1.0);}");
+
+            builder.AppendLine("td, th { " +
+                               "border: 1px solid #dddddd; " +
+                               "text-align: left; " +
+                               "padding: 8px;}");
+
+            builder.AppendLine("tr:nth-child(even) { " +
+                               "background - color: #dddddd; }");
+            builder.AppendLine("</style");
+            var rendered = builder.ToString();
+            return rendered;
         }
 
         private string GetHeader(ReportModel model)
@@ -38,6 +61,7 @@ namespace WebApi.Implementations.Helpers
             var builder = new StringBuilder();
             builder.AppendLine("<head>");
             builder.AppendLine("<meta charset=\"UTF-8\">");
+            builder.AppendLine(GetCss());
             builder.AppendLine($"<title>{model.Patient.FirstName} {model.Patient.MiddleName} {model.Patient.LastName}</title>");
             builder.AppendLine("</head>");
             var rendered = builder.ToString();
@@ -52,22 +76,30 @@ namespace WebApi.Implementations.Helpers
             builder.AppendLine($"<h2>{model.Patient.FirstName} {model.Patient.MiddleName} {model.Patient.LastName}</h2>");
             builder.AppendLine("</p>");
             builder.AppendLine("<br><h3>Результаты анализов:</h3>");
-            builder.AppendLine("<ul>");
+            builder.AppendLine("<table>");
+            builder.AppendLine("<tr> " +
+                               "<th>Тест: </th> " +
+                               "<th>LOINC: </th> " +
+                               "<th>Ваш показатель: </th> " +
+                               "<th>Интерпретация: </th> " +
+                               "<th>Нижняя граница нормы: </th> " +
+                               "<th>Верхняя граница нормы: </th> </tr>");
             foreach (var analysis in model.AnalysisResults)
             {
-                builder.AppendLine("<li>");
-                builder.AppendLine($"Тест: {analysis.TestName}, LOINC: {analysis.Loinc}");
+                builder.AppendLine("<tr>");
+                builder.AppendLine($"<td>{analysis.TestName}</td>");
+                builder.AppendLine($"<td>{ analysis.Loinc}</td>");
                 var resultValue = decimal.Round(analysis.Entry, 2, MidpointRounding.AwayFromZero);
                 var referenceLow = decimal.Round(analysis.ReferenceLow, 2, MidpointRounding.AwayFromZero);
                 var referenceHigh = decimal.Round(analysis.ReferenceHigh, 2, MidpointRounding.AwayFromZero);
-                builder.AppendLine($"Ваш показатель: {resultValue} ед. изм.");
+                builder.AppendLine($"<td>{resultValue} ед. изм.</td>");
                 var resultValueInterpretation = GetResultValueInterpretation(resultValue, referenceLow, referenceHigh);
-                builder.AppendLine(resultValueInterpretation);
-                builder.AppendLine($"Нижняя граница нормы: {referenceLow} ед. изм.");
-                builder.AppendLine($"Верхняя граница нормы: {referenceHigh} ед. изм.");
-                builder.AppendLine("</li>");
+                builder.AppendLine($"<td>{resultValueInterpretation}</td>");
+                builder.AppendLine($"<td>{referenceLow} ед. изм.</td>");
+                builder.AppendLine($"<td>{referenceHigh} ед. изм.</td>");
+                builder.AppendLine("</tr>");
             }
-            builder.AppendLine("</ul>");
+            builder.AppendLine("</table>");
             builder.AppendLine("<br>");
             builder.AppendLine("<h3>Возможные диагнозы:</h3>");
             builder.AppendLine("<ul>");
