@@ -44,7 +44,7 @@ namespace WebApi.Implementations.Helpers
                     var probability = decimal.Round(processedResult.Value, 2, MidpointRounding.AwayFromZero);
                     builder.AppendLine($"Диагноз {diagnosis.Name}, код МКБ-10 {diagnosis.MkbCode}");
                     builder.AppendLine($"Вероятность {probability} относительных единиц.");
-                    positiveResult = probability > 0;
+                    positiveResult = probability > 0 || positiveResult;
                 }
 
                 var report = builder.ToString();
