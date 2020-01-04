@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-using POCO.Domain;
 using WebApi.Interfaces.Helpers;
 using Guid = System.Guid;
 

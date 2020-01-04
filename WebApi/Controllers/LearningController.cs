@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using POCO.Domain;
+﻿using Microsoft.AspNetCore.Mvc;
 using POCO.Domain.Dto;
 using WebApi.Interfaces.Learning;
 
