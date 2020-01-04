@@ -9,5 +9,6 @@ namespace WebApi.Interfaces.Learning
         List<ProcessedResult> ProcessForAllPatients();
         void CreateRule(CreateRuleDto dto);
         void CreateNewDiagnosis(CreateDiagnosisDto dto);
+        void CreateBaseRules();
     }
 }

@@ -19,7 +19,7 @@ namespace WebApi.Implementations.Helpers
                 builder.AppendLine("Результаты анализов:");
                 foreach (var analysis in analysisResults)
                 {
-                    builder.AppendLine($"Анализ: {analysis.AnalysisName}, LOINC: {analysis.Loinc}");
+                    builder.AppendLine($"Тест: {analysis.TestName}, LOINC: {analysis.Loinc}");
                     builder.AppendLine($"Ваш показатель: {decimal.Round(analysis.Entry, 2, MidpointRounding.AwayFromZero)} ед. изм.");
                     builder.AppendLine($"Нижняя граница нормы: {decimal.Round(analysis.ReferenceLow, 2, MidpointRounding.AwayFromZero)} ед. изм.");
                     builder.AppendLine($"Верхняя граница нормы: {decimal.Round(analysis.ReferenceHigh, 2, MidpointRounding.AwayFromZero)} ед. изм.");

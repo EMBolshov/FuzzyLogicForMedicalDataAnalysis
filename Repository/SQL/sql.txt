@@ -6,7 +6,7 @@ CREATE TABLE "Rule"
   "Id" SERIAL,
   "Guid" uuid NOT NULL,
   "DiagnosisName" character varying(250) NOT NULL,
-  "Analysis" character varying(250) NOT NULL,  
+  "Test" character varying(250) NOT NULL,  
   "Power" decimal NULL,
   "InputTermName" character varying(250) NOT NULL,
   "IsRemoved" boolean NOT NULL DEFAULT false,

@@ -7,7 +7,6 @@ using Moq;
 using POCO.Domain;
 using WebApi.Implementations.Helpers;
 using WebApi.Implementations.Learning;
-using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.MainProcessing;
 
 namespace UnitTests.LearningProcessorTests
@@ -74,7 +73,7 @@ namespace UnitTests.LearningProcessorTests
                 new AnalysisResult
                 {
                     Guid = Guid.NewGuid(),
-                    AnalysisName = "Гемоглобин (HGB)",
+                    TestName = "Гемоглобин (HGB)",
                     Entry = 1m,
                     Confidence = 1m,
                     PatientGuid = patientGuid,
@@ -85,7 +84,7 @@ namespace UnitTests.LearningProcessorTests
                 new AnalysisResult
                 {
                     Guid = Guid.NewGuid(),
-                    AnalysisName = "Железо в сыворотке",
+                    TestName = "Железо в сыворотке",
                     Entry = 1m,
                     Confidence = 1m,
                     PatientGuid = patientGuid,
@@ -96,7 +95,7 @@ namespace UnitTests.LearningProcessorTests
                 new AnalysisResult
                 {
                     Guid = Guid.NewGuid(),
-                    AnalysisName = "Ферритин",
+                    TestName = "Ферритин",
                     Entry = 1m,
                     Confidence = 1m,
                     PatientGuid = patientGuid,
@@ -107,7 +106,7 @@ namespace UnitTests.LearningProcessorTests
                 new AnalysisResult
                 {
                     Guid = Guid.NewGuid(),
-                    AnalysisName = "Витамин В12",
+                    TestName = "Витамин В12",
                     Entry = 15m,
                     Confidence = 1m,
                     PatientGuid = patientGuid,
@@ -118,7 +117,7 @@ namespace UnitTests.LearningProcessorTests
                 new AnalysisResult
                 {
                     Guid = Guid.NewGuid(),
-                    AnalysisName = "Фолат сыворотки",
+                    TestName = "Фолат сыворотки",
                     Entry = 25m,
                     Confidence = 1m,
                     PatientGuid = patientGuid,
@@ -157,7 +156,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Гемоглобин (HGB)",
+                    Test = "Гемоглобин (HGB)",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "Low",
@@ -166,7 +165,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Железо в сыворотке",
+                    Test = "Железо в сыворотке",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "Low",
@@ -175,7 +174,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Ферритин",
+                    Test = "Ферритин",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "Low",
@@ -184,7 +183,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Витамин В12",
+                    Test = "Витамин В12",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "Normal",
@@ -193,7 +192,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Витамин В12",
+                    Test = "Витамин В12",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "High",
@@ -202,7 +201,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Фолат сыворотки",
+                    Test = "Фолат сыворотки",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "Normal",
@@ -211,7 +210,7 @@ namespace UnitTests.LearningProcessorTests
                 new Rule
                 {
                     Guid = Guid.NewGuid(),
-                    Analysis = "Фолат сыворотки",
+                    Test = "Фолат сыворотки",
                     DiagnosisName = "Железодефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "High",

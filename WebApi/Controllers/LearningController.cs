@@ -31,6 +31,15 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Learn
+        /// </summary>
+        [HttpGet("CreateBaseRules")]
+        public void CreateBaseRules()
+        {
+            _learningProcessor.CreateBaseRules();
+        }
+
+        /// <summary>
         /// Insert new rule in learning DB
         /// </summary>
         /// <param name="dto">DTO with all rule info</param>

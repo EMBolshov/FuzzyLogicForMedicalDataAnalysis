@@ -58,7 +58,7 @@ namespace WebApi.Implementations.Helpers
             {
                 Guid = source.Guid,
                 IsRemoved = source.IsRemoved,
-                Analysis = source.Analysis,
+                Test = source.Test,
                 DiagnosisName = source.DiagnosisName,
                 InputTermName = source.InputTermName,
                 Power = source.Power,

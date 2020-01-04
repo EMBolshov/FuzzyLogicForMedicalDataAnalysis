@@ -101,7 +101,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "INSERT INTO \"AnalysisResult\" (\"Guid\", \"PatientGuid\", \"InsertedDate\", " +
-                          "\"AnalysisName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
+                          "\"TestName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
                           "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"Confidence\", \"IsRemoved\") " +
                           $"VALUES ('{dto.Guid}', '{dto.PatientGuid}', '{dto.InsertedDate}', " +
                           $"'{dto.AnalysisName}', '{dto.TestName}', '{dto.Loinc}', '{dto.ReportedName}', " +
@@ -121,9 +121,10 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "SELECT \"Id\", \"Guid\", \"PatientGuid\", \"InsertedDate\", " +
-                          "\"AnalysisName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
+                          "\"TestName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
                           "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"IsRemoved\" " +
-                          "FROM \"AnalysisResult\" WHERE \"IsRemoved\" = 'False'";
+                          "FROM \"AnalysisResult\" WHERE \"IsRemoved\" = 'False' AND " +
+                          $"\"PatientGuid\" = '{patientGuid}'";
 
                 result = context.Query<AnalysisResult>(sql).ToList();
             }
@@ -146,8 +147,8 @@ namespace Repository
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Analysis\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
-                          $"VALUES ('{ruleDto.Guid}', '{ruleDto.DiagnosisName}', '{ruleDto.Analysis}', " +
+                var sql = "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
+                          $"VALUES ('{ruleDto.Guid}', '{ruleDto.DiagnosisName}', '{ruleDto.Test}', " +
                           $"'{ruleDto.Power}', '{ruleDto.InputTermName}', '{ruleDto.IsRemoved}')";
 
                 context.Execute(sql);
@@ -160,8 +161,8 @@ namespace Repository
 
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "SELECT Id, Guid, DiagnosisName, Analysis, Power, InputTermName, IsRemoved " +
-                          "FROM Rule WHERE IsRemoved = 'False'";
+                var sql = "SELECT \"Id\", \"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\" " +
+                          "FROM \"Rule\" WHERE \"IsRemoved\" = 'False'";
 
                 result = context.Query<Rule>(sql).ToList();
             }
@@ -173,8 +174,8 @@ namespace Repository
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "UPDATE Rule set IsRemoved = \'true\' " +
-                          $"WHERE Guid = '{ruleGuid}'";
+                var sql = "UPDATE \"Rule\" set \"IsRemoved\" = \'true\' " +
+                          $"WHERE \"Guid\" = '{ruleGuid}'";
 
                 context.Execute(sql);
             }

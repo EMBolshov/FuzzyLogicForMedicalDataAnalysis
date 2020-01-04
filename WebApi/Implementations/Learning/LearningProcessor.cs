@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using POCO.Domain;
 using POCO.Domain.Dto;
@@ -60,6 +61,12 @@ namespace WebApi.Implementations.Learning
             _learningDiagnosisProvider.CreateNewDiagnosis(dto);
         }
 
+        public void CreateBaseRules()
+        {
+            var dtoForRules = CreateDtoForBaseRules();
+            dtoForRules.ForEach(x => _learningRuleProvider.CreateRule(x));
+        }
+
         private List<Patient> GetAllPatients()
         {
             return _learningPatientProvider.GetAllPatients();
@@ -73,8 +80,8 @@ namespace WebApi.Implementations.Learning
             foreach (var diagnosis in LearningDiagnoses)
             {
                 var rules = LearningRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
-                var analysisToProcess = rules.Select(x => x.Analysis).ToList();
-                var analysisResults = allAnalysisResults.Where(x => analysisToProcess.Contains(x.AnalysisName)).ToList();
+                var analysisToProcess = rules.Select(x => x.Test).ToList();
+                var analysisResults = allAnalysisResults.Where(x => analysisToProcess.Contains(x.TestName)).ToList();
 
                 var fuzzyResults = new List<FuzzyAnalysisResult>();
 
@@ -82,21 +89,21 @@ namespace WebApi.Implementations.Learning
                 {
                     fuzzyResults.Add(new FuzzyAnalysisResult
                     {
-                        AnalysisName = analysisResult.AnalysisName,
+                        TestName = analysisResult.TestName,
                         InputTermName = "Low",
                         Confidence = GetLowResultConfidence(analysisResult)
                     });
 
                     fuzzyResults.Add(new FuzzyAnalysisResult
                     {
-                        AnalysisName = analysisResult.AnalysisName,
+                        TestName = analysisResult.TestName,
                         InputTermName = "Normal",
                         Confidence = GetNormalResultConfidence(analysisResult)
                     });
 
                     fuzzyResults.Add(new FuzzyAnalysisResult
                     {
-                        AnalysisName = analysisResult.AnalysisName,
+                        TestName = analysisResult.TestName,
                         InputTermName = "High",
                         Confidence = GetHighResultConfidence(analysisResult)
                     });
@@ -108,7 +115,7 @@ namespace WebApi.Implementations.Learning
                 {
                     foreach (var rule in LearningRules)
                     {
-                        if (fuzzyResult.AnalysisName == rule.Analysis)
+                        if (fuzzyResult.TestName == rule.Test)
                         {
                             //For learning data all core rules power must be 1, non-core rules power must be 0
                             fuzzyResult.Confidence *= rule.Power;
@@ -168,6 +175,173 @@ namespace WebApi.Implementations.Learning
             }
 
             return 0m;
+        }
+
+        private List<CreateRuleDto> CreateDtoForBaseRules()
+        {
+            var result = new List<CreateRuleDto>();
+            result.AddRange(CreateJDARules());
+            result.AddRange(CreateAHZRules());
+
+            return result;
+        }
+
+        private List<CreateRuleDto> CreateJDARules()
+        {
+            return new List<CreateRuleDto>
+            {
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                }
+            };
+        }
+
+        private List<CreateRuleDto> CreateAHZRules()
+        {
+            return new List<CreateRuleDto>
+            {
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                }
+            };
         }
     }
 }
