@@ -231,7 +231,7 @@ namespace UnitTests.LearningProcessorTests
             //Assert
             Assert.IsTrue(results.Count > 0);
             Assert.IsTrue(results.All(x => x.PatientGuid == patient.Guid));
-            Assert.IsTrue(results.Any(x => x.Value > 0));
+            Assert.IsTrue(results.All(x => x.Value > 0));
         }
 
         [TestMethod]
