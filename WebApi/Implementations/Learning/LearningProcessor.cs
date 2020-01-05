@@ -33,7 +33,7 @@ namespace WebApi.Implementations.Learning
             _learningDiagnosisProvider = diagnosisServiceResolver("Learning");
             _learningPatientProvider = patientServiceResolver("Learning");
             _learningRuleProvider = ruleServiceResolver("Learning");
-            _reportGenerator = reportGeneratorResolver("Txt");
+            _reportGenerator = reportGeneratorResolver("Html");
         }
 
         public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
