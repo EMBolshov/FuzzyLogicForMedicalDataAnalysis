@@ -220,8 +220,7 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
-            var mockReportGenerator = new TxtReportGenerator();
-            //var mockReportGenerator = new HtmlReportGenerator();
+            var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
                 mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
@@ -694,7 +693,7 @@ namespace UnitTests.LearningProcessorTests
             result.AddRange(CreateRulesForJDA());
             result.AddRange(CreateRulesForAHZ());
             result.AddRange(CreateRulesForFDA());
-            result.AddRange(CreateRulesForB12DA);
+            result.AddRange(CreateRulesForB12DA());
             return result;
         }
 
