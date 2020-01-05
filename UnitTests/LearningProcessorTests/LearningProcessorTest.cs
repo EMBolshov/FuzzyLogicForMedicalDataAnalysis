@@ -231,7 +231,46 @@ namespace UnitTests.LearningProcessorTests
             //Assert
             Assert.IsTrue(results.Count > 0);
             Assert.IsTrue(results.All(x => x.PatientGuid == patient.Guid));
-            Assert.IsTrue(results.All(x => x.Value == 0));
+            Assert.IsTrue(results.Any(x => x.Value > 0));
+        }
+
+        [TestMethod]
+        public void ProcessForPatientTestExpectedJDAAndAHZ()
+        {
+            //Arrange
+            var patient = CreatePatient();
+            var mockPatientDbProvider = new Mock<IPatientProvider>();
+            mockPatientDbProvider.Setup(x => x.GetAllPatients()).Returns(new List<Patient> { patient });
+
+            var analysisResults = CreateAnalysisResultsForJDAAndAHZ(patient.Guid);
+            var mockAnalysisResultDbProvider = new Mock<IAnalysisResultProvider>();
+            mockAnalysisResultDbProvider.Setup(x => x.GetAnalysisResultsByPatientGuid(patient.Guid))
+                .Returns(analysisResults);
+
+            var diagnoses = CreateDiagnoses();
+            var mockDiagnosisDbProvider = new Mock<IDiagnosisProvider>();
+            mockDiagnosisDbProvider.Setup(x => x.GetAllDiagnoses()).Returns(diagnoses);
+
+            var rules = CreateRules();
+            var mockRuleDbProvider = new Mock<IRuleProvider>();
+            mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
+
+            var mockReportGenerator = new HtmlReportGenerator();
+
+            var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+
+            //Act
+            var results = sut.ProcessForAllPatients();
+
+            //Assert
+            Assert.IsTrue(results.Count > 0);
+            results = results.OrderBy(x => x.Value).ToList();
+            Assert.IsTrue(results.All(x => x.PatientGuid == patient.Guid));
+            var guidJDA = diagnoses.First(x => x.Name == "Железодефицитная анемия").Guid;
+            var guidAHZ = diagnoses.First(x => x.Name == "Анемия хронических заболеваний").Guid;
+            Assert.IsTrue(results.Any(x => x.DiagnosisGuid == guidJDA && x.Value > 0));
+            Assert.IsTrue(results.Any(x => x.DiagnosisGuid == guidAHZ && x.Value > 0));
         }
 
         private Patient CreatePatient()
@@ -600,54 +639,6 @@ namespace UnitTests.LearningProcessorTests
                     ReferenceHigh = 20m,
                     Loinc = "1.01",
                     IsRemoved = false
-                },
-                new AnalysisResult
-                {
-                    Guid = Guid.NewGuid(),
-                    TestName = "Железо в сыворотке",
-                    Entry = 12m,
-                    Confidence = 1m,
-                    PatientGuid = patientGuid,
-                    ReferenceLow = 10m,
-                    ReferenceHigh = 20m,
-                    Loinc = "1.02",
-                    IsRemoved = false
-                },
-                new AnalysisResult
-                {
-                    Guid = Guid.NewGuid(),
-                    TestName = "Ферритин",
-                    Entry = 15m,
-                    Confidence = 1m,
-                    PatientGuid = patientGuid,
-                    ReferenceLow = 10m,
-                    ReferenceHigh = 20m,
-                    Loinc = "1.03",
-                    IsRemoved = false
-                },
-                new AnalysisResult
-                {
-                    Guid = Guid.NewGuid(),
-                    TestName = "Витамин В12",
-                    Entry = 15m,
-                    Confidence = 1m,
-                    PatientGuid = patientGuid,
-                    ReferenceLow = 10m,
-                    ReferenceHigh = 20m,
-                    Loinc = "1.04",
-                    IsRemoved = false
-                },
-                new AnalysisResult
-                {
-                    Guid = Guid.NewGuid(),
-                    TestName = "Фолат сыворотки",
-                    Entry = 15m,
-                    Confidence = 1m,
-                    PatientGuid = patientGuid,
-                    ReferenceLow = 10m,
-                    ReferenceHigh = 20m,
-                    Loinc = "1.05",
-                    IsRemoved = false
                 }
             };
         }
@@ -683,6 +674,61 @@ namespace UnitTests.LearningProcessorTests
                     IsRemoved = false,
                     MkbCode = "4.1",
                     Name = "B12-дефицитная анемия"
+                }
+            };
+        }
+
+        private List<AnalysisResult> CreateAnalysisResultsForJDAAndAHZ(Guid patientGuid)
+        {
+            return new List<AnalysisResult>
+            {
+                new AnalysisResult
+                {
+                    Guid = Guid.NewGuid(),
+                    TestName = "Гемоглобин (HGB)",
+                    Entry = 1m,
+                    Confidence = 1m,
+                    PatientGuid = patientGuid,
+                    ReferenceLow = 10m,
+                    ReferenceHigh = 20m,
+                    Loinc = "1.01",
+                    IsRemoved = false
+                },
+                new AnalysisResult
+                {
+                    Guid = Guid.NewGuid(),
+                    TestName = "Железо в сыворотке",
+                    Entry = 1m,
+                    Confidence = 1m,
+                    PatientGuid = patientGuid,
+                    ReferenceLow = 10m,
+                    ReferenceHigh = 20m,
+                    Loinc = "1.02",
+                    IsRemoved = false
+                },
+                new AnalysisResult
+                {
+                    Guid = Guid.NewGuid(),
+                    TestName = "Витамин В12",
+                    Entry = 15m,
+                    Confidence = 1m,
+                    PatientGuid = patientGuid,
+                    ReferenceLow = 10m,
+                    ReferenceHigh = 20m,
+                    Loinc = "1.04",
+                    IsRemoved = false
+                },
+                new AnalysisResult
+                {
+                    Guid = Guid.NewGuid(),
+                    TestName = "Фолат сыворотки",
+                    Entry = 25m,
+                    Confidence = 1m,
+                    PatientGuid = patientGuid,
+                    ReferenceLow = 10m,
+                    ReferenceHigh = 20m,
+                    Loinc = "1.05",
+                    IsRemoved = false
                 }
             };
         }

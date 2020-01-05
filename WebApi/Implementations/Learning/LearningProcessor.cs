@@ -123,8 +123,9 @@ namespace WebApi.Implementations.Learning
             {
                 if (rules.Count(x => x.Test == rule.Test) == 1)
                 {
+                    var anyResults = fuzzyResults.Any(x => x.TestName == rule.Test);
                     var currentRuleValue = 0m;
-                    if (fuzzyResults.Any(x => x.TestName == rule.Test))
+                    if (anyResults)
                     {
                         currentRuleValue = fuzzyResults
                                                .First(x => x.TestName == rule.Test && x.InputTermName == rule.InputTermName)
@@ -136,7 +137,7 @@ namespace WebApi.Implementations.Learning
                         value += currentRuleValue;
                         countedTests++;
                     }
-                    else
+                    else if(anyResults)
                     {
                         return new ProcessedResult
                         {
@@ -150,10 +151,13 @@ namespace WebApi.Implementations.Learning
                 {
                     var nonSingleRules = rules.Where(x => x.Test == rule.Test).ToList();
                     var currentRuleValue = 0m;
+                    var anyResults = false;
                     foreach (var nonSingleRule in nonSingleRules)
                     {
-                        if (fuzzyResults.Any(x => x.TestName == nonSingleRule.Test))
+                        var anySingleResult = fuzzyResults.Any(x => x.TestName == nonSingleRule.Test);
+                        if (anySingleResult)
                         {
+                            anyResults = true;
                             currentRuleValue += fuzzyResults
                                                    .First(x => x.TestName == nonSingleRule.Test && x.InputTermName == nonSingleRule.InputTermName)
                                                    .Confidence * nonSingleRule.Power;
@@ -170,7 +174,7 @@ namespace WebApi.Implementations.Learning
                         value += currentRuleValue;
                         countedTests++;
                     }
-                    else
+                    else if (anyResults)
                     {
                         return new ProcessedResult
                         {
