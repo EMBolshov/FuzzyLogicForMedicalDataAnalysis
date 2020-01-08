@@ -16,5 +16,7 @@ namespace WebApi.Interfaces.MainProcessing
         List<AnalysisResult> LoadAnalysisResultsFromFile(string path);
 
         List<Patient> LoadPatientsFromFile(string path);
+
+        List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid);
     }
 }

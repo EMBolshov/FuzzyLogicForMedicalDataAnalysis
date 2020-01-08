@@ -43,5 +43,10 @@ namespace WebApi.Implementations.Learning
         {
             return _parser.GetPatientsFromCsv(path);
         }
+
+        public List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid)
+        {
+            return _repo.GetPositiveAnalysisResultsByDiagnosisGuid(diagnosisGuid);
+        }
     }
 }

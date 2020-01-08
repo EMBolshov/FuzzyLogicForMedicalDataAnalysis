@@ -8,6 +8,7 @@ namespace WebApi.Implementations.Helpers
 {
     public class HtmlReportGenerator : IReportGenerator
     {
+        //TODO: Отдельный метод SaveReport
         public void GenerateReport(ReportModel model)
         {
             var generatedHtml = HtmlInit();

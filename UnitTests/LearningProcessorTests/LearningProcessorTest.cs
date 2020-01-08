@@ -11,6 +11,8 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace UnitTests.LearningProcessorTests
 {
+    //TODO: Refactor to DiagnosisDecisionMakerTests
+    //TODO: Make tests to LearningProcessor
     [TestClass]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class LearningProcessorTest
@@ -231,7 +233,8 @@ namespace UnitTests.LearningProcessorTests
             //Assert
             Assert.IsTrue(results.Count > 0);
             Assert.IsTrue(results.All(x => x.PatientGuid == patient.Guid));
-            Assert.IsTrue(results.All(x => x.Value > 0));
+            //Для LearningProcessor-а результат диагноза ставится только по полному набору ключевых показателей
+            Assert.IsFalse(results.All(x => x.Value > 0));
         }
 
         [TestMethod]
@@ -269,8 +272,9 @@ namespace UnitTests.LearningProcessorTests
             Assert.IsTrue(results.All(x => x.PatientGuid == patient.Guid));
             var guidJDA = diagnoses.First(x => x.Name == "Железодефицитная анемия").Guid;
             var guidAHZ = diagnoses.First(x => x.Name == "Анемия хронических заболеваний").Guid;
-            Assert.IsTrue(results.Any(x => x.DiagnosisGuid == guidJDA && x.Value > 0));
-            Assert.IsTrue(results.Any(x => x.DiagnosisGuid == guidAHZ && x.Value > 0));
+            //Для LearningProcessor-а результат диагноза ставится только по полному набору ключевых показателей
+            Assert.IsFalse(results.Any(x => x.DiagnosisGuid == guidJDA && x.Value > 0));
+            Assert.IsFalse(results.Any(x => x.DiagnosisGuid == guidAHZ && x.Value > 0));
         }
 
         private Patient CreatePatient()

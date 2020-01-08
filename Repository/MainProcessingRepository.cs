@@ -132,6 +132,26 @@ namespace Repository
             return result;
         }
 
+        //TODO: Implement! Need to join with diagnosis results
+        public List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid)
+        {
+            throw new NotImplementedException();
+            List<AnalysisResult> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "SELECT \"Id\", \"Guid\", \"PatientGuid\", \"InsertedDate\", " +
+                          "\"TestName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
+                          "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"IsRemoved\" " +
+                          "FROM \"AnalysisResult\" WHERE \"IsRemoved\" = 'False' AND " +
+                          $"\"PatientGuid\" = '{diagnosisGuid}'";
+
+                result = context.Query<AnalysisResult>(sql).ToList();
+            }
+
+            return result;
+        }
+
         public void RemoveAnalysisResultByGuid(Guid analysisResultGuid)
         {
             using (var context = new NpgsqlConnection(_connectionString))

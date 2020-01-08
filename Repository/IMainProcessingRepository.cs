@@ -16,6 +16,7 @@ namespace Repository
         void CreateAnalysisResult(CreateAnalysisResultDto dto);
         List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid);
         void RemoveAnalysisResultByGuid(Guid analysisResultGuid);
+        List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid);
         void CreateRule(CreateRuleDto ruleDto);
         List<Rule> GetAllActiveRules();
         void RemoveRuleByGuid(Guid ruleGuid);

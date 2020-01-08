@@ -5,6 +5,7 @@ using System.Linq;
 using POCO.Domain;
 using POCO.Domain.Dto;
 using WebApi.Implementations.Helpers;
+using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.Learning;
 using WebApi.Interfaces.MainProcessing;
@@ -19,6 +20,15 @@ namespace WebApi.Implementations.Learning
         private readonly IPatientProvider _learningPatientProvider;
         private readonly IRuleProvider _learningRuleProvider;
         private readonly IReportGenerator _reportGenerator;
+        private readonly IDiagnosisDecisionMaker _decisionMaker;
+        private readonly List<string> _coreTests = new List<string>
+        {
+            "Гемоглобин (HGB)",
+            "Железо в сыворотке",
+            "Витамин В12",
+            "Фолат сыворотки",
+            "Ферритин"
+        };
 
         private IEnumerable<Rule> LearningRules => _learningRuleProvider.GetAllActiveRules();
         private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
@@ -34,6 +44,8 @@ namespace WebApi.Implementations.Learning
             _learningPatientProvider = patientServiceResolver("Learning");
             _learningRuleProvider = ruleServiceResolver("Learning");
             _reportGenerator = reportGeneratorResolver("Html");
+            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider,
+                _learningPatientProvider, _learningRuleProvider);
         }
 
         public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
@@ -44,13 +56,53 @@ namespace WebApi.Implementations.Learning
             _learningPatientProvider = learningPatientProvider;
             _learningRuleProvider = learningRuleProvider;
             _reportGenerator = reportGenerator;
+            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider,
+                _learningPatientProvider, _learningRuleProvider);
         }
         
+        //TODO: нужно ли возвращать все результаты наверх, если тесты будут переписаны?
         public List<ProcessedResult> ProcessForAllPatients()
         {
             var patients = GetAllPatients();
             var results = new List<ProcessedResult>(); 
-            patients.ForEach(patient => results.AddRange(ProcessForPatient(patient)));
+            //Поставить диагнозы по полным данным
+            patients.ForEach(patient =>
+            {
+                var processedResults = _decisionMaker.ProcessForPatient(patient, true);
+                results.AddRange(processedResults);
+
+                if (processedResults.Any(x => x.Value > 0))
+                {
+                    //Результаты так же доставались в прыдыдущем шаге внутри ProcessForPatient. Передавать их внутрь не хочу,
+                    //из-за того, что они потребуются только для обучения (оправдание избыточности обращения к бд).
+                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+                    
+                    //Подготовка отчетов по результатам для целей тестирования
+                    var reportModel = new ReportModel
+                    {
+                        ProcessedResults = processedResults,
+                        Patient = patient,
+                        AnalysisResults = patientResults,
+                        Diagnoses = LearningDiagnoses.ToList(),
+                        Path = "TestReports"
+                    };
+
+                    _reportGenerator.GenerateReport(reportModel);
+                }
+            });
+
+            //TODO: Среди проставленных диагнозов собрать статистику по другим анализам этого пациента
+
+            foreach (var diagnosis in LearningDiagnoses)
+            {
+                
+            }
+
+            //TODO: Подготовить новые правила с учетом статистики 
+
+            //TODO: Подготовить статистический отчет
+            //TODO: Загрузить новые правила в основную БД
+
             return results;
         }
 
@@ -73,192 +125,6 @@ namespace WebApi.Implementations.Learning
         private List<Patient> GetAllPatients()
         {
             return _learningPatientProvider.GetAllPatients();
-        }
-
-        //TODO: refactor
-        private List<ProcessedResult> ProcessForPatient(Patient patient)
-        {
-            var processedResults = new List<ProcessedResult>();
-            var allAnalysisResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
-            foreach (var diagnosis in LearningDiagnoses)
-            {
-                var rules = LearningRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
-                var testsToProcess = rules.Select(x => x.Test).ToList();
-                var analysisResults = allAnalysisResults.Where(x => testsToProcess.Contains(x.TestName)).ToList();
-
-                if (analysisResults.Any())
-                {
-                    processedResults.Add(GetProcessedResultValue(analysisResults, diagnosis, rules));
-                }
-            }
-
-            if (processedResults.Any(x => x.Value > 0))
-                //&& x.DiagnosisGuid == LearningDiagnoses.First(y => y.Name == "Анемия хронических заболеваний").Guid))
-            {
-                var reportModel = new ReportModel
-                {
-                    ProcessedResults = processedResults,
-                    Patient = patient,
-                    AnalysisResults = allAnalysisResults,
-                    Diagnoses = LearningDiagnoses.ToList(),
-                    Path = "TestReports"
-                };
-
-                _reportGenerator.GenerateReport(reportModel);
-            }
-
-            return processedResults;
-        }
-
-        private ProcessedResult GetProcessedResultValue(List<AnalysisResult> analysisResults, Diagnosis diagnosis, List<Rule> rules)
-        {
-            var value = 0m;
-            var countedTests = 0;
-
-            var fuzzyResults = FuzzyficateResults(analysisResults);
-
-            var distinctRules = rules.GroupBy(x => x.Test).Select(x => x.First()).ToList();
-
-            foreach (var rule in distinctRules)
-            {
-                if (rules.Count(x => x.Test == rule.Test) == 1)
-                {
-                    var anyResults = fuzzyResults.Any(x => x.TestName == rule.Test);
-                    var currentRuleValue = 0m;
-                    if (anyResults)
-                    {
-                        currentRuleValue = fuzzyResults
-                                               .First(x => x.TestName == rule.Test && x.InputTermName == rule.InputTermName)
-                                               .Confidence * rule.Power;
-                    }
-
-                    if (currentRuleValue > 0)
-                    {
-                        value += currentRuleValue;
-                        countedTests++;
-                    }
-                    else if(anyResults)
-                    {
-                        return new ProcessedResult
-                        {
-                            DiagnosisGuid = diagnosis.Guid,
-                            PatientGuid = analysisResults.First().PatientGuid,
-                            Value = 0m
-                        };
-                    }
-                }
-                else
-                {
-                    var nonSingleRules = rules.Where(x => x.Test == rule.Test).ToList();
-                    var currentRuleValue = 0m;
-                    var anyResults = false;
-                    foreach (var nonSingleRule in nonSingleRules)
-                    {
-                        var anySingleResult = fuzzyResults.Any(x => x.TestName == nonSingleRule.Test);
-                        if (anySingleResult)
-                        {
-                            anyResults = true;
-                            currentRuleValue += fuzzyResults
-                                                   .First(x => x.TestName == nonSingleRule.Test && x.InputTermName == nonSingleRule.InputTermName)
-                                                   .Confidence * nonSingleRule.Power;
-                        }
-                    }
-
-                    if (currentRuleValue > 0)
-                    {
-                        if (currentRuleValue > 1)
-                        {
-                            currentRuleValue = 1;
-                        }
-
-                        value += currentRuleValue;
-                        countedTests++;
-                    }
-                    else if (anyResults)
-                    {
-                        return new ProcessedResult
-                        {
-                            DiagnosisGuid = diagnosis.Guid,
-                            PatientGuid = analysisResults.First().PatientGuid,
-                            Value = 0m
-                        };
-                    }
-                }
-            }
-
-            var result = new ProcessedResult
-            {
-                DiagnosisGuid = diagnosis.Guid,
-                PatientGuid = analysisResults.First().PatientGuid,
-                Value = value / countedTests
-            };
-
-            return result;
-        }
-
-        private List<FuzzyAnalysisResult> FuzzyficateResults(List<AnalysisResult> analysisResults)
-        {
-            var fuzzyResults = new List<FuzzyAnalysisResult>();
-
-            foreach (var analysisResult in analysisResults)
-            {
-                fuzzyResults.Add(new FuzzyAnalysisResult
-                {
-                    TestName = analysisResult.TestName,
-                    InputTermName = "Low",
-                    Confidence = GetLowResultConfidence(analysisResult)
-                });
-
-                fuzzyResults.Add(new FuzzyAnalysisResult
-                {
-                    TestName = analysisResult.TestName,
-                    InputTermName = "Normal",
-                    Confidence = GetNormalResultConfidence(analysisResult)
-                });
-
-                fuzzyResults.Add(new FuzzyAnalysisResult
-                {
-                    TestName = analysisResult.TestName,
-                    InputTermName = "High",
-                    Confidence = GetHighResultConfidence(analysisResult)
-                });
-            }
-
-            return fuzzyResults;
-        }
-
-        //TODO: Fuzzyfication
-        private decimal GetLowResultConfidence(AnalysisResult analysisResult)
-        {
-            if (analysisResult.Entry < analysisResult.ReferenceLow)
-            {
-                return 1m;
-            }
-
-            return 0m;
-        }
-
-        //TODO: Fuzzyfication
-        private decimal GetNormalResultConfidence(AnalysisResult analysisResult)
-        {
-            if (analysisResult.Entry >= analysisResult.ReferenceLow
-                && analysisResult.Entry <= analysisResult.ReferenceHigh)
-            {
-                return 1m;
-            }
-
-            return 0m;
-        }
-
-        //TODO: Fuzzyfication
-        private decimal GetHighResultConfidence(AnalysisResult analysisResult)
-        {
-            if (analysisResult.Entry > analysisResult.ReferenceHigh)
-            {
-                return 1m;
-            }
-
-            return 0m;
         }
 
         private List<CreateRuleDto> CreateDtoForBaseRules()

@@ -53,12 +53,11 @@ namespace WebApi
 
                 c.IncludeXmlComments(_appPath);
             });
-
-            //todo: AddTransient vs AddScoped 
+            
             services.Configure<Config>(Configuration.GetSection("Config"));
             services.AddSingleton<IFileParser, FileParser>();
             services.AddSingleton<INamingMapper, AnalysisAndTestsNamingMapper>();
-            services.AddSingleton<ILearningProcessor, LearningProcessor>();
+            services.AddTransient<ILearningProcessor, LearningProcessor>();
             services.AddSingleton<IEntitiesToCreateDtoMapper, EntitiesToCreateDtoMapper>();
 
             services.AddTransient<MainRepositoryWrapper>();

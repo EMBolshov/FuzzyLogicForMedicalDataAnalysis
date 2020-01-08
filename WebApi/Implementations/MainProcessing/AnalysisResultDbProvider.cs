@@ -43,5 +43,10 @@ namespace WebApi.Implementations.MainProcessing
         {
             return _parser.GetPatientsFromCsv(path);
         }
+
+        public List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid)
+        {
+            throw new NotImplementedException("Method can be used only with learning data!");
+        }
     }
 }

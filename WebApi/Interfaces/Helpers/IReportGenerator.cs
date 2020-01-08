@@ -2,9 +2,9 @@
 
 namespace WebApi.Interfaces.Helpers
 {
-    //TODO: DTO for ReportGenerator
     public interface IReportGenerator
     {
+        //TODO: Return byte array
         void GenerateReport(ReportModel model);
     }
 }
