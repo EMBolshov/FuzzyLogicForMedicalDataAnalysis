@@ -13,6 +13,7 @@ namespace UnitTests.LearningProcessorTests
 {
     //TODO: Refactor to DiagnosisDecisionMakerTests
     //TODO: Make tests to LearningProcessor
+    //TODO: Builder for SUT
     [TestClass]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class LearningProcessorTest
@@ -38,10 +39,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
             var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object, 
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object, 
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
             
             //Act
             var results = sut.ProcessForAllPatients();
@@ -75,10 +79,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
             var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object,
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
 
             //Act
             var results = sut.ProcessForAllPatients();
@@ -112,10 +119,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
             var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object,
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
 
             //Act
             var results = sut.ProcessForAllPatients();
@@ -149,10 +159,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
             var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object,
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
 
             //Act
             var results = sut.ProcessForAllPatients();
@@ -186,11 +199,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
-            var mockReportGenerator = new TxtReportGenerator();
-            //var mockReportGenerator = new HtmlReportGenerator();
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
+            var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object,
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
 
             //Act
             var results = sut.ProcessForAllPatients();
@@ -222,10 +237,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
             var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object,
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
 
             //Act
             var results = sut.ProcessForAllPatients();
@@ -258,10 +276,13 @@ namespace UnitTests.LearningProcessorTests
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
 
+            var mockProcessedResultsDbProvider = new Mock<IProcessedResultProvider>();
+
             var mockReportGenerator = new HtmlReportGenerator();
 
             var sut = new LearningProcessor(mockAnalysisResultDbProvider.Object, mockDiagnosisDbProvider.Object,
-                mockPatientDbProvider.Object, mockRuleDbProvider.Object, mockReportGenerator);
+                mockPatientDbProvider.Object, mockRuleDbProvider.Object,
+                mockProcessedResultsDbProvider.Object, mockReportGenerator);
 
             //Act
             var results = sut.ProcessForAllPatients();

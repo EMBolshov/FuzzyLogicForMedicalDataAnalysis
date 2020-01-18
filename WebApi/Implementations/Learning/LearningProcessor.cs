@@ -19,6 +19,7 @@ namespace WebApi.Implementations.Learning
         private readonly IDiagnosisProvider _learningDiagnosisProvider;
         private readonly IPatientProvider _learningPatientProvider;
         private readonly IRuleProvider _learningRuleProvider;
+        private readonly IProcessedResultProvider _learningProcessedResultProvider;
         private readonly IReportGenerator _reportGenerator;
         private readonly IDiagnosisDecisionMaker _decisionMaker;
         private readonly List<string> _coreTests = new List<string>
@@ -37,24 +38,28 @@ namespace WebApi.Implementations.Learning
             Startup.DiagnosisServiceResolver diagnosisServiceResolver, 
             Startup.AnalysisResultServiceResolver analysisResultServiceResolver, 
             Startup.PatientServiceResolver patientServiceResolver,
+            Startup.ProcessedResultServiceResolver processedResultResolver,
             Startup.ReportGeneratorResolver reportGeneratorResolver)
         {
             _learningAnalysisResultProvider = analysisResultServiceResolver("Learning");
             _learningDiagnosisProvider = diagnosisServiceResolver("Learning");
             _learningPatientProvider = patientServiceResolver("Learning");
             _learningRuleProvider = ruleServiceResolver("Learning");
+            _learningProcessedResultProvider = processedResultResolver("Learning");
             _reportGenerator = reportGeneratorResolver("Html");
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider,
                 _learningPatientProvider, _learningRuleProvider);
         }
 
         public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
-            IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider, IReportGenerator reportGenerator)
+            IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider, 
+            IProcessedResultProvider learningProcessedResultProvider, IReportGenerator reportGenerator)
         {
             _learningAnalysisResultProvider = learningAnalysisResultProvider;
             _learningDiagnosisProvider = learningDiagnosisProvider;
             _learningPatientProvider = learningPatientProvider;
             _learningRuleProvider = learningRuleProvider;
+            _learningProcessedResultProvider = learningProcessedResultProvider;
             _reportGenerator = reportGenerator;
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider,
                 _learningPatientProvider, _learningRuleProvider);
@@ -73,6 +78,9 @@ namespace WebApi.Implementations.Learning
 
                 if (processedResults.Any(x => x.Value > 0))
                 {
+                    processedResults.Where(x => x.Value > 0).ToList()
+                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+
                     //Результаты так же доставались в прыдыдущем шаге внутри ProcessForPatient. Передавать их внутрь не хочу,
                     //из-за того, что они потребуются только для обучения (оправдание избыточности обращения к бд).
                     var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
@@ -91,11 +99,21 @@ namespace WebApi.Implementations.Learning
                 }
             });
 
-            //TODO: Среди проставленных диагнозов собрать статистику по другим анализам этого пациента
+            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
 
+            //TODO: Среди проставленных диагнозов собрать статистику по другим тестам
             foreach (var diagnosis in LearningDiagnoses)
             {
-                
+                var sickPatientGuids = allPositiveResults.Where(x => x.DiagnosisGuid == diagnosis.Guid)
+                    .Select(x => x.PatientGuid).ToList();
+                foreach (var patientGuid in sickPatientGuids)
+                {
+                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patientGuid);
+                    var nonCoreResults = patientResults.Where(x => !_coreTests.Contains(x.TestName)).ToList();
+                    
+                    //TODO: Фаззификация результатов и занесение их в Dictionary
+                    //(добавляем новые тесты или обновляем счетчик у старых)
+                }
             }
 
             //TODO: Подготовить новые правила с учетом статистики 

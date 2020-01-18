@@ -132,24 +132,10 @@ namespace Repository
             return result;
         }
 
-        //TODO: Implement! Need to join with diagnosis results
+        //TODO: Implement! Need to join with diagnosis results - А оно мне действительно надо?
         public List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid)
         {
             throw new NotImplementedException();
-            List<AnalysisResult> result;
-
-            using (var context = new NpgsqlConnection(_connectionString))
-            {
-                var sql = "SELECT \"Id\", \"Guid\", \"PatientGuid\", \"InsertedDate\", " +
-                          "\"TestName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
-                          "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"IsRemoved\" " +
-                          "FROM \"AnalysisResult\" WHERE \"IsRemoved\" = 'False' AND " +
-                          $"\"PatientGuid\" = '{diagnosisGuid}'";
-
-                result = context.Query<AnalysisResult>(sql).ToList();
-            }
-
-            return result;
         }
 
         public void RemoveAnalysisResultByGuid(Guid analysisResultGuid)
@@ -199,6 +185,33 @@ namespace Repository
 
                 context.Execute(sql);
             }
+        }
+
+        public void SaveProcessedResult(ProcessedResult result)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "INSERT INTO \"ProcessedResult\" (\"Guid\", \"PatientGuid\", \"DiagnosisGuid\", \"Value\", \"InsertedDate\") " +
+                          $"VALUES ('{result.Guid}', '{result.PatientGuid}', '{result.DiagnosisGuid}', " +
+                          $"'{result.Value}', '{result.InsertedDate}')";
+
+                context.Execute(sql);
+            }
+        }
+
+        public List<ProcessedResult> GetAllPositiveResults()
+        {
+            List<ProcessedResult> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "SELECT \"Id\", \"Guid\", \"PatientGuid\", \"DiagnosisGuid\", \"Value\", \"InsertedDate\" " +
+                          "FROM \"ProcessedResult\" WHERE \"Value\" > 0";
+
+                result = context.Query<ProcessedResult>(sql).ToList();
+            }
+
+            return result;
         }
     }
 }

@@ -79,7 +79,19 @@ WITH (
 
 ----------------------------------------------------------------------------
 
-
+CREATE TABLE "ProcessedResult"
+(
+  "Id" SERIAL,  
+  "Guid" uuid NOT NULL,
+  "PatientGuid" uuid NOT NULL,
+  "DiagnosisGuid" uuid NOT NULL,
+  "Value" decimal NOT NULL,
+  "InsertedDate" timestamp without time zone NOT NULL,
+  CONSTRAINT "PK_ProcessedResult" PRIMARY KEY ("Id")
+)
+WITH (
+  OIDS=FALSE
+);
 
 
 

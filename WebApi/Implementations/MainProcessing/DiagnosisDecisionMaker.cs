@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using POCO.Domain;
 using WebApi.Interfaces.MainProcessing;
@@ -76,6 +77,8 @@ namespace WebApi.Implementations.MainProcessing
                     {
                         return new ProcessedResult
                         {
+                            Guid = Guid.NewGuid(),
+                            InsertedDate = DateTime.Now,
                             DiagnosisGuid = diagnosis.Guid,
                             PatientGuid = analysisResults.First().PatientGuid,
                             Value = 0m
@@ -113,6 +116,8 @@ namespace WebApi.Implementations.MainProcessing
                     {
                         return new ProcessedResult
                         {
+                            Guid = Guid.NewGuid(),
+                            InsertedDate = DateTime.Now,
                             DiagnosisGuid = diagnosis.Guid,
                             PatientGuid = analysisResults.First().PatientGuid,
                             Value = 0m
@@ -123,6 +128,8 @@ namespace WebApi.Implementations.MainProcessing
 
             var result = new ProcessedResult
             {
+                Guid = Guid.NewGuid(),
+                InsertedDate = DateTime.Now,
                 DiagnosisGuid = diagnosis.Guid,
                 PatientGuid = analysisResults.First().PatientGuid,
                 Value = value / countedTests

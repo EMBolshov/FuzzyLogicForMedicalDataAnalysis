@@ -63,6 +63,11 @@ namespace WebApi.Implementations.Learning
             _repo.RemoveAnalysisResultByGuid(analysisResultGuid);
         }
 
+        public List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CreateRule(CreateRuleDto ruleDto)
         {
             _repo.CreateRule(ruleDto);
@@ -76,6 +81,16 @@ namespace WebApi.Implementations.Learning
         public void RemoveRuleByGuid(Guid ruleGuid)
         {
             _repo.RemoveRuleByGuid(ruleGuid);
+        }
+
+        public void SaveProcessedResult(ProcessedResult result)
+        {
+            _repo.SaveProcessedResult(result);
+        }
+
+        public List<ProcessedResult> GetAllPositiveResults()
+        {
+            return _repo.GetAllPositiveResults();
         }
     }
 }

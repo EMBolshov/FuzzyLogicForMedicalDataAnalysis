@@ -20,5 +20,7 @@ namespace Repository
         void CreateRule(CreateRuleDto ruleDto);
         List<Rule> GetAllActiveRules();
         void RemoveRuleByGuid(Guid ruleGuid);
+        void SaveProcessedResult(ProcessedResult result);
+        List<ProcessedResult> GetAllPositiveResults();
     }
 }
