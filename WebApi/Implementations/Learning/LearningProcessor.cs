@@ -22,6 +22,7 @@ namespace WebApi.Implementations.Learning
         private readonly IProcessedResultProvider _learningProcessedResultProvider;
         private readonly IReportGenerator _reportGenerator;
         private readonly IDiagnosisDecisionMaker _decisionMaker;
+        private readonly IFuzzyficator _fuzzyficator;
         private readonly List<string> _coreTests = new List<string>
         {
             "Гемоглобин (HGB)",
@@ -47,8 +48,9 @@ namespace WebApi.Implementations.Learning
             _learningRuleProvider = ruleServiceResolver("Learning");
             _learningProcessedResultProvider = processedResultResolver("Learning");
             _reportGenerator = reportGeneratorResolver("Html");
-            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider,
-                _learningPatientProvider, _learningRuleProvider);
+            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider,
+                _learningDiagnosisProvider, _learningRuleProvider);
+            _fuzzyficator = new Fuzzyficator();
         }
 
         public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
@@ -61,8 +63,9 @@ namespace WebApi.Implementations.Learning
             _learningRuleProvider = learningRuleProvider;
             _learningProcessedResultProvider = learningProcessedResultProvider;
             _reportGenerator = reportGenerator;
-            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider,
-                _learningPatientProvider, _learningRuleProvider);
+            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, 
+                _learningDiagnosisProvider, _learningRuleProvider);
+            _fuzzyficator = new Fuzzyficator();
         }
         
         //TODO: нужно ли возвращать все результаты наверх, если тесты будут переписаны?
@@ -71,52 +74,15 @@ namespace WebApi.Implementations.Learning
             var patients = GetAllPatients();
             var results = new List<ProcessedResult>(); 
             //Поставить диагнозы по полным данным
-            patients.ForEach(patient =>
-            {
-                var processedResults = _decisionMaker.ProcessForPatient(patient, true);
-                results.AddRange(processedResults);
-
-                if (processedResults.Any(x => x.Value > 0))
-                {
-                    processedResults.Where(x => x.Value > 0).ToList()
-                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
-
-                    //Результаты так же доставались в прыдыдущем шаге внутри ProcessForPatient. Передавать их внутрь не хочу,
-                    //из-за того, что они потребуются только для обучения (оправдание избыточности обращения к бд).
-                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
-                    
-                    //Подготовка отчетов по результатам для целей тестирования
-                    var reportModel = new ReportModel
-                    {
-                        ProcessedResults = processedResults,
-                        Patient = patient,
-                        AnalysisResults = patientResults,
-                        Diagnoses = LearningDiagnoses.ToList(),
-                        Path = "TestReports"
-                    };
-
-                    _reportGenerator.GenerateReport(reportModel);
-                }
-            });
+            patients.ForEach(MakeDiagnosisDecisionAndGenerateReports);
 
             var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
 
-            //TODO: Среди проставленных диагнозов собрать статистику по другим тестам
-            foreach (var diagnosis in LearningDiagnoses)
-            {
-                var sickPatientGuids = allPositiveResults.Where(x => x.DiagnosisGuid == diagnosis.Guid)
-                    .Select(x => x.PatientGuid).ToList();
-                foreach (var patientGuid in sickPatientGuids)
-                {
-                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patientGuid);
-                    var nonCoreResults = patientResults.Where(x => !_coreTests.Contains(x.TestName)).ToList();
-                    
-                    //TODO: Фаззификация результатов и занесение их в Dictionary
-                    //(добавляем новые тесты или обновляем счетчик у старых)
-                }
-            }
+            var statistics = GetPositiveResultsStatistics(allPositiveResults);
 
             //TODO: Подготовить новые правила с учетом статистики 
+
+            var newRules = MakeNewRulesBasedOnStatistics(statistics);
 
             //TODO: Подготовить статистический отчет
             //TODO: Загрузить новые правила в основную БД
@@ -138,6 +104,109 @@ namespace WebApi.Implementations.Learning
         {
             var dtoForRules = CreateDtoForBaseRules();
             dtoForRules.ForEach(x => _learningRuleProvider.CreateRule(x));
+        }
+
+        private void MakeDiagnosisDecisionAndGenerateReports(Patient patient)
+        {
+            var processedResults = _decisionMaker.ProcessForPatient(patient, true);
+            //TODO: переписать тесты! Результаты возвращает только decisionMaker, тесты LearningProcessor-а должны быть
+            //TODO: полностью другие
+            //results.AddRange(processedResults);
+
+            if (processedResults.Any(x => x.Value > 0))
+            {
+                processedResults.Where(x => x.Value > 0).ToList()
+                    .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+
+                //Результаты так же доставались в прыдыдущем шаге внутри ProcessForPatient. Передавать их внутрь не хочу,
+                //из-за того, что они потребуются только для обучения (оправдание избыточности обращения к бд).
+                var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+
+                //Подготовка отчетов по результатам для целей тестирования
+                var reportModel = new ReportModel
+                {
+                    ProcessedResults = processedResults,
+                    Patient = patient,
+                    AnalysisResults = patientResults,
+                    Diagnoses = LearningDiagnoses.ToList(),
+                    Path = "TestReports"
+                };
+
+                _reportGenerator.GenerateReport(reportModel);
+            }
+        }
+
+        private Dictionary<Diagnosis, List<FuzzyAnalysisResult>> GetPositiveResultsStatistics(List<ProcessedResult> results)
+        {
+            var statistic = new Dictionary<Diagnosis, List<FuzzyAnalysisResult>>();
+            //TODO: Среди проставленных диагнозов собрать статистику по другим тестам
+            foreach (var diagnosis in LearningDiagnoses)
+            {
+                var fuzzyResults = new List<FuzzyAnalysisResult>();
+                var sickPatientGuids = results.Where(x => x.DiagnosisGuid == diagnosis.Guid)
+                    .Select(x => x.PatientGuid).ToList();
+                
+                foreach (var patientGuid in sickPatientGuids)
+                {
+                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patientGuid);
+                    var nonCoreResults = patientResults.Where(x => !_coreTests.Contains(x.TestName)).ToList();
+
+                    //TODO: Фаззификация результатов и занесение их в Dictionary
+                    //(добавляем новые тесты или обновляем счетчик у старых)
+                    fuzzyResults.AddRange(_fuzzyficator.FuzzyficateResults(nonCoreResults));
+                }
+
+                if (!statistic.ContainsKey(diagnosis))
+                {
+                    statistic.Add(diagnosis, fuzzyResults);
+                }
+            }
+
+            return statistic;
+        }
+
+        private List<Rule> MakeNewRulesBasedOnStatistics(Dictionary<Diagnosis, List<FuzzyAnalysisResult>> statistics)
+        {
+            var result = new List<Rule>();
+
+            foreach (var diagnosis in statistics.Keys)
+            {
+                var analysisResults = statistics[diagnosis];
+
+                var tests = analysisResults.Select(x => x.TestName).Distinct().ToList();
+                var terms = analysisResults.Select(x => x.InputTermName).Distinct().ToList();
+
+                foreach (var test in tests)
+                {
+                    foreach (var term in terms)
+                    {
+                        var testResultByTerm = analysisResults
+                            .Where(x => x.InputTermName == term && x.TestName == test).ToList();
+                        decimal positiveResultsCount = testResultByTerm.Count(x => x.Confidence > 0);
+                        var power = positiveResultsCount / testResultByTerm.Count;
+
+                        if (power > 0)
+                        {
+                            result.Add(CreateRule(diagnosis.Name, term, power, test));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private Rule CreateRule(string diagnosis, string term, decimal power, string test)
+        {
+            return new Rule
+            {
+                Guid = Guid.NewGuid(),
+                DiagnosisName = diagnosis,
+                InputTermName = term,
+                Power = power,
+                IsRemoved = false,
+                Test = test
+            };
         }
 
         private List<Patient> GetAllPatients()

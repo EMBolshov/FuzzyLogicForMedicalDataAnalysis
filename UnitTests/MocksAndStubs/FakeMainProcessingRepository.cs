@@ -60,6 +60,11 @@ namespace UnitTests.MocksAndStubs
             throw new NotImplementedException();
         }
 
+        public List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CreateRule(CreateRuleDto ruleDto)
         {
             throw new NotImplementedException();
@@ -71,6 +76,16 @@ namespace UnitTests.MocksAndStubs
         }
 
         public void RemoveRuleByGuid(Guid ruleGuid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveProcessedResult(ProcessedResult result)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<ProcessedResult> GetAllPositiveResults()
         {
             throw new NotImplementedException();
         }

@@ -8,28 +8,29 @@ namespace WebApi.Implementations.MainProcessing
 {
     public class DiagnosisDecisionMaker : IDiagnosisDecisionMaker
     {
-        private readonly IAnalysisResultProvider _learningAnalysisResultProvider;
-        private readonly IDiagnosisProvider _learningDiagnosisProvider;
-        private readonly IPatientProvider _learningPatientProvider;
+        private readonly IAnalysisResultProvider _analysisResultProvider;
+        private readonly IDiagnosisProvider _diagnosisProvider;
         private readonly IRuleProvider _learningRuleProvider;
+        private readonly IFuzzyficator _fuzzyficator;
 
         //TODO: Cache
         private IEnumerable<Rule> LearningRules => _learningRuleProvider.GetAllActiveRules();
-        private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
+        private IEnumerable<Diagnosis> LearningDiagnoses => _diagnosisProvider.GetAllDiagnoses();
         
-        public DiagnosisDecisionMaker(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider, IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider)
+        public DiagnosisDecisionMaker(IAnalysisResultProvider analysisResultProvider, 
+            IDiagnosisProvider diagnosisProvider, IRuleProvider ruleProvider)
         {
-            _learningAnalysisResultProvider = learningAnalysisResultProvider;
-            _learningDiagnosisProvider = learningDiagnosisProvider;
-            _learningPatientProvider = learningPatientProvider;
-            _learningRuleProvider = learningRuleProvider;
+            _analysisResultProvider = analysisResultProvider;
+            _diagnosisProvider = diagnosisProvider;
+            _learningRuleProvider = ruleProvider;
+            _fuzzyficator = new Fuzzyficator();
         }
 
         //TODO: Тесты
         public List<ProcessedResult> ProcessForPatient(Patient patient, bool isOnlyFullData = false)
         {
             var processedResults = new List<ProcessedResult>();
-            var allAnalysisResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+            var allAnalysisResults = _analysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
             foreach (var diagnosis in LearningDiagnoses)
             {
                 var rules = LearningRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
@@ -51,7 +52,7 @@ namespace WebApi.Implementations.MainProcessing
             var value = 0m;
             var countedTests = 0;
 
-            var fuzzyResults = FuzzyficateResults(analysisResults);
+            var fuzzyResults = _fuzzyficator.FuzzyficateResults(analysisResults);
 
             var distinctRules = rules.GroupBy(x => x.Test).Select(x => x.First()).ToList();
 
@@ -136,71 +137,6 @@ namespace WebApi.Implementations.MainProcessing
             };
 
             return result;
-        }
-
-        private List<FuzzyAnalysisResult> FuzzyficateResults(List<AnalysisResult> analysisResults)
-        {
-            var fuzzyResults = new List<FuzzyAnalysisResult>();
-
-            foreach (var analysisResult in analysisResults)
-            {
-                fuzzyResults.Add(new FuzzyAnalysisResult
-                {
-                    TestName = analysisResult.TestName,
-                    InputTermName = "Low",
-                    Confidence = GetLowResultConfidence(analysisResult)
-                });
-
-                fuzzyResults.Add(new FuzzyAnalysisResult
-                {
-                    TestName = analysisResult.TestName,
-                    InputTermName = "Normal",
-                    Confidence = GetNormalResultConfidence(analysisResult)
-                });
-
-                fuzzyResults.Add(new FuzzyAnalysisResult
-                {
-                    TestName = analysisResult.TestName,
-                    InputTermName = "High",
-                    Confidence = GetHighResultConfidence(analysisResult)
-                });
-            }
-
-            return fuzzyResults;
-        }
-
-        //TODO: Fuzzyfication
-        private decimal GetLowResultConfidence(AnalysisResult analysisResult)
-        {
-            if (analysisResult.Entry < analysisResult.ReferenceLow)
-            {
-                return 1m;
-            }
-
-            return 0m;
-        }
-
-        //TODO: Fuzzyfication
-        private decimal GetNormalResultConfidence(AnalysisResult analysisResult)
-        {
-            if (analysisResult.Entry >= analysisResult.ReferenceLow
-                && analysisResult.Entry <= analysisResult.ReferenceHigh)
-            {
-                return 1m;
-            }
-
-            return 0m;
-        }
-
-        //TODO: Fuzzyfication
-        private decimal GetHighResultConfidence(AnalysisResult analysisResult)
-        {
-            if (analysisResult.Entry > analysisResult.ReferenceHigh)
-            {
-                return 1m;
-            }
-
-            return 0m;
         }
     }
 }
