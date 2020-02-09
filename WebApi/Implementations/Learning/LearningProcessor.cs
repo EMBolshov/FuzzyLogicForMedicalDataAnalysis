@@ -85,6 +85,7 @@ namespace WebApi.Implementations.Learning
             var newRules = MakeNewRulesBasedOnStatistics(statistics);
 
             //TODO: Подготовить статистический отчет
+
             //TODO: Загрузить новые правила в основную БД
 
             return results;

@@ -10,3 +10,15 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\Repository\bin\Debug
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\Repository\obj\Debug\netstandard2.0\Repository.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\Repository\obj\Debug\netstandard2.0\Repository.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\Repository\obj\Debug\netstandard2.0\Repository.pdb
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\bin\Debug\netstandard2.0\Repository.deps.json
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\bin\Debug\netstandard2.0\Repository.dll
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\bin\Debug\netstandard2.0\Repository.pdb
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\bin\Debug\netstandard2.0\POCO.Domain.dll
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\bin\Debug\netstandard2.0\POCO.Domain.pdb
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.csprojAssemblyReference.cache
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.csproj.CoreCompileInputs.cache
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.AssemblyInfoInputs.cache
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.AssemblyInfo.cs
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.csproj.CopyComplete
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.dll
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\Repository\obj\Debug\netstandard2.0\Repository.pdb

@@ -26,7 +26,6 @@ namespace WebApi.Implementations.MainProcessing
             _fuzzyficator = new Fuzzyficator();
         }
 
-        //TODO: Тесты
         public List<ProcessedResult> ProcessForPatient(Patient patient, bool isOnlyFullData = false)
         {
             var processedResults = new List<ProcessedResult>();
