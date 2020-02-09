@@ -4,3 +4,5 @@ TestResults/
 GeneratedTestDataAggregation/
 .vs/FuzzyLogicInMedicalData/v15/Server/sqlite3/storage.ide-wal
 .vs/FuzzyLogicInMedicalData/v15/Server/sqlite3/storage.ide-shm
+WebApi/TestReports/
+UnitTests/bin/Debug/netcoreapp2.1/TestReports/
