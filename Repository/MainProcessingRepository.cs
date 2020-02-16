@@ -101,7 +101,7 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "INSERT INTO \"AnalysisResult\" (\"Guid\", \"PatientGuid\", \"InsertedDate\", " +
-                          "\"TestName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
+                          "\"AnalysisName\", \"TestName\", \"Loinc\", \"ReportedName\", \"Entry\", " +
                           "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"Confidence\", \"IsRemoved\") " +
                           $"VALUES ('{dto.Guid}', '{dto.PatientGuid}', '{dto.InsertedDate}', " +
                           $"'{dto.AnalysisName}', '{dto.TestName}', '{dto.Loinc}', '{dto.ReportedName}', " +

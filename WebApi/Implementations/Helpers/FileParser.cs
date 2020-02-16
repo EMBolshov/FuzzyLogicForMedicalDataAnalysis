@@ -86,6 +86,8 @@ namespace WebApi.Implementations.Helpers
                 result.Add(patient);
             });
 
+            result = result.GroupBy(x => x.Guid, (key, group) => group.First()).ToList();
+
             return result;
         }
     }
