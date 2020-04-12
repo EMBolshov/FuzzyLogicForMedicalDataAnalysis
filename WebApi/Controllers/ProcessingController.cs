@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using POCO.Domain.Dto;
+using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
 {
@@ -9,26 +11,20 @@ namespace WebApi.Controllers
     [ApiController]
     public class ProcessingController : ControllerBase
     {
-        /// <summary>
-        /// Temp
-        /// </summary>
-        /// <param name="id">paramTest</param>
-        /// <remarks>QWEQWE</remarks>
-        /// <returns></returns>
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        private readonly IMainProcessor _processor;
+
+        public ProcessingController(IMainProcessor processor)
         {
-            return "value";
+            _processor = processor;
         }
 
         /// <summary>
-        /// 
+        /// Process for all
         /// </summary>
-        /// <param name="value"></param>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet("ProcessForAllPatients")]
+        public void ProcessForAllPatients()
         {
-
+            _processor.ProcessForAllPatients();
         }
     }
 }

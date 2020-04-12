@@ -10,19 +10,19 @@ namespace WebApi.Implementations.MainProcessing
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
         private readonly IDiagnosisProvider _diagnosisProvider;
-        private readonly IRuleProvider _learningRuleProvider;
+        private readonly IRuleProvider _ruleProvider;
         private readonly IFuzzyficator _fuzzyficator;
 
         //TODO: Cache
-        private IEnumerable<Rule> LearningRules => _learningRuleProvider.GetAllActiveRules();
-        private IEnumerable<Diagnosis> LearningDiagnoses => _diagnosisProvider.GetAllDiagnoses();
+        private IEnumerable<Rule> Rules => _ruleProvider.GetAllActiveRules();
+        private IEnumerable<Diagnosis> Diagnoses => _diagnosisProvider.GetAllDiagnoses();
         
         public DiagnosisDecisionMaker(IAnalysisResultProvider analysisResultProvider, 
             IDiagnosisProvider diagnosisProvider, IRuleProvider ruleProvider)
         {
             _analysisResultProvider = analysisResultProvider;
             _diagnosisProvider = diagnosisProvider;
-            _learningRuleProvider = ruleProvider;
+            _ruleProvider = ruleProvider;
             _fuzzyficator = new Fuzzyficator();
         }
 
@@ -31,9 +31,9 @@ namespace WebApi.Implementations.MainProcessing
             var processedResults = new List<ProcessedResult>();
             var allAnalysisResults = _analysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
 
-            foreach (var diagnosis in LearningDiagnoses)
+            foreach (var diagnosis in Diagnoses)
             {
-                var rules = LearningRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
+                var rules = Rules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
                 var testsToProcess = rules.Select(x => x.Test).ToList();
                 var analysisResults = allAnalysisResults.Where(x => testsToProcess.Contains(x.TestName)).ToList();
 

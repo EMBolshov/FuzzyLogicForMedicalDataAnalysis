@@ -154,7 +154,6 @@ namespace Repository
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-
                 context.Execute(
                     "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
                     "VALUES (@Guid, @DiagnosisName, @Test, @Power, @InputTermName, @IsRemoved);",

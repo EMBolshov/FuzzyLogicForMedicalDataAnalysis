@@ -89,6 +89,14 @@ namespace WebApi.Implementations.Learning
 
             //TODO: Загрузить новые правила в основную БД
 
+            //TODO: убрать загрузку основных правил
+            var rules = _learningRuleProvider.GetAllActiveRules();
+            rules.ForEach(x =>
+            {
+                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(x);
+                _mainProcessingRuleProvider.CreateRule(ruleDto);
+            });
+
             foreach (var newRule in newRules)
             {
                 var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);

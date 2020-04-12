@@ -52,11 +52,12 @@ namespace WebApi
             services.AddSingleton<IFileParser, FileParser>();
             services.AddSingleton<INamingMapper, AnalysisAndTestsNamingMapper>();
             services.AddTransient<ILearningProcessor, LearningProcessor>();
+            services.AddTransient<IMainProcessor, MainProcessor>();
             services.AddSingleton<IEntitiesToCreateDtoMapper, EntitiesToCreateDtoMapper>();
 
             services.AddTransient<IMainProcessingRepository, MainRepositoryWrapper>();
             services.AddTransient<ILearningRepository, LearningRepositoryWrapper>();
-
+            
             services.AddTransient<AnalysisResultDbProvider>();
             services.AddTransient<AnalysisResultLearningDbProvider>();
             services.AddTransient<PatientDbProvider>();

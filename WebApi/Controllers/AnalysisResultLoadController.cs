@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Repository;
 using WebApi.Implementations.Learning;
+using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.MainProcessing;
 
@@ -13,14 +14,19 @@ namespace WebApi.Controllers
     [ApiController]
     public class AnalysisResultLoadController : ControllerBase
     {
-        private readonly IAnalysisResultProvider _analysisResultProvider;
-        private readonly IPatientProvider _patientProvider;
+        private readonly IAnalysisResultProvider _analysisResultProviderLearn;
+        private readonly IPatientProvider _patientProviderLearn;
+        private readonly IAnalysisResultProvider _analysisResultProviderMain;
+        private readonly IPatientProvider _patientProviderMain;
         private readonly IEntitiesToCreateDtoMapper _dtoMapper;
 
-        public AnalysisResultLoadController(ILearningRepository repo, IFileParser parser, IEntitiesToCreateDtoMapper dtoMapper)
+        public AnalysisResultLoadController(ILearningRepository learnRepo, IMainProcessingRepository mainRepo,
+            IFileParser parser, IEntitiesToCreateDtoMapper dtoMapper)
         {
-            _analysisResultProvider = new AnalysisResultLearningDbProvider(repo, parser);
-            _patientProvider = new PatientLearningDbProvider(repo);
+            _analysisResultProviderLearn = new AnalysisResultLearningDbProvider(learnRepo, parser);
+            _patientProviderLearn = new PatientLearningDbProvider(learnRepo);
+            _analysisResultProviderMain = new AnalysisResultDbProvider(mainRepo, parser);
+            _patientProviderMain = new PatientDbProvider(mainRepo);
             _dtoMapper = dtoMapper;
         }
 
@@ -31,11 +37,11 @@ namespace WebApi.Controllers
         [HttpGet("LoadAnalysisResultsFromFileToLearningDb")]
         public void LoadAnalysisResultsFromFileToLearningDb(string path)
         {
-            var analysisResults = _analysisResultProvider.LoadAnalysisResultsFromFile(path);
+            var analysisResults = _analysisResultProviderLearn.LoadAnalysisResultsFromFile(path);
             foreach (var analysisResult in analysisResults)
             {
                 var dto = _dtoMapper.AnalysisResultToDto(analysisResult);
-                _analysisResultProvider.CreateNewAnalysisResult(dto);
+                _analysisResultProviderLearn.CreateNewAnalysisResult(dto);
             }
         }
 
@@ -46,11 +52,41 @@ namespace WebApi.Controllers
         [HttpGet("LoadPatientsFromFileToLearningDb")]
         public void LoadPatientsFromFileToLearningDb(string path)
         {
-            var patients = _analysisResultProvider.LoadPatientsFromFile(path);
+            var patients = _analysisResultProviderLearn.LoadPatientsFromFile(path);
             foreach (var patient in patients)
             {
                 var dto = _dtoMapper.PatientToCreatePatientDto(patient);
-                _patientProvider.CreateNewPatient(dto);
+                _patientProviderLearn.CreateNewPatient(dto);
+            }
+        }
+
+        /// <summary>
+        /// C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv
+        /// </summary>
+        /// <param name="path">C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv</param>
+        [HttpGet("LoadAnalysisResultsFromFileToMainDb")]
+        public void LoadAnalysisResultsFromFileToMainDb(string path)
+        {
+            var analysisResults = _analysisResultProviderLearn.LoadAnalysisResultsFromFile(path);
+            foreach (var analysisResult in analysisResults)
+            {
+                var dto = _dtoMapper.AnalysisResultToDto(analysisResult);
+                _analysisResultProviderMain.CreateNewAnalysisResult(dto);
+            }
+        }
+
+        /// <summary>
+        /// C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv
+        /// </summary>
+        /// <param name="path">C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\WebApi\data.csv</param>
+        [HttpGet("LoadPatientsFromFileToMainDb")]
+        public void LoadPatientsFromFileToMainDb(string path)
+        {
+            var patients = _analysisResultProviderLearn.LoadPatientsFromFile(path);
+            foreach (var patient in patients)
+            {
+                var dto = _dtoMapper.PatientToCreatePatientDto(patient);
+                _patientProviderMain.CreateNewPatient(dto);
             }
         }
     }
