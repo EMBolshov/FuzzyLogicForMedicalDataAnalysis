@@ -8,7 +8,7 @@ using WebApi.POCO;
 
 namespace WebApi.Implementations.MainProcessing
 {
-    public class MainRepositoryWrapper : IMainProcessingRepository
+    public class MainRepositoryWrapper : IMainProcessingRepository, IService
     {
         private readonly IMainProcessingRepository _repo;
         

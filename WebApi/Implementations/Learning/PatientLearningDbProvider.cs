@@ -7,13 +7,13 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.Learning
 {
-    public class PatientLearningDbProvider : IPatientProvider
+    public class PatientLearningDbProvider : IPatientProvider, IService
     {
         private readonly IMainProcessingRepository _repo;
 
-        public PatientLearningDbProvider(Startup.RepositoryServiceResolver repositoryServiceResolver)
+        public PatientLearningDbProvider(Startup.ServiceResolver resolver)
         {
-            _repo = repositoryServiceResolver("Learning");
+            _repo = resolver("LearningRepo") as IMainProcessingRepository;
         }
 
         public List<Patient> GetAllPatients()

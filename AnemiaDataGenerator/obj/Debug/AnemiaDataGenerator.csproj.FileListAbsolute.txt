@@ -106,6 +106,8 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\ob
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\AnemiaDataGenerator.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\AnemiaDataGenerator.exe
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\RealDataGenerator\obj\Debug\AnemiaDataGenerator.pdb
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.csprojAssemblyReference.cache
+C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.csproj.CoreCompileInputs.cache
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\bin\Debug\AnemiaDataGenerator.exe.config
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\bin\Debug\AnemiaDataGenerator.exe
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\bin\Debug\AnemiaDataGenerator.pdb
@@ -214,5 +216,3 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.exe
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.pdb
-C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.csprojAssemblyReference.cache
-C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\AnemiaDataGenerator\obj\Debug\AnemiaDataGenerator.csproj.CoreCompileInputs.cache

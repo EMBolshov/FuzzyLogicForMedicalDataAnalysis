@@ -15,11 +15,10 @@ namespace WebApi.Controllers
         private readonly IPatientProvider _patientProvider;
         private readonly IEntitiesToCreateDtoMapper _dtoMapper;
 
-        public AnalysisResultLoadController(Startup.AnalysisResultServiceResolver analysisResultServiceResolver,
-            Startup.PatientServiceResolver patientServiceResolver, IEntitiesToCreateDtoMapper dtoMapper)
+        public AnalysisResultLoadController(Startup.ServiceResolver resolver, IEntitiesToCreateDtoMapper dtoMapper)
         {
-            _analysisResultProvider = analysisResultServiceResolver("Learning");
-            _patientProvider = patientServiceResolver("Learning");
+            _analysisResultProvider = resolver("AnalysisResultLearning") as IAnalysisResultProvider;
+            _patientProvider = resolver("PatientLearning") as IPatientProvider;
             _dtoMapper = dtoMapper;
         }
 

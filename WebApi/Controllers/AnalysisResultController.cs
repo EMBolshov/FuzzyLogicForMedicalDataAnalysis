@@ -16,9 +16,9 @@ namespace WebApi.Controllers
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
 
-        public AnalysisResultController(Startup.AnalysisResultServiceResolver analysisResultServiceResolver)
+        public AnalysisResultController(Startup.ServiceResolver resolver)
         {
-            _analysisResultProvider = analysisResultServiceResolver("Main");
+            _analysisResultProvider = resolver("AnalysisResultMain") as IAnalysisResultProvider;
         }
         
         /// <summary>

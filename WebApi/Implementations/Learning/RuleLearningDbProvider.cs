@@ -7,13 +7,13 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.Learning
 {
-    public class RuleLearningDbProvider : IRuleProvider
+    public class RuleLearningDbProvider : IRuleProvider, IService
     {
         private readonly IMainProcessingRepository _repo;
 
-        public RuleLearningDbProvider(Startup.RepositoryServiceResolver repositoryServiceResolver)
+        public RuleLearningDbProvider(Startup.ServiceResolver resolver)
         {
-            _repo = repositoryServiceResolver("Learning");
+            _repo = resolver("LearningRepo") as IMainProcessingRepository;
         }
 
         public List<Rule> GetAllActiveRules()

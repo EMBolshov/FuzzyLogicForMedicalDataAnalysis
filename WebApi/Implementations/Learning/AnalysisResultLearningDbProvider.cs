@@ -8,14 +8,14 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.Learning
 {
-    public class AnalysisResultLearningDbProvider : IAnalysisResultProvider
+    public class AnalysisResultLearningDbProvider : IAnalysisResultProvider, IService
     {
         private readonly IMainProcessingRepository _repo;
         private readonly IFileParser _parser;
 
-        public AnalysisResultLearningDbProvider(Startup.RepositoryServiceResolver repositoryServiceResolver, IFileParser parser)
+        public AnalysisResultLearningDbProvider(Startup.ServiceResolver resolver, IFileParser parser)
         {
-            _repo = repositoryServiceResolver("Learning");
+            _repo = resolver("LearningRepo") as IMainProcessingRepository;
             _parser = parser;
         }
 

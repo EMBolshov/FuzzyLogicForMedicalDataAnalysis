@@ -2,12 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using POCO.Domain;
 using WebApi.Interfaces.Helpers;
 
 namespace WebApi.Implementations.Helpers
 {
     //TODO: Builder
-    public class HtmlReportGenerator : IReportGenerator
+    public class HtmlReportGenerator : IReportGenerator, IService
     {
         //TODO: Отдельный метод SaveReport
         public void GenerateReport(ReportModel model)

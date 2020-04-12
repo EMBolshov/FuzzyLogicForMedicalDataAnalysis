@@ -6,7 +6,7 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.MainProcessing
 {
-    public class DiagnosisDecisionMaker : IDiagnosisDecisionMaker
+    public class DiagnosisDecisionMaker : IDiagnosisDecisionMaker, IService
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
         private readonly IDiagnosisProvider _diagnosisProvider;
@@ -30,6 +30,7 @@ namespace WebApi.Implementations.MainProcessing
         {
             var processedResults = new List<ProcessedResult>();
             var allAnalysisResults = _analysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+
             foreach (var diagnosis in LearningDiagnoses)
             {
                 var rules = LearningRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();

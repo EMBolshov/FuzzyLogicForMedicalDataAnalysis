@@ -3,13 +3,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using POCO.Domain;
 using WebApi.Interfaces.Helpers;
 using Guid = System.Guid;
 
 namespace WebApi.Implementations.Helpers
 {
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    public class TxtReportGenerator : IReportGenerator
+    public class TxtReportGenerator : IReportGenerator, IService
     {
         public void GenerateReport(ReportModel model)
         {

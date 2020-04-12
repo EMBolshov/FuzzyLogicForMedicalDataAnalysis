@@ -16,9 +16,9 @@ namespace WebApi.Controllers
     {
         private readonly IRuleProvider _ruleProvider;
 
-        public RuleController(Startup.RuleServiceResolver ruleServiceResolver)
+        public RuleController(Startup.ServiceResolver resolver)
         {
-            _ruleProvider = ruleServiceResolver("Main");
+            _ruleProvider = resolver("RuleMain") as IRuleProvider;
         }
 
         /// <summary>

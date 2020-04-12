@@ -8,7 +8,7 @@ using WebApi.POCO;
 
 namespace WebApi.Implementations.Learning
 {
-    public class LearningRepositoryWrapper : IMainProcessingRepository
+    public class LearningRepositoryWrapper : IMainProcessingRepository, IService
     {
         private readonly IMainProcessingRepository _repo;
 

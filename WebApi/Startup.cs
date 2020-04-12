@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using POCO.Domain;
 using Repository;
 using Swashbuckle.AspNetCore.Swagger;
 using WebApi.Implementations.Helpers;
@@ -23,14 +24,7 @@ namespace WebApi
         public IConfiguration Configuration { get; }
         public IHostingEnvironment Environment { get; set; }
 
-        public delegate IMainProcessingRepository RepositoryServiceResolver(string key);
-        public delegate IAnalysisResultProvider AnalysisResultServiceResolver(string key);
-        public delegate IPatientProvider PatientServiceResolver(string key);
-        public delegate IDiagnosisProvider DiagnosisServiceResolver(string key);
-        public delegate IRuleProvider RuleServiceResolver(string key);
-        public delegate IProcessedResultProvider ProcessedResultServiceResolver(string key);
-        public delegate IReportGenerator ReportGeneratorResolver(string key);
-
+        public delegate IService ServiceResolver(string key);
         private string _appPath;
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
@@ -63,108 +57,61 @@ namespace WebApi
 
             services.AddTransient<MainRepositoryWrapper>();
             services.AddTransient<LearningRepositoryWrapper>();
-
-            services.AddTransient<RepositoryServiceResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "Main":
-                        return serviceProvider.GetService<MainRepositoryWrapper>();
-                    case "Learning":
-                        return serviceProvider.GetService<LearningRepositoryWrapper>();
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
-
             services.AddTransient<AnalysisResultDbProvider>();
             services.AddTransient<AnalysisResultLearningDbProvider>();
-
-            services.AddTransient<AnalysisResultServiceResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "Main":
-                        return serviceProvider.GetService<AnalysisResultDbProvider>();
-                    case "Learning":
-                        return serviceProvider.GetService<AnalysisResultLearningDbProvider>();
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
-
             services.AddTransient<PatientDbProvider>();
             services.AddTransient<PatientLearningDbProvider>();
-
-            services.AddTransient<PatientServiceResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "Main":
-                        return serviceProvider.GetService<PatientDbProvider>();
-                    case "Learning":
-                        return serviceProvider.GetService<PatientLearningDbProvider>();
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
-
-            services.AddTransient<DiagnosisDbProvider>();
-            services.AddTransient<DiagnosisLearningDbProvider>();
-
-            services.AddTransient<DiagnosisServiceResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "Main":
-                        return serviceProvider.GetService<DiagnosisDbProvider>();
-                    case "Learning":
-                        return serviceProvider.GetService<DiagnosisLearningDbProvider>();
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
-
             services.AddTransient<RuleDbProvider>();
             services.AddTransient<RuleLearningDbProvider>();
-
-            services.AddTransient<RuleServiceResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "Main":
-                        return serviceProvider.GetService<RuleDbProvider>();
-                    case "Learning":
-                        return serviceProvider.GetService<RuleLearningDbProvider>();
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
-
+            services.AddTransient<DiagnosisDbProvider>();
+            services.AddTransient<DiagnosisLearningDbProvider>();
             services.AddTransient<TxtReportGenerator>();
             services.AddTransient<HtmlReportGenerator>();
-            
-            services.AddTransient<ReportGeneratorResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "Txt":
-                        return serviceProvider.GetService<TxtReportGenerator>();
-                    case "Html":
-                        return serviceProvider.GetService<HtmlReportGenerator>();
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
-            
             services.AddTransient<LearningProcessedResultDbProvider>();
 
-            services.AddTransient<ProcessedResultServiceResolver>(serviceProvider => key =>
+            services.AddTransient<ServiceResolver>(serviceProvider => key =>
             {
                 switch (key)
                 {
-                    case "Learning":
+                    case "MainRepo":
+                        return serviceProvider.GetService<MainRepositoryWrapper>();
+
+                    case "LearningRepo":
+                        return serviceProvider.GetService<LearningRepositoryWrapper>();
+
+                    case "AnalysisResultMain":
+                        return serviceProvider.GetService<AnalysisResultDbProvider>();
+
+                    case "AnalysisResultLearning":
+                        return serviceProvider.GetService<AnalysisResultLearningDbProvider>();
+
+                    case "PatientMain":
+                        return serviceProvider.GetService<PatientDbProvider>();
+
+                    case "PatientLearning":
+                        return serviceProvider.GetService<PatientLearningDbProvider>();
+
+                    case "DiagnosisMain":
+                        return serviceProvider.GetService<DiagnosisDbProvider>();
+
+                    case "DiagnosisLearning":
+                        return serviceProvider.GetService<DiagnosisLearningDbProvider>();
+
+                    case "RuleMain":
+                        return serviceProvider.GetService<RuleDbProvider>();
+
+                    case "RuleLearning":
+                        return serviceProvider.GetService<RuleLearningDbProvider>();
+
+                    case "Txt":
+                        return serviceProvider.GetService<TxtReportGenerator>();
+
+                    case "Html":
+                        return serviceProvider.GetService<HtmlReportGenerator>();
+
+                    case "ProcessedResultLearning":
                         return serviceProvider.GetService<LearningProcessedResultDbProvider>();
+
                     default:
                         throw new KeyNotFoundException();
                 }

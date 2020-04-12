@@ -18,6 +18,7 @@ namespace UnitTests.Builders
         public IAnalysisResultProvider AnalysisResultProvider { get; private set; }
         public IDiagnosisProvider DiagnosisProvider { get; private set; }
         public IRuleProvider RuleProvider { get; private set; }
+        public IRuleProvider MainProcessingRuleProvider { get; set; }
         public IProcessedResultProvider ProcessedResultProvider { get; private set; }
         public IReportGenerator ReportGenerator { get; private set; }
 
@@ -151,6 +152,11 @@ namespace UnitTests.Builders
             var mockRuleDbProvider = new Mock<IRuleProvider>();
             mockRuleDbProvider.Setup(x => x.GetAllActiveRules()).Returns(rules);
             RuleProvider = mockRuleDbProvider.Object;
+            
+            var mockMainProcessingRuleDbProvider = new Mock<IRuleProvider>();
+            //TODO:
+            //mockMainProcessingRuleDbProvider.Setup(x => x.CreateRule());
+            MainProcessingRuleProvider = mockMainProcessingRuleDbProvider.Object;
             return this;
         }
 
@@ -170,7 +176,7 @@ namespace UnitTests.Builders
         public LearningProcessor Build()
         {
             return new LearningProcessor(AnalysisResultProvider, DiagnosisProvider,
-                PatientProvider, RuleProvider, ProcessedResultProvider, ReportGenerator);
+                PatientProvider, RuleProvider, MainProcessingRuleProvider, ProcessedResultProvider, ReportGenerator);
         }
     }
 }

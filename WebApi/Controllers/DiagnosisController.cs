@@ -16,9 +16,9 @@ namespace WebApi.Controllers
     {
         private readonly IDiagnosisProvider _diagnosisProvider;
         
-        public DiagnosisController(Startup.DiagnosisServiceResolver diagnosisServiceResolver)
+        public DiagnosisController(Startup.ServiceResolver resolver)
         {
-            _diagnosisProvider = diagnosisServiceResolver("Main");
+            _diagnosisProvider = resolver("DiagnosisMain") as IDiagnosisProvider;
         }
 
         /// <summary>

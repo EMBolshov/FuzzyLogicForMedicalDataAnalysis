@@ -7,13 +7,13 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.MainProcessing
 {
-    public class RuleDbProvider : IRuleProvider
+    public class RuleDbProvider : IRuleProvider, IService
     {
         private readonly IMainProcessingRepository _repo;
 
-        public RuleDbProvider(IMainProcessingRepository repo)
+        public RuleDbProvider(Startup.ServiceResolver resolver)
         {
-            _repo = repo;
+            _repo = resolver("MainRepo") as IMainProcessingRepository;
         }
 
         public List<Rule> GetAllActiveRules()

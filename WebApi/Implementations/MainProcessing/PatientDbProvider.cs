@@ -7,7 +7,7 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.MainProcessing
 {
-    public class PatientDbProvider : IPatientProvider
+    public class PatientDbProvider : IPatientProvider, IService
     {
         private readonly IMainProcessingRepository _repo;
 

@@ -19,10 +19,12 @@ namespace WebApi.Implementations.Learning
         private readonly IDiagnosisProvider _learningDiagnosisProvider;
         private readonly IPatientProvider _learningPatientProvider;
         private readonly IRuleProvider _learningRuleProvider;
+        private readonly IRuleProvider _mainProcessingRuleProvider;
         private readonly IProcessedResultProvider _learningProcessedResultProvider;
         private readonly IReportGenerator _reportGenerator;
         private readonly IDiagnosisDecisionMaker _decisionMaker;
         private readonly IFuzzyficator _fuzzyficator;
+        private readonly IEntitiesToCreateDtoMapper _createDtoMapper;
         private readonly List<string> _coreTests = new List<string>
         {
             "Гемоглобин (HGB)",
@@ -31,41 +33,43 @@ namespace WebApi.Implementations.Learning
             "Фолат сыворотки",
             "Ферритин"
         };
-
-        private IEnumerable<Rule> LearningRules => _learningRuleProvider.GetAllActiveRules();
+        
         private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
 
-        public LearningProcessor(Startup.RuleServiceResolver ruleServiceResolver, 
-            Startup.DiagnosisServiceResolver diagnosisServiceResolver, 
-            Startup.AnalysisResultServiceResolver analysisResultServiceResolver, 
-            Startup.PatientServiceResolver patientServiceResolver,
-            Startup.ProcessedResultServiceResolver processedResultResolver,
-            Startup.ReportGeneratorResolver reportGeneratorResolver)
+        public LearningProcessor(Startup.ServiceResolver resolver)
         {
-            _learningAnalysisResultProvider = analysisResultServiceResolver("Learning");
-            _learningDiagnosisProvider = diagnosisServiceResolver("Learning");
-            _learningPatientProvider = patientServiceResolver("Learning");
-            _learningRuleProvider = ruleServiceResolver("Learning");
-            _learningProcessedResultProvider = processedResultResolver("Learning");
-            _reportGenerator = reportGeneratorResolver("Html");
+            var analysisResultProvider = resolver("AnalysisResultLearning") as IAnalysisResultProvider;
+            _learningAnalysisResultProvider = analysisResultProvider;
+
+            var diagnosisProvider = resolver("DiagnosisLearning") as IDiagnosisProvider;
+            _learningDiagnosisProvider = diagnosisProvider;
+
+            _learningPatientProvider = resolver("PatientLearning") as IPatientProvider;
+            _learningRuleProvider = resolver("RuleLearning") as IRuleProvider;
+            _mainProcessingRuleProvider = resolver("RuleMain") as IRuleProvider;
+            _learningProcessedResultProvider = resolver("ProcessedResultLearning") as IProcessedResultProvider;
+            _reportGenerator = resolver("Html") as IReportGenerator;
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider,
                 _learningDiagnosisProvider, _learningRuleProvider);
             _fuzzyficator = new Fuzzyficator();
+            _createDtoMapper = new EntitiesToCreateDtoMapper();
         }
 
         public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
-            IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider, 
+            IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider, IRuleProvider mainProcessingRuleProvider,
             IProcessedResultProvider learningProcessedResultProvider, IReportGenerator reportGenerator)
         {
             _learningAnalysisResultProvider = learningAnalysisResultProvider;
             _learningDiagnosisProvider = learningDiagnosisProvider;
             _learningPatientProvider = learningPatientProvider;
             _learningRuleProvider = learningRuleProvider;
+            _mainProcessingRuleProvider = mainProcessingRuleProvider;
             _learningProcessedResultProvider = learningProcessedResultProvider;
             _reportGenerator = reportGenerator;
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, 
                 _learningDiagnosisProvider, _learningRuleProvider);
             _fuzzyficator = new Fuzzyficator();
+            _createDtoMapper = new EntitiesToCreateDtoMapper();
         }
         
         //TODO: нужно ли возвращать все результаты наверх, если тесты будут переписаны?
@@ -87,6 +91,12 @@ namespace WebApi.Implementations.Learning
             //TODO: Подготовить статистический отчет
 
             //TODO: Загрузить новые правила в основную БД
+
+            foreach (var newRule in newRules)
+            {
+                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
+                _mainProcessingRuleProvider.CreateRule(ruleDto);
+            }
 
             return results;
         }

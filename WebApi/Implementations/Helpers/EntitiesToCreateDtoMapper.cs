@@ -4,6 +4,7 @@ using WebApi.Interfaces.Helpers;
 
 namespace WebApi.Implementations.Helpers
 {
+    //TODO: мб сделать экстеншен методы?
     public class EntitiesToCreateDtoMapper : IEntitiesToCreateDtoMapper
     {
         public CreateAnalysisResultDto AnalysisResultToDto(AnalysisResult source)

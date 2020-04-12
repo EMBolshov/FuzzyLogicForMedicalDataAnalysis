@@ -16,9 +16,9 @@ namespace WebApi.Controllers
     {
         private readonly IPatientProvider _patientProvider;
         
-        public PatientController(Startup.PatientServiceResolver patientServiceResolver)
+        public PatientController(Startup.ServiceResolver resolver)
         {
-            _patientProvider = patientServiceResolver("Main");
+            _patientProvider = resolver("PatientMain") as IPatientProvider;
         }
 
         /// <summary>
