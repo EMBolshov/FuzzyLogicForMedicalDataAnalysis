@@ -24,7 +24,6 @@ namespace WebApi
         public IConfiguration Configuration { get; }
         public IHostingEnvironment Environment { get; set; }
 
-        public delegate IService ServiceResolver(string key);
         private string _appPath;
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
@@ -55,8 +54,9 @@ namespace WebApi
             services.AddTransient<ILearningProcessor, LearningProcessor>();
             services.AddSingleton<IEntitiesToCreateDtoMapper, EntitiesToCreateDtoMapper>();
 
-            services.AddTransient<MainRepositoryWrapper>();
-            services.AddTransient<LearningRepositoryWrapper>();
+            services.AddTransient<IMainProcessingRepository, MainRepositoryWrapper>();
+            services.AddTransient<ILearningRepository, LearningRepositoryWrapper>();
+
             services.AddTransient<AnalysisResultDbProvider>();
             services.AddTransient<AnalysisResultLearningDbProvider>();
             services.AddTransient<PatientDbProvider>();
@@ -68,54 +68,6 @@ namespace WebApi
             services.AddTransient<TxtReportGenerator>();
             services.AddTransient<HtmlReportGenerator>();
             services.AddTransient<LearningProcessedResultDbProvider>();
-
-            services.AddTransient<ServiceResolver>(serviceProvider => key =>
-            {
-                switch (key)
-                {
-                    case "MainRepo":
-                        return serviceProvider.GetService<MainRepositoryWrapper>();
-
-                    case "LearningRepo":
-                        return serviceProvider.GetService<LearningRepositoryWrapper>();
-
-                    case "AnalysisResultMain":
-                        return serviceProvider.GetService<AnalysisResultDbProvider>();
-
-                    case "AnalysisResultLearning":
-                        return serviceProvider.GetService<AnalysisResultLearningDbProvider>();
-
-                    case "PatientMain":
-                        return serviceProvider.GetService<PatientDbProvider>();
-
-                    case "PatientLearning":
-                        return serviceProvider.GetService<PatientLearningDbProvider>();
-
-                    case "DiagnosisMain":
-                        return serviceProvider.GetService<DiagnosisDbProvider>();
-
-                    case "DiagnosisLearning":
-                        return serviceProvider.GetService<DiagnosisLearningDbProvider>();
-
-                    case "RuleMain":
-                        return serviceProvider.GetService<RuleDbProvider>();
-
-                    case "RuleLearning":
-                        return serviceProvider.GetService<RuleLearningDbProvider>();
-
-                    case "Txt":
-                        return serviceProvider.GetService<TxtReportGenerator>();
-
-                    case "Html":
-                        return serviceProvider.GetService<HtmlReportGenerator>();
-
-                    case "ProcessedResultLearning":
-                        return serviceProvider.GetService<LearningProcessedResultDbProvider>();
-
-                    default:
-                        throw new KeyNotFoundException();
-                }
-            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

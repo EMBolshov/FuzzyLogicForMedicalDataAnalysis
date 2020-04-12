@@ -7,13 +7,13 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.Learning
 {
-    public class DiagnosisLearningDbProvider : IDiagnosisProvider, IService
+    public class DiagnosisLearningDbProvider : IDiagnosisProvider
     {
-        private readonly IMainProcessingRepository _repo;
+        private readonly ILearningRepository _repo;
         
-        public DiagnosisLearningDbProvider(Startup.ServiceResolver resolver)
+        public DiagnosisLearningDbProvider(ILearningRepository repo)
         {
-            _repo = resolver("LearningRepo") as IMainProcessingRepository;
+            _repo = repo;
         }
         
         public List<Diagnosis> GetAllDiagnoses()

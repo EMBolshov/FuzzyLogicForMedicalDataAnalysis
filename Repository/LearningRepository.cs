@@ -9,15 +9,15 @@ using POCO.Domain.Dto;
 
 namespace Repository
 {
-    public class MainProcessingRepository : IMainProcessingRepository
+    public class LearningRepository : ILearningRepository
     {
         private static string _connectionString;
 
-        public MainProcessingRepository(string connectionString)
+        public LearningRepository(string connectionString)
         {
             _connectionString = connectionString;
         }
-        
+
         public void CreateDiagnosis(CreateDiagnosisDto dto)
         {
             using (var context = new NpgsqlConnection(_connectionString))
@@ -105,7 +105,7 @@ namespace Repository
                           "\"FormattedEntry\", \"ReferenceLow\", \"ReferenceHigh\", \"Confidence\", \"IsRemoved\") " +
                           $"VALUES ('{dto.Guid}', '{dto.PatientGuid}', '{dto.InsertedDate}', " +
                           $"'{dto.AnalysisName}', '{dto.TestName}', '{dto.Loinc}', '{dto.ReportedName}', " +
-                          $"'{dto.Entry.ToString(CultureInfo.InvariantCulture).Replace(',','.')}', " +
+                          $"'{dto.Entry.ToString(CultureInfo.InvariantCulture).Replace(',', '.')}', " +
                           $"'{dto.FormattedEntry}', '{dto.ReferenceLow.ToString(CultureInfo.InvariantCulture).Replace(',', '.')}', " +
                           $"'{dto.ReferenceHigh.ToString(CultureInfo.InvariantCulture).Replace(',', '.')}', " +
                           $"'{dto.Confidence}', '{dto.IsRemoved}')";
@@ -113,7 +113,7 @@ namespace Repository
                 context.Execute(sql);
             }
         }
-        
+
         public List<AnalysisResult> GetAnalysisResultsByPatientGuid(Guid patientGuid)
         {
             List<AnalysisResult> result;
@@ -149,24 +149,15 @@ namespace Repository
             }
         }
 
-        //TODO: переписать все запросы таким образом
         public void CreateRule(CreateRuleDto ruleDto)
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
+                var sql = "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
+                          $"VALUES ('{ruleDto.Guid}', '{ruleDto.DiagnosisName}', '{ruleDto.Test}', " +
+                          $"'{ruleDto.Power}', '{ruleDto.InputTermName}', '{ruleDto.IsRemoved}')";
 
-                context.Execute(
-                    "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
-                    "VALUES (@Guid, @DiagnosisName, @Test, @Power, @InputTermName, @IsRemoved);",
-                    new
-                    {
-                        Guid = ruleDto.Guid,
-                        DiagnosisName = ruleDto.DiagnosisName,
-                        Test = ruleDto.Test,
-                        Power = ruleDto.Power,
-                        InputTermName = ruleDto.InputTermName,
-                        IsRemoved = ruleDto.IsRemoved
-                    });
+                context.Execute(sql);
             }
         }
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Repository;
+using WebApi.Implementations.Learning;
 using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.MainProcessing;
 
@@ -15,10 +17,10 @@ namespace WebApi.Controllers
         private readonly IPatientProvider _patientProvider;
         private readonly IEntitiesToCreateDtoMapper _dtoMapper;
 
-        public AnalysisResultLoadController(Startup.ServiceResolver resolver, IEntitiesToCreateDtoMapper dtoMapper)
+        public AnalysisResultLoadController(ILearningRepository repo, IFileParser parser, IEntitiesToCreateDtoMapper dtoMapper)
         {
-            _analysisResultProvider = resolver("AnalysisResultLearning") as IAnalysisResultProvider;
-            _patientProvider = resolver("PatientLearning") as IPatientProvider;
+            _analysisResultProvider = new AnalysisResultLearningDbProvider(repo, parser);
+            _patientProvider = new PatientLearningDbProvider(repo);
             _dtoMapper = dtoMapper;
         }
 

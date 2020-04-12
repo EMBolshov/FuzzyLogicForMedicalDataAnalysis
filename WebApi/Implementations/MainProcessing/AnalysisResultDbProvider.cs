@@ -8,7 +8,7 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.MainProcessing
 {
-    public class AnalysisResultDbProvider : IAnalysisResultProvider, IService
+    public class AnalysisResultDbProvider : IAnalysisResultProvider
     {
         private readonly IMainProcessingRepository _repo;
         private readonly IFileParser _parser;

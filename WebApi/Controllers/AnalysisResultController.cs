@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using POCO.Domain;
 using POCO.Domain.Dto;
+using Repository;
+using WebApi.Implementations.Helpers;
+using WebApi.Implementations.Learning;
+using WebApi.Implementations.MainProcessing;
+using WebApi.Interfaces.Helpers;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
@@ -16,9 +21,9 @@ namespace WebApi.Controllers
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
 
-        public AnalysisResultController(Startup.ServiceResolver resolver)
+        public AnalysisResultController(IMainProcessingRepository repo, IFileParser parser)
         {
-            _analysisResultProvider = resolver("AnalysisResultMain") as IAnalysisResultProvider;
+            _analysisResultProvider = new AnalysisResultDbProvider(repo, parser);
         }
         
         /// <summary>

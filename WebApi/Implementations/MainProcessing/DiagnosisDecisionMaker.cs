@@ -6,7 +6,7 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.MainProcessing
 {
-    public class DiagnosisDecisionMaker : IDiagnosisDecisionMaker, IService
+    public class DiagnosisDecisionMaker : IDiagnosisDecisionMaker
     {
         private readonly IAnalysisResultProvider _analysisResultProvider;
         private readonly IDiagnosisProvider _diagnosisProvider;

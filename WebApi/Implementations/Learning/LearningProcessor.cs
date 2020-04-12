@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using POCO.Domain;
 using POCO.Domain.Dto;
+using Repository;
 using WebApi.Implementations.Helpers;
 using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces.Helpers;
@@ -36,21 +37,17 @@ namespace WebApi.Implementations.Learning
         
         private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
 
-        public LearningProcessor(Startup.ServiceResolver resolver)
+        public LearningProcessor(IMainProcessingRepository mainRepo, ILearningRepository learnRepo)
         {
-            var analysisResultProvider = resolver("AnalysisResultLearning") as IAnalysisResultProvider;
-            _learningAnalysisResultProvider = analysisResultProvider;
+            _learningProcessedResultProvider = new LearningProcessedResultDbProvider(learnRepo);
+            _learningAnalysisResultProvider = new AnalysisResultLearningDbProvider(learnRepo, new FileParser(new AnalysisAndTestsNamingMapper()));
+            _learningDiagnosisProvider = new DiagnosisLearningDbProvider(learnRepo);
+            _learningPatientProvider = new PatientLearningDbProvider(learnRepo);
+            _learningRuleProvider = new RuleLearningDbProvider(learnRepo);
+            _mainProcessingRuleProvider = new RuleDbProvider(mainRepo);
 
-            var diagnosisProvider = resolver("DiagnosisLearning") as IDiagnosisProvider;
-            _learningDiagnosisProvider = diagnosisProvider;
-
-            _learningPatientProvider = resolver("PatientLearning") as IPatientProvider;
-            _learningRuleProvider = resolver("RuleLearning") as IRuleProvider;
-            _mainProcessingRuleProvider = resolver("RuleMain") as IRuleProvider;
-            _learningProcessedResultProvider = resolver("ProcessedResultLearning") as IProcessedResultProvider;
-            _reportGenerator = resolver("Html") as IReportGenerator;
-            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider,
-                _learningDiagnosisProvider, _learningRuleProvider);
+            _reportGenerator = new HtmlReportGenerator();
+            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider, _learningRuleProvider);
             _fuzzyficator = new Fuzzyficator();
             _createDtoMapper = new EntitiesToCreateDtoMapper();
         }

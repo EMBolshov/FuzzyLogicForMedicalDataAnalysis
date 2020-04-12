@@ -10,7 +10,7 @@ using Guid = System.Guid;
 namespace WebApi.Implementations.Helpers
 {
     [SuppressMessage("ReSharper", "StringLiteralTypo")]
-    public class TxtReportGenerator : IReportGenerator, IService
+    public class TxtReportGenerator : IReportGenerator
     {
         public void GenerateReport(ReportModel model)
         {

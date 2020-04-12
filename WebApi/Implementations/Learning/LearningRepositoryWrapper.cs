@@ -8,14 +8,14 @@ using WebApi.POCO;
 
 namespace WebApi.Implementations.Learning
 {
-    public class LearningRepositoryWrapper : IMainProcessingRepository, IService
+    public class LearningRepositoryWrapper : ILearningRepository
     {
-        private readonly IMainProcessingRepository _repo;
+        private readonly ILearningRepository _repo;
 
         public LearningRepositoryWrapper(IOptions<Config> config)
         {
-            var mainRepoConnectionString = config.Value.LearningDbConnectionString;
-            _repo = new MainProcessingRepository(mainRepoConnectionString);
+            var learningRepoConnectionString = config.Value.LearningDbConnectionString;
+            _repo = new LearningRepository(learningRepoConnectionString);
         }
 
         public void CreateDiagnosis(CreateDiagnosisDto diagnosisDto)

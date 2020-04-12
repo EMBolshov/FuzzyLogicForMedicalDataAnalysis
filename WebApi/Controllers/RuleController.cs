@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using POCO.Domain;
 using POCO.Domain.Dto;
+using Repository;
+using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
@@ -16,9 +18,9 @@ namespace WebApi.Controllers
     {
         private readonly IRuleProvider _ruleProvider;
 
-        public RuleController(Startup.ServiceResolver resolver)
+        public RuleController(IMainProcessingRepository repo)
         {
-            _ruleProvider = resolver("RuleMain") as IRuleProvider;
+            _ruleProvider = new RuleDbProvider(repo);
         }
 
         /// <summary>

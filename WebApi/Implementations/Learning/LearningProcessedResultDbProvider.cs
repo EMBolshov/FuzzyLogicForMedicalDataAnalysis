@@ -5,13 +5,13 @@ using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Implementations.Learning
 {
-    public class LearningProcessedResultDbProvider : IProcessedResultProvider, IService
+    public class LearningProcessedResultDbProvider : IProcessedResultProvider
     {
-        private readonly IMainProcessingRepository _repo;
+        private readonly ILearningRepository _repo;
 
-        public LearningProcessedResultDbProvider(Startup.ServiceResolver resolver)
+        public LearningProcessedResultDbProvider(ILearningRepository repo)
         {
-            _repo = resolver("LearningRepo") as IMainProcessingRepository;
+            _repo = repo;
         }
 
         public void SaveProcessedResult(ProcessedResult result)

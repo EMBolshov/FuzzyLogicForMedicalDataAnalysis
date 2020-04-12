@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using POCO.Domain;
 using POCO.Domain.Dto;
+using Repository;
+using WebApi.Implementations.MainProcessing;
 using WebApi.Interfaces.MainProcessing;
 
 namespace WebApi.Controllers
@@ -16,9 +18,9 @@ namespace WebApi.Controllers
     {
         private readonly IPatientProvider _patientProvider;
         
-        public PatientController(Startup.ServiceResolver resolver)
+        public PatientController(IMainProcessingRepository repo)
         {
-            _patientProvider = resolver("PatientMain") as IPatientProvider;
+            _patientProvider = new PatientDbProvider(repo);
         }
 
         /// <summary>

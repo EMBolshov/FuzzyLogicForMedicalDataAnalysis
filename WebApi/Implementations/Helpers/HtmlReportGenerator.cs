@@ -8,7 +8,7 @@ using WebApi.Interfaces.Helpers;
 namespace WebApi.Implementations.Helpers
 {
     //TODO: Builder
-    public class HtmlReportGenerator : IReportGenerator, IService
+    public class HtmlReportGenerator : IReportGenerator
     {
         //TODO: Отдельный метод SaveReport
         public void GenerateReport(ReportModel model)
