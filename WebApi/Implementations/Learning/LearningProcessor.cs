@@ -191,7 +191,7 @@ namespace WebApi.Implementations.Learning
                         var testResultByTerm = analysisResults
                             .Where(x => x.InputTermName == term && x.TestName == test).ToList();
                         decimal positiveResultsCount = testResultByTerm.Count(x => x.Confidence > 0);
-                        var power = positiveResultsCount / testResultByTerm.Count;
+                        var power = Math.Round(positiveResultsCount / testResultByTerm.Count, 4);
 
                         if (power > 0)
                         {

@@ -191,11 +191,17 @@ namespace Repository
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "INSERT INTO \"ProcessedResult\" (\"Guid\", \"PatientGuid\", \"DiagnosisGuid\", \"Value\", \"InsertedDate\") " +
-                          $"VALUES ('{result.Guid}', '{result.PatientGuid}', '{result.DiagnosisGuid}', " +
-                          $"'{result.Value}', '{result.InsertedDate}')";
-
-                context.Execute(sql);
+                context.Execute(
+                    "INSERT INTO \"ProcessedResult\" (\"Guid\", \"PatientGuid\", \"DiagnosisGuid\", \"Value\", \"InsertedDate\") " +
+                    "VALUES (@Guid, @PatientGuid, @DiagnosisGuid, @Value, @InsertedDate)",
+                    new
+                    {
+                        Guid = result.Guid,
+                        PatientGuid = result.PatientGuid,
+                        DiagnosisGuid = result.DiagnosisGuid,
+                        Value = result.Value,
+                        InsertedDate = result.InsertedDate
+                    });
             }
         }
 
