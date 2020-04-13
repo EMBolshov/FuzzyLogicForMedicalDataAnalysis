@@ -147,27 +147,6 @@ namespace WebApi.Implementations.Learning
             var partialDataResults = new List<ProcessedResult>();
             var removedAnalysisResultsGuids = new List<Guid>();
 
-            //Сбор статистики для подготовки новых правил
-            foreach (var patient in patients)
-            {
-                var fullRes = _decisionMaker.ProcessForPatient(patient, true);
-                if (fullRes.Any(x => x.Value > 0))
-                {
-                    fullRes.Where(x => x.Value > 0).ToList()
-                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
-                }
-            }
-
-            //Добавить новые правила
-            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
-            var statistics = GetPositiveResultsStatistics(allPositiveResults);
-            var newRules = MakeNewRulesBasedOnStatistics(statistics);
-            foreach (var newRule in newRules)
-            {
-                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
-                _learningRuleProvider.CreateRule(ruleDto);
-            }
-
             //Полный набор данных
             foreach (var patient in patients)
             {
@@ -179,6 +158,28 @@ namespace WebApi.Implementations.Learning
 
                     fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
                 }
+            }
+
+            // //TODO: Объединить, если все правильно считаю
+            // //Сбор статистики для подготовки новых правил
+            // foreach (var patient in patients)
+            // {
+            //     var fullRes = _decisionMaker.ProcessForPatient(patient, true);
+            //     if (fullRes.Any(x => x.Value > 0))
+            //     {
+            //         fullRes.Where(x => x.Value > 0).ToList()
+            //             .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+            //     }
+            // }
+
+            //Добавить новые правила
+            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
+            var statistics = GetPositiveResultsStatistics(allPositiveResults);
+            var newRules = MakeNewRulesBasedOnStatistics(statistics);
+            foreach (var newRule in newRules)
+            {
+                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
+                _learningRuleProvider.CreateRule(ruleDto);
             }
 
             //Только ОАК
@@ -213,13 +214,13 @@ namespace WebApi.Implementations.Learning
                 }
             });
 
-            var difference = filteredPartRes.Where(x => x.Value == 0).ToList();
+            var difference = filteredPartRes.Where(x => x.Value < 0.5m).ToList();
             
             removedAnalysisResultsGuids.ForEach(x => _learningAnalysisResultProvider.ReturnAnalysisResult(x));
             _learningRuleProvider.DeleteAllRules();
             CreateBaseRules();
 
-            return difference.Count / maxCount * 100;
+            return (decimal)difference.Count / (decimal)maxCount * 100m;
         }
 
         private void MakeDiagnosisDecisionAndGenerateReports(Patient patient)
