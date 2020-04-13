@@ -147,6 +147,28 @@ namespace WebApi.Implementations.Learning
             var partialDataResults = new List<ProcessedResult>();
             var removedAnalysisResultsGuids = new List<Guid>();
 
+            //Сбор статистики для подготовки новых правил
+            foreach (var patient in patients)
+            {
+                var fullRes = _decisionMaker.ProcessForPatient(patient, true);
+                if (fullRes.Any(x => x.Value > 0))
+                {
+                    fullRes.Where(x => x.Value > 0).ToList()
+                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+                }
+            }
+
+            //Добавить новые правила
+            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
+            var statistics = GetPositiveResultsStatistics(allPositiveResults);
+            var newRules = MakeNewRulesBasedOnStatistics(statistics);
+            foreach (var newRule in newRules)
+            {
+                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
+                _learningRuleProvider.CreateRule(ruleDto);
+            }
+
+            //Полный набор данных
             foreach (var patient in patients)
             {
                 var fullRes = _decisionMaker.ProcessForPatient(patient, true);
@@ -159,17 +181,7 @@ namespace WebApi.Implementations.Learning
                 }
             }
 
-            //Добавить новые правила
-
-            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
-            var statistics = GetPositiveResultsStatistics(allPositiveResults);
-            var newRules = MakeNewRulesBasedOnStatistics(statistics);
-            foreach (var newRule in newRules)
-            {
-                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
-                _learningRuleProvider.CreateRule(ruleDto);
-            }
-
+            //Только ОАК
             foreach (var patient in patients)
             {
                 var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
@@ -189,9 +201,7 @@ namespace WebApi.Implementations.Learning
                 }
             }
 
-            //var duplicates = fullDataResults.Intersect(partialDataResults).ToList();
-            
-            //Сравниваю только полные данные с неполными
+            //Сравнение полного набора с неполным
             var maxCount = fullDataResults.Count;
             var filteredPartRes = new List<ProcessedResult>();
 
