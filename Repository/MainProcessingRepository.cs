@@ -221,5 +221,15 @@ namespace Repository
 
             return result;
         }
+
+        public void DeleteAllRules()
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "DELETE FROM \"Rule\"";
+
+                context.Execute(sql);
+            }
+        }
     }
 }

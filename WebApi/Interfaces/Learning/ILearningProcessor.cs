@@ -10,5 +10,6 @@ namespace WebApi.Interfaces.Learning
         void CreateRule(CreateRuleDto dto);
         void CreateNewDiagnosis(CreateDiagnosisDto dto);
         void CreateBaseRules();
+        decimal GetErrorRatio();
     }
 }

@@ -7,5 +7,6 @@ namespace WebApi.Interfaces.MainProcessing
     {
         void SaveProcessedResult(ProcessedResult result);
         List<ProcessedResult> GetAllPositiveResults();
+        void DeleteAllResults();
     }
 }

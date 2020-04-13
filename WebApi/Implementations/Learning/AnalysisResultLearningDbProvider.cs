@@ -34,6 +34,11 @@ namespace WebApi.Implementations.Learning
             _repo.RemoveAnalysisResultByGuid(analysisResultGuid);
         }
 
+        public void ReturnAnalysisResult(Guid analysisResultGuid)
+        {
+            _repo.ReturnAnalysisResultByGuid(analysisResultGuid);
+        }
+
         public List<AnalysisResult> LoadAnalysisResultsFromFile(string path)
         {
             return _parser.GetAnalysisResultsFromCsv(path);

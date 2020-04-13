@@ -28,7 +28,17 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Learn
+        /// TODO
+        /// </summary>
+        [HttpGet("GetErrorRatio")]
+        public decimal GetErrorRatio()
+        {
+            var results = _learningProcessor.GetErrorRatio();
+            return results;
+        }
+
+        /// <summary>
+        /// TODO
         /// </summary>
         [HttpGet("CreateBaseRules")]
         public void CreateBaseRules()

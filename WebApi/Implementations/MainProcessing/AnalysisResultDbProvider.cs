@@ -48,5 +48,10 @@ namespace WebApi.Implementations.MainProcessing
         {
             throw new NotImplementedException("Method can be used only with learning data!");
         }
+
+        public void ReturnAnalysisResult(Guid analysisResultGuid)
+        {
+            throw new NotImplementedException("Method can be used only with learning data!");
+        }
     }
 }

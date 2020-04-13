@@ -153,11 +153,18 @@ namespace Repository
         {
             using (var context = new NpgsqlConnection(_connectionString))
             {
-                var sql = "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
-                          $"VALUES ('{ruleDto.Guid}', '{ruleDto.DiagnosisName}', '{ruleDto.Test}', " +
-                          $"'{ruleDto.Power}', '{ruleDto.InputTermName}', '{ruleDto.IsRemoved}')";
-
-                context.Execute(sql);
+                context.Execute(
+                    "INSERT INTO \"Rule\" (\"Guid\", \"DiagnosisName\", \"Test\", \"Power\", \"InputTermName\", \"IsRemoved\") " +
+                    "VALUES (@Guid, @DiagnosisName, @Test, @Power, @InputTermName, @IsRemoved);",
+                    new
+                    {
+                        Guid = ruleDto.Guid,
+                        DiagnosisName = ruleDto.DiagnosisName,
+                        Test = ruleDto.Test,
+                        Power = ruleDto.Power,
+                        InputTermName = ruleDto.InputTermName,
+                        IsRemoved = ruleDto.IsRemoved
+                    });
             }
         }
 
@@ -182,6 +189,16 @@ namespace Repository
             {
                 var sql = "UPDATE \"Rule\" set \"IsRemoved\" = \'true\' " +
                           $"WHERE \"Guid\" = '{ruleGuid}'";
+
+                context.Execute(sql);
+            }
+        }
+
+        public void DeleteAllRules()
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "DELETE FROM \"Rule\"";
 
                 context.Execute(sql);
             }
@@ -218,6 +235,27 @@ namespace Repository
             }
 
             return result;
+        }
+
+        public void DeleteAllProcessedResults()
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "DELETE FROM \"ProcessedResult\"";
+
+                context.Execute(sql);
+            }
+        }
+
+        public void ReturnAnalysisResultByGuid(Guid analysisResultGuid)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "UPDATE \"AnalysisResult\" set \"IsRemoved\" = \'false\' " +
+                          $"WHERE \"Guid\" = '{analysisResultGuid}'";
+
+                context.Execute(sql);
+            }
         }
     }
 }

@@ -30,5 +30,10 @@ namespace WebApi.Implementations.Learning
         {
             _repo.RemoveRuleByGuid(ruleGuid);
         }
+
+        public void DeleteAllRules()
+        {
+            _repo.DeleteAllRules();
+        }
     }
 }

@@ -13,10 +13,6 @@ namespace WebApi.Implementations.MainProcessing
         private readonly IRuleProvider _ruleProvider;
         private readonly IFuzzyficator _fuzzyficator;
 
-        //TODO: Cache
-        private IEnumerable<Rule> Rules => _ruleProvider.GetAllActiveRules();
-        private IEnumerable<Diagnosis> Diagnoses => _diagnosisProvider.GetAllDiagnoses();
-        
         public DiagnosisDecisionMaker(IAnalysisResultProvider analysisResultProvider, 
             IDiagnosisProvider diagnosisProvider, IRuleProvider ruleProvider)
         {
@@ -30,10 +26,12 @@ namespace WebApi.Implementations.MainProcessing
         {
             var processedResults = new List<ProcessedResult>();
             var allAnalysisResults = _analysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+            var allDiagnoses = _diagnosisProvider.GetAllDiagnoses();
+            var allActiveRules = _ruleProvider.GetAllActiveRules();
 
-            foreach (var diagnosis in Diagnoses)
+            foreach (var diagnosis in allDiagnoses)
             {
-                var rules = Rules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
+                var rules = allActiveRules.Where(x => x.DiagnosisName == diagnosis.Name).ToList();
                 var testsToProcess = rules.Select(x => x.Test).ToList();
                 var analysisResults = allAnalysisResults.Where(x => testsToProcess.Contains(x.TestName)).ToList();
 

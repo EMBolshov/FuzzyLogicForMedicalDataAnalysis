@@ -22,5 +22,6 @@ namespace Repository
         void RemoveRuleByGuid(Guid ruleGuid);
         void SaveProcessedResult(ProcessedResult result);
         List<ProcessedResult> GetAllPositiveResults();
+        void DeleteAllRules();
     }
 }

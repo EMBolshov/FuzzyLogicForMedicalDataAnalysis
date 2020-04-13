@@ -23,5 +23,10 @@ namespace WebApi.Implementations.Learning
         {
             return _repo.GetAllPositiveResults();
         }
+
+        public void DeleteAllResults()
+        {
+            _repo.DeleteAllProcessedResults();
+        }
     }
 }

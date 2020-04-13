@@ -35,6 +35,15 @@ namespace WebApi.Implementations.Learning
             "Ферритин"
         };
         
+        private readonly List<string> _OAKTests = new List<string>
+        {
+            "Гемоглобин (HGB)",
+            "Средний объем эритроцита (MCV)",
+            "Эритроциты (RBC)",
+            "Средн. сод. гемоглобина в эр-те (MCH)",
+            "Гематокрит (HCT)"
+        };
+        
         private IEnumerable<Diagnosis> LearningDiagnoses => _learningDiagnosisProvider.GetAllDiagnoses();
 
         public LearningProcessor(IMainProcessingRepository mainRepo, ILearningRepository learnRepo)
@@ -72,6 +81,13 @@ namespace WebApi.Implementations.Learning
         //TODO: нужно ли возвращать все результаты наверх, если тесты будут переписаны?
         public List<ProcessedResult> ProcessForAllPatients()
         {
+            //TODO: разбить на методы
+
+            //Предварительная очистка всех правил на проде
+            _mainProcessingRuleProvider.DeleteAllRules();
+            //Предварительная очистка всех результатов на лерне
+            _learningProcessedResultProvider.DeleteAllResults();
+
             var patients = GetAllPatients();
             var results = new List<ProcessedResult>(); 
             //Поставить диагнозы по полным данным
@@ -87,9 +103,6 @@ namespace WebApi.Implementations.Learning
 
             //TODO: Подготовить статистический отчет
 
-            //TODO: Загрузить новые правила в основную БД
-
-            //TODO: убрать загрузку основных правил
             var rules = _learningRuleProvider.GetAllActiveRules();
             rules.ForEach(x =>
             {
@@ -120,6 +133,83 @@ namespace WebApi.Implementations.Learning
         {
             var dtoForRules = CreateDtoForBaseRules();
             dtoForRules.ForEach(x => _learningRuleProvider.CreateRule(x));
+        }
+
+        public decimal GetErrorRatio()
+        {
+            //Поставить диагнозы по полному набору данных, убрать из результатов пациентов специфические тесты,
+            //поставить диагнозы по неполному набору данных, сравнить количество положительных результатов
+
+            _learningProcessedResultProvider.DeleteAllResults();
+
+            var patients = _learningPatientProvider.GetAllPatients();
+            var fullDataResults = new List<ProcessedResult>();
+            var partialDataResults = new List<ProcessedResult>();
+            var removedAnalysisResultsGuids = new List<Guid>();
+
+            foreach (var patient in patients)
+            {
+                var fullRes = _decisionMaker.ProcessForPatient(patient, true);
+                if (fullRes.Any(x => x.Value > 0))
+                {
+                    fullRes.Where(x => x.Value > 0).ToList()
+                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+
+                    fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
+                }
+            }
+
+            //Добавить новые правила
+
+            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
+            var statistics = GetPositiveResultsStatistics(allPositiveResults);
+            var newRules = MakeNewRulesBasedOnStatistics(statistics);
+            foreach (var newRule in newRules)
+            {
+                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
+                _learningRuleProvider.CreateRule(ruleDto);
+            }
+
+            foreach (var patient in patients)
+            {
+                var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+                patientResults.ForEach(x =>
+                {
+                    if (!_OAKTests.Contains(x.TestName))
+                    {
+                        _learningAnalysisResultProvider.RemoveAnalysisResult(x.Guid);
+                        removedAnalysisResultsGuids.Add(x.Guid);
+                    }
+                });
+
+                var partRes = _decisionMaker.ProcessForPatient(patient, false);
+                if (partRes.Any(x => x.Value > 0))
+                {
+                    partialDataResults.AddRange(partRes.Where(x => x.Value > 0));
+                }
+            }
+
+            //var duplicates = fullDataResults.Intersect(partialDataResults).ToList();
+            
+            //Сравниваю только полные данные с неполными
+            var maxCount = fullDataResults.Count;
+            var filteredPartRes = new List<ProcessedResult>();
+
+            partialDataResults.ForEach(x =>
+            {
+                if (fullDataResults.Any(y => y.PatientGuid == x.PatientGuid && y.DiagnosisGuid == x.DiagnosisGuid))
+                {
+                    filteredPartRes.Add(x);
+                }
+            });
+
+            var difference = filteredPartRes.Where(x => x.Value == 0).ToList();
+            
+            removedAnalysisResultsGuids.ForEach(x => _learningAnalysisResultProvider.ReturnAnalysisResult(x));
+            _learningRuleProvider.DeleteAllRules();
+            CreateBaseRules();
+
+            return difference.Count / maxCount * 100;
         }
 
         private void MakeDiagnosisDecisionAndGenerateReports(Patient patient)

@@ -31,5 +31,10 @@ namespace WebApi.Implementations.MainProcessing
         {
             _repo.RemoveRuleByGuid(ruleGuid);
         }
+
+        public void DeleteAllRules()
+        {
+            _repo.DeleteAllRules();
+        }
     }
 }

@@ -12,5 +12,7 @@ namespace WebApi.Interfaces.MainProcessing
         void CreateRule(CreateRuleDto ruleDto);
 
         void RemoveRule(Guid ruleGuid);
+
+        void DeleteAllRules();
     }
 }

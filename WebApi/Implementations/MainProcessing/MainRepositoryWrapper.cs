@@ -92,5 +92,10 @@ namespace WebApi.Implementations.MainProcessing
         {
             return _repo.GetAllPositiveResults();
         }
+
+        public void DeleteAllRules()
+        {
+            _repo.DeleteAllRules();
+        }
     }
 }
