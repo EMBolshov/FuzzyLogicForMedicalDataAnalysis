@@ -138,7 +138,7 @@ namespace WebApi.Implementations.Learning
         public decimal GetErrorRatio()
         {
             //Поставить диагнозы по полному набору данных, убрать из результатов пациентов специфические тесты,
-            //поставить диагнозы по неполному набору данных, сравнить количество положительных результатов
+            //поставить диагнозы по неполному набору данных, сравнить наиболее вероятный диагноз по неполным данным с поставленным по полным
 
             _learningProcessedResultProvider.DeleteAllResults();
 
@@ -159,18 +159,6 @@ namespace WebApi.Implementations.Learning
                     fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
                 }
             }
-
-            // //TODO: Объединить, если все правильно считаю
-            // //Сбор статистики для подготовки новых правил
-            // foreach (var patient in patients)
-            // {
-            //     var fullRes = _decisionMaker.ProcessForPatient(patient, true);
-            //     if (fullRes.Any(x => x.Value > 0))
-            //     {
-            //         fullRes.Where(x => x.Value > 0).ToList()
-            //             .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
-            //     }
-            // }
 
             //Добавить новые правила
             var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
@@ -203,24 +191,34 @@ namespace WebApi.Implementations.Learning
             }
 
             //Сравнение полного набора с неполным
-            var maxCount = fullDataResults.Count;
-            var filteredPartRes = new List<ProcessedResult>();
 
-            partialDataResults.ForEach(x =>
+            var patientsWithPositiveResultByFullData =
+                patients.Where(x => fullDataResults.Any(y => y.PatientGuid == x.Guid)).ToList();
+
+            var diffCount = 0;
+
+            foreach (var patient in patientsWithPositiveResultByFullData)
             {
-                if (fullDataResults.Any(y => y.PatientGuid == x.PatientGuid && y.DiagnosisGuid == x.DiagnosisGuid))
-                {
-                    filteredPartRes.Add(x);
-                }
-            });
+                var diagnosisGuid = fullDataResults.First(x => x.PatientGuid == patient.Guid).DiagnosisGuid;
+                var diagnosis = LearningDiagnoses.FirstOrDefault(x => x.Guid == diagnosisGuid)?.Name;
 
-            var difference = filteredPartRes.Where(x => x.Value < 0.5m).ToList();
-            
+                var allPartialDiagnosis = partialDataResults.Where(x => x.PatientGuid == patient.Guid)
+                    .ToDictionary(x => LearningDiagnoses.First(y => y.Guid == x.DiagnosisGuid).Name, x => x.Value);
+
+                var maxValue = allPartialDiagnosis.Values.Max();
+                var mostProbableDiagnoses = allPartialDiagnosis.Where(x => x.Value >= maxValue).Select(x => x.Key).ToList();
+
+                if (!mostProbableDiagnoses.Contains(diagnosis))
+                {
+                    diffCount++;
+                }
+            }
+
             removedAnalysisResultsGuids.ForEach(x => _learningAnalysisResultProvider.ReturnAnalysisResult(x));
             _learningRuleProvider.DeleteAllRules();
             CreateBaseRules();
 
-            return (decimal)difference.Count / (decimal)maxCount * 100m;
+            return diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
         }
 
         private void MakeDiagnosisDecisionAndGenerateReports(Patient patient)
