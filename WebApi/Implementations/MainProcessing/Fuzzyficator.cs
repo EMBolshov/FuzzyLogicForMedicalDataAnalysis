@@ -39,15 +39,14 @@ namespace WebApi.Implementations.MainProcessing
             return fuzzyResults;
         }
 
-        //TODO: Fuzzyfication
         private decimal GetLowResultConfidence(AnalysisResult analysisResult)
         {
-            if (analysisResult.Entry >= analysisResult.ReferenceLow)
+            var delta = ((analysisResult.ReferenceHigh - analysisResult.ReferenceLow) * 0.05m / 0.95m) / 2m;
+
+            if (analysisResult.Entry >= analysisResult.ReferenceLow + delta)
             {
                 return 0m;
             }
-
-            var delta = ((analysisResult.ReferenceHigh - analysisResult.ReferenceLow) * 0.05m / 0.95m) / 2m;
 
             if (analysisResult.Entry <= analysisResult.ReferenceLow - delta)
             {
@@ -55,7 +54,7 @@ namespace WebApi.Implementations.MainProcessing
             }
 
             var firstPoint = (analysisResult.ReferenceLow - delta, 1m);
-            var secondPoint = (analysisResult.ReferenceLow, 0m);
+            var secondPoint = (analysisResult.ReferenceLow + delta, 0m);
 
             var k = (secondPoint.Item2 - firstPoint.Item2) / (secondPoint.Item1 - firstPoint.Item1);
             var b = firstPoint.Item2 - (firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2) 
@@ -69,28 +68,27 @@ namespace WebApi.Implementations.MainProcessing
             return Math.Round(affiliation, 4);
         }
 
-        //TODO: Fuzzyfication
         private decimal GetNormalResultConfidence(AnalysisResult analysisResult)
         {
-            if (analysisResult.Entry >= analysisResult.ReferenceLow
-                && analysisResult.Entry <= analysisResult.ReferenceHigh)
-            {
-                return 1m;
-            }
-
             var delta = ((analysisResult.ReferenceHigh - analysisResult.ReferenceLow) * 0.05m / 0.95m) / 2m;
             var minValue = analysisResult.ReferenceLow - delta;
             var maxValue = analysisResult.ReferenceHigh + delta;
-
+            
+            if (analysisResult.Entry >= analysisResult.ReferenceLow + delta
+                && analysisResult.Entry <= analysisResult.ReferenceHigh - delta)
+            {
+                return 1m;
+            }
+            
             if (analysisResult.Entry <= minValue || analysisResult.Entry >= maxValue)
             {
                 return 0m;
             }
 
-            if (analysisResult.Entry > minValue && analysisResult.Entry < analysisResult.ReferenceLow)
+            if (analysisResult.Entry > minValue && analysisResult.Entry < analysisResult.ReferenceLow + delta)
             {
-                var firstPoint = (analysisResult.ReferenceHigh, 0m);
-                var secondPoint = (maxValue, 100m);
+                var firstPoint = (minValue, 0m);
+                var secondPoint = (analysisResult.ReferenceLow + delta, 100m);
 
                 var k = (secondPoint.Item2 - firstPoint.Item2)
                         / (secondPoint.Item1 - firstPoint.Item1);
@@ -105,10 +103,10 @@ namespace WebApi.Implementations.MainProcessing
                 return Math.Round(affiliation, 4);
             }
 
-            if (analysisResult.Entry > analysisResult.ReferenceHigh && analysisResult.Entry < maxValue)
+            if (analysisResult.Entry > analysisResult.ReferenceHigh - delta && analysisResult.Entry < maxValue)
             {
-                var firstPoint = (analysisResult.ReferenceLow - delta, 1m);
-                var secondPoint = (analysisResult.ReferenceLow, 0m);
+                var firstPoint = (analysisResult.ReferenceHigh - delta, 1m);
+                var secondPoint = (maxValue, 0m);
 
                 var k = (secondPoint.Item2 - firstPoint.Item2) / (secondPoint.Item1 - firstPoint.Item1);
                 var b = firstPoint.Item2 - (firstPoint.Item1 * (secondPoint.Item2 - firstPoint.Item2)
@@ -126,23 +124,22 @@ namespace WebApi.Implementations.MainProcessing
                 $"Entry of analysisResult with GUID {analysisResult.Guid} is {analysisResult.Entry} and it is out of range");
         }
 
-        //TODO: Fuzzyfication
         private decimal GetHighResultConfidence(AnalysisResult analysisResult)
         {
-            if (analysisResult.Entry < analysisResult.ReferenceHigh)
+            var delta = ((analysisResult.ReferenceHigh - analysisResult.ReferenceLow) * 0.05m / 0.95m) / 2m;
+            var maxValue = analysisResult.ReferenceHigh + delta;
+
+            if (analysisResult.Entry < analysisResult.ReferenceHigh - delta)
             {
                 return 0m;
             }
-
-            var delta = ((analysisResult.ReferenceHigh - analysisResult.ReferenceLow) * 0.05m / 0.95m) / 2m;
-            var maxValue = analysisResult.ReferenceHigh + delta;
 
             if (analysisResult.Entry > maxValue)
             {
                 return 1m;
             }
 
-            var firstPoint = (analysisResult.ReferenceHigh, 0m);
+            var firstPoint = (analysisResult.ReferenceHigh - delta, 0m);
             var secondPoint = (maxValue, 100m);
 
             var k = (secondPoint.Item2 - firstPoint.Item2)

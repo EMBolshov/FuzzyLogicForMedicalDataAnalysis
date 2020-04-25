@@ -12,8 +12,8 @@ namespace WebApi.POCO
         public string AnalysisName { get; set; }
         public string ReportedName { get; set; }
         public decimal ReferenceLow { get; set; }
-        public decimal Entry { get; set; }
+        public decimal? Entry { get; set; }
         public decimal ReferenceHigh { get; set; }
-        public string FormattedEntry { get; set; }
+        public decimal FormattedEntry { get; set; }
     }
 }

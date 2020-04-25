@@ -12131,23 +12131,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ПК\\.nuget\\packages\\": {},
+    "C:\\Users\\bolshov.e\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\WebApi\\WebApi.csproj",
+      "projectUniqueName": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\WebApi\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\WebApi\\WebApi.csproj",
-      "packagesPath": "C:\\Users\\ПК\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\WebApi\\obj\\",
+      "projectPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\WebApi\\WebApi.csproj",
+      "packagesPath": "C:\\Users\\bolshov.e\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\WebApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\ПК\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\bolshov.e\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -12155,16 +12155,17 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://proget.medlinx.online:443/nuget/nuget/": {}
       },
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\POCO.Domain\\POCO.Domain.csproj": {
-              "projectPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\POCO.Domain\\POCO.Domain.csproj"
+            "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\POCO.Domain\\POCO.Domain.csproj": {
+              "projectPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\POCO.Domain\\POCO.Domain.csproj"
             },
-            "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\Repository\\Repository.csproj": {
-              "projectPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\Repository\\Repository.csproj"
+            "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\Repository\\Repository.csproj": {
+              "projectPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\Repository\\Repository.csproj"
             }
           }
         }

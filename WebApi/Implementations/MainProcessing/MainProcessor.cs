@@ -14,8 +14,6 @@ namespace WebApi.Implementations.MainProcessing
         private readonly IAnalysisResultProvider _analysisResultProvider;
         private readonly IDiagnosisProvider _diagnosisProvider;
         private readonly IPatientProvider _patientProvider;
-        private readonly IRuleProvider _ruleProvider;
-        private readonly IProcessedResultProvider _processedResultProvider;
         private readonly IReportGenerator _reportGenerator;
         private readonly IDiagnosisDecisionMaker _decisionMaker;
 
@@ -26,10 +24,10 @@ namespace WebApi.Implementations.MainProcessing
             _analysisResultProvider = new AnalysisResultDbProvider(mainRepo, new FileParser(new AnalysisAndTestsNamingMapper()));
             _diagnosisProvider = new DiagnosisDbProvider(mainRepo);
             _patientProvider = new PatientDbProvider(mainRepo);
-            _ruleProvider = new RuleDbProvider(mainRepo);
+            IRuleProvider ruleProvider = new RuleDbProvider(mainRepo);
 
             _reportGenerator = new HtmlReportGenerator();
-            _decisionMaker = new DiagnosisDecisionMaker(_analysisResultProvider, _diagnosisProvider, _ruleProvider);
+            _decisionMaker = new DiagnosisDecisionMaker(_analysisResultProvider, _diagnosisProvider, ruleProvider);
         }
 
         public void ProcessForAllPatients()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using FileHelpers;
 using POCO.Domain;
@@ -39,8 +40,9 @@ namespace WebApi.Implementations.Helpers
                 {
                     PatientGuid = record.PatientGuid,
                     AnalysisName = record.AnalysisName,
-                    Entry = record.Entry,
-                    FormattedEntry = record.FormattedEntry,
+                    //Entry пустой, FormattedEntry лучше сразу парсить как decimal
+                    Entry = record.FormattedEntry,
+                    FormattedEntry = record.FormattedEntry.ToString(CultureInfo.InvariantCulture),
                     Guid = Guid.NewGuid(),
                     InsertedDate = DateTime.Now,
                     ReferenceHigh = record.ReferenceHigh,

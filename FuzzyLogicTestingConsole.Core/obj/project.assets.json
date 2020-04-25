@@ -1016,23 +1016,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ПК\\.nuget\\packages\\": {},
+    "C:\\Users\\bolshov.e\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicTestingConsole.Core\\FuzzyLogicTestingConsole.Core.csproj",
+      "projectUniqueName": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicTestingConsole.Core\\FuzzyLogicTestingConsole.Core.csproj",
       "projectName": "FuzzyLogicTestingConsole.Core",
-      "projectPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicTestingConsole.Core\\FuzzyLogicTestingConsole.Core.csproj",
-      "packagesPath": "C:\\Users\\ПК\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicTestingConsole.Core\\obj\\",
+      "projectPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicTestingConsole.Core\\FuzzyLogicTestingConsole.Core.csproj",
+      "packagesPath": "C:\\Users\\bolshov.e\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicTestingConsole.Core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\ПК\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\bolshov.e\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1040,13 +1040,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://proget.medlinx.online:443/nuget/nuget/": {}
       },
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicMedicalCore.BL\\FuzzyLogicMedicalCore.BL.csproj": {
-              "projectPath": "C:\\Users\\ПК\\source\\repos\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicMedicalCore.BL\\FuzzyLogicMedicalCore.BL.csproj"
+            "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicMedicalCore.BL\\FuzzyLogicMedicalCore.BL.csproj": {
+              "projectPath": "C:\\Users\\bolshov.e\\Documents\\FuzzyLogicForMedicalDataAnalysis\\FuzzyLogicMedicalCore.BL\\FuzzyLogicMedicalCore.BL.csproj"
             }
           }
         }

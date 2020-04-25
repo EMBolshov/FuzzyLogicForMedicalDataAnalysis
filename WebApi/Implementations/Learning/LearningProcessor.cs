@@ -141,6 +141,8 @@ namespace WebApi.Implementations.Learning
             //поставить диагнозы по неполному набору данных, сравнить наиболее вероятный диагноз по неполным данным с поставленным по полным
 
             _learningProcessedResultProvider.DeleteAllResults();
+            _learningRuleProvider.DeleteAllRules();
+            CreateBaseRules();
 
             var patients = _learningPatientProvider.GetAllPatients();
             var fullDataResults = new List<ProcessedResult>();
