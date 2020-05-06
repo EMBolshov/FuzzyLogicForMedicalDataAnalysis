@@ -30,5 +30,10 @@ namespace WebApi.Implementations.Learning
         {
             _repo.RemovePatientByGuid(patientGuid);
         }
+
+        public void DeleteAllPatients()
+        {
+            _repo.DeleteAllPatients();
+        }
     }
 }

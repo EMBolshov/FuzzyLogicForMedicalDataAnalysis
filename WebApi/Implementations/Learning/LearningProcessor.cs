@@ -26,6 +26,10 @@ namespace WebApi.Implementations.Learning
         private readonly IDiagnosisDecisionMaker _decisionMaker;
         private readonly IFuzzyficator _fuzzyficator;
         private readonly IEntitiesToCreateDtoMapper _createDtoMapper;
+        private readonly ITestAccuracyProvider _mainTestAccuracyProvider;
+        private readonly ITestAccuracyProvider _learningTestAccuracyProvider;
+        private readonly string _normalDataSet = "full_ds.csv";
+        private readonly string _negativeDataSet = "full_negative.csv";
         private readonly List<string> _coreTests = new List<string>
         {
             "Гемоглобин (HGB)",
@@ -34,7 +38,6 @@ namespace WebApi.Implementations.Learning
             "Фолат сыворотки",
             "Ферритин"
         };
-        
         private readonly List<string> _OAKTests = new List<string>
         {
             "Гемоглобин (HGB)",
@@ -54,6 +57,8 @@ namespace WebApi.Implementations.Learning
             _learningPatientProvider = new PatientLearningDbProvider(learnRepo);
             _learningRuleProvider = new RuleLearningDbProvider(learnRepo);
             _mainProcessingRuleProvider = new RuleDbProvider(mainRepo);
+            _learningTestAccuracyProvider = new TestAccuracyLearningDbProvider(learnRepo);
+            _mainTestAccuracyProvider = new TestAccuracyDbProvider(mainRepo);
 
             _reportGenerator = new HtmlReportGenerator();
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider, _learningRuleProvider);
@@ -63,7 +68,8 @@ namespace WebApi.Implementations.Learning
 
         public LearningProcessor(IAnalysisResultProvider learningAnalysisResultProvider, IDiagnosisProvider learningDiagnosisProvider,
             IPatientProvider learningPatientProvider, IRuleProvider learningRuleProvider, IRuleProvider mainProcessingRuleProvider,
-            IProcessedResultProvider learningProcessedResultProvider, IReportGenerator reportGenerator)
+            IProcessedResultProvider learningProcessedResultProvider, IReportGenerator reportGenerator, 
+            ITestAccuracyProvider learningTestAccuracyProvider, ITestAccuracyProvider mainTestAccuracyProvider)
         {
             _learningAnalysisResultProvider = learningAnalysisResultProvider;
             _learningDiagnosisProvider = learningDiagnosisProvider;
@@ -71,6 +77,8 @@ namespace WebApi.Implementations.Learning
             _learningRuleProvider = learningRuleProvider;
             _mainProcessingRuleProvider = mainProcessingRuleProvider;
             _learningProcessedResultProvider = learningProcessedResultProvider;
+            _learningTestAccuracyProvider = learningTestAccuracyProvider;
+            _mainTestAccuracyProvider = mainTestAccuracyProvider;
             _reportGenerator = reportGenerator;
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, 
                 _learningDiagnosisProvider, _learningRuleProvider);
@@ -132,6 +140,12 @@ namespace WebApi.Implementations.Learning
         public void CreateBaseRules()
         {
             var dtoForRules = CreateDtoForBaseRules();
+            dtoForRules.ForEach(x => _learningRuleProvider.CreateRule(x));
+        }
+
+        public void CreateInverseRules()
+        {
+            var dtoForRules = CreateDtoForInverseRules();
             dtoForRules.ForEach(x => _learningRuleProvider.CreateRule(x));
         }
 
@@ -223,6 +237,127 @@ namespace WebApi.Implementations.Learning
             return diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
         }
 
+        public void CalculateTestAccuracy()
+        {
+            ReCreateStandardRulesAndLoadResults();
+
+            //Сначала по обычному набору правил и результатов
+            //Проставить диагнозы по полному набору данных
+            var patients = _learningPatientProvider.GetAllPatients();
+            var fullDataResults = new List<ProcessedResult>();
+
+            //Полный набор данных
+            foreach (var patient in patients)
+            {
+                var fullRes = _decisionMaker.ProcessForPatient(patient, true);
+                if (fullRes.Any(x => x.Value > 0))
+                {
+                    fullRes.Where(x => x.Value > 0).ToList()
+                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+
+                    fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
+                }
+            }
+
+            //Разделить показатели на две категории - ниже ReferenceLow и выше
+            //Подсчитать коэфы (А, Б) => А = кол-во ниже RefLow, Б = 1 -А 
+
+            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
+            var statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
+
+            var testAccuracies = CalculateTrulyTestAccuracies(statistics);
+            foreach (var testAccuracy in testAccuracies)
+            {
+                _learningTestAccuracyProvider.CreateTestAccuracy(testAccuracy);
+            }
+
+            //Загрузить инверсный набор правил и второй комплект результатов
+            ReCreateInverseRulesAndLoadResults();
+
+            //Проставить диагнозы по полному набору данных
+
+            patients = _learningPatientProvider.GetAllPatients();
+            fullDataResults = new List<ProcessedResult>();
+
+            //Полный набор данных
+            foreach (var patient in patients)
+            {
+                var fullRes = _decisionMaker.ProcessForPatient(patient, true);
+                if (fullRes.Any(x => x.Value > 0))
+                {
+                    fullRes.Where(x => x.Value > 0).ToList()
+                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+
+                    fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
+                }
+            }
+
+
+            //Разделить показатели на две категории
+            //Подсчитать коэфы (В, Г)
+
+            allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
+            statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
+
+            //testAccuracies = CalculateTrulyTestAccuracies(statistics);
+            //foreach (var testAccuracy in testAccuracies)
+            //{
+            //    _learningTestAccuracyProvider.CreateTestAccuracy(testAccuracy);
+            //}
+
+            //По каждому диагнозу для каждого показателя посчитать OТ => (А + Г) / (А + Б + В + Г)
+        }
+
+        private void ReCreateStandardRulesAndLoadResults()
+        {
+            ClearDb();
+
+            CreateBaseRules();
+
+            var analysisResults = _learningAnalysisResultProvider.LoadAnalysisResultsFromFile(_normalDataSet);
+            foreach (var analysisResult in analysisResults)
+            {
+                var dto = _createDtoMapper.AnalysisResultToDto(analysisResult);
+                _learningAnalysisResultProvider.CreateNewAnalysisResult(dto);
+            }
+
+            var patients = _learningAnalysisResultProvider.LoadPatientsFromFile(_normalDataSet);
+            foreach (var patient in patients)
+            {
+                var dto = _createDtoMapper.PatientToCreatePatientDto(patient);
+                _learningPatientProvider.CreateNewPatient(dto);
+            }
+        }
+
+        private void ReCreateInverseRulesAndLoadResults()
+        {
+            ClearDb();
+
+            CreateInverseRules();
+
+            var analysisResults = _learningAnalysisResultProvider.LoadAnalysisResultsFromFile(_negativeDataSet);
+            foreach (var analysisResult in analysisResults)
+            {
+                var dto = _createDtoMapper.AnalysisResultToDto(analysisResult);
+                _learningAnalysisResultProvider.CreateNewAnalysisResult(dto);
+            }
+
+            var patients = _learningAnalysisResultProvider.LoadPatientsFromFile(_negativeDataSet);
+            foreach (var patient in patients)
+            {
+                var dto = _createDtoMapper.PatientToCreatePatientDto(patient);
+                _learningPatientProvider.CreateNewPatient(dto);
+            }
+        }
+
+        private void ClearDb()
+        {
+            _learningProcessedResultProvider.DeleteAllResults();
+            _learningRuleProvider.DeleteAllRules();
+            _learningPatientProvider.DeleteAllPatients();
+            _learningAnalysisResultProvider.DeleteAllAnalysisResults();
+        }
+
         private void MakeDiagnosisDecisionAndGenerateReports(Patient patient)
         {
             var processedResults = _decisionMaker.ProcessForPatient(patient, true);
@@ -251,6 +386,34 @@ namespace WebApi.Implementations.Learning
 
                 _reportGenerator.GenerateReport(reportModel);
             }
+        }
+
+        private Dictionary<Diagnosis, List<BinaryAnalysisResult>> GetPositiveResultsBinaryStatistics(List<ProcessedResult> results)
+        {
+            var statistic = new Dictionary<Diagnosis, List<BinaryAnalysisResult>>();
+            
+            foreach (var diagnosis in LearningDiagnoses)
+            {
+                var binaryResults = new List<BinaryAnalysisResult>();
+                var sickPatientGuids = results.Where(x => x.DiagnosisGuid == diagnosis.Guid)
+                    .Select(x => x.PatientGuid).ToList();
+
+                foreach (var patientGuid in sickPatientGuids)
+                {
+                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patientGuid);
+                    var nonCoreResults = patientResults.Where(x => !_coreTests.Contains(x.TestName)).ToList();
+
+                    //(добавляем новые тесты или обновляем счетчик у старых)
+                    binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(nonCoreResults));
+                }
+
+                if (!statistic.ContainsKey(diagnosis))
+                {
+                    statistic.Add(diagnosis, binaryResults);
+                }
+            }
+
+            return statistic;
         }
 
         private Dictionary<Diagnosis, List<FuzzyAnalysisResult>> GetPositiveResultsStatistics(List<ProcessedResult> results)
@@ -313,6 +476,54 @@ namespace WebApi.Implementations.Learning
             return result;
         }
 
+        private List<TestAccuracy> CalculateTrulyTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics)
+        {
+            var result = new List<TestAccuracy>();
+
+            foreach (var diagnosis in statistics.Keys)
+            {
+                var analysisResults = statistics[diagnosis];
+
+                var tests = analysisResults.Select(x => x.TestName).Distinct().ToList();
+                var terms = analysisResults.Select(x => x.InputTermName).Distinct().ToList();
+
+                foreach (var test in tests)
+                {
+                    foreach (var term in terms)
+                    {
+                        var testResultByTerm = analysisResults
+                            .Where(x => x.InputTermName == term && x.TestName == test).ToList();
+                        decimal positiveResultsCount = testResultByTerm.Count(x => x.Confidence > 0);
+                        var power = Math.Round(positiveResultsCount / testResultByTerm.Count, 4);
+
+                        if (power > 0)
+                        {
+                            result.Add(CreateTrulyTestAccuracy(diagnosis.Guid, power, test));
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private TestAccuracy CreateTrulyTestAccuracy(Guid diagnosisGuid, decimal power, string test)
+        {
+            return new TestAccuracy()
+            {
+                Guid = Guid.NewGuid(),
+                IsRemoved = false,
+                InsertedDate = DateTime.Now,
+                TestName = test,
+                DiagnosisGuid = diagnosisGuid,
+                TrulyPositive = power,
+                TrulyNegative = 1 - power,
+                FalselyPositive = 0, 
+                FalselyNegative = 0,
+                OverallAccuracy = 0
+            };
+        }
+
         private Rule CreateRule(string diagnosis, string term, decimal power, string test)
         {
             return new Rule
@@ -338,6 +549,17 @@ namespace WebApi.Implementations.Learning
             result.AddRange(CreateAHZRules());
             result.AddRange(CreateFolDefAnemiaRules());
             result.AddRange(CreateB12DefAnemiaRules());
+
+            return result;
+        }
+
+        private List<CreateRuleDto> CreateDtoForInverseRules()
+        {
+            var result = new List<CreateRuleDto>();
+            result.AddRange(CreateInverseJDARules());
+            result.AddRange(CreateInverseAHZRules());
+            result.AddRange(CreateInverseFolDefAnemiaRules());
+            result.AddRange(CreateInverseB12DefAnemiaRules());
 
             return result;
         }
@@ -653,6 +875,287 @@ namespace WebApi.Implementations.Learning
                     DiagnosisName = "B12-дефицитная анемия",
                     IsRemoved = false,
                     InputTermName = "High",
+                    Power = 1
+                }
+            };
+        }
+
+        private List<CreateRuleDto> CreateInverseJDARules()
+        {
+            return new List<CreateRuleDto>
+            {
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Железодефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                }
+            };
+        }
+
+        private List<CreateRuleDto> CreateInverseAHZRules()
+        {
+            return new List<CreateRuleDto>
+            {
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Анемия хронических заболеваний",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                }
+            };
+        }
+
+        private List<CreateRuleDto> CreateInverseFolDefAnemiaRules()
+        {
+            return new List<CreateRuleDto>
+            {
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "Фолиеводефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                }
+            };
+        }
+
+        private List<CreateRuleDto> CreateInverseB12DefAnemiaRules()
+        {
+            return new List<CreateRuleDto>
+            {
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Гемоглобин (HGB)",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Железо в сыворотке",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Ферритин",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Normal",
+                    Power = 1
+                },
+
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Витамин В12",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "High",
+                    Power = 1
+                },
+                new CreateRuleDto
+                {
+                    Guid = Guid.NewGuid(),
+                    Test = "Фолат сыворотки",
+                    DiagnosisName = "B12-дефицитная анемия",
+                    IsRemoved = false,
+                    InputTermName = "Low",
                     Power = 1
                 }
             };

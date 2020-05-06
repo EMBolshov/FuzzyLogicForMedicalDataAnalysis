@@ -53,5 +53,10 @@ namespace WebApi.Implementations.MainProcessing
         {
             throw new NotImplementedException("Method can be used only with learning data!");
         }
+
+        public void DeleteAllAnalysisResults()
+        {
+            throw new NotImplementedException("Method can be used only with learning data!");
+        }
     }
 }

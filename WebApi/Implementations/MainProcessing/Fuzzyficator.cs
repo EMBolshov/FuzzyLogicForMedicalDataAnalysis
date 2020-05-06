@@ -39,6 +39,30 @@ namespace WebApi.Implementations.MainProcessing
             return fuzzyResults;
         }
 
+        public List<BinaryAnalysisResult> MakeBinaryResults(List<AnalysisResult> analysisResults)
+        {
+            var binaryResults = new List<BinaryAnalysisResult>();
+
+            foreach (var analysisResult in analysisResults)
+            {
+                binaryResults.Add(new BinaryAnalysisResult()
+                {
+                    TestName = analysisResult.TestName,
+                    InputTermName = "Low",
+                    Confidence = GetBinaryLowResultConfidence(analysisResult)
+                });
+
+                binaryResults.Add(new BinaryAnalysisResult()
+                {
+                    TestName = analysisResult.TestName,
+                    InputTermName = "Normal",
+                    Confidence = GetBinaryNormalResultConfidence(analysisResult)
+                });
+            }
+
+            return binaryResults;
+        }
+
         private decimal GetLowResultConfidence(AnalysisResult analysisResult)
         {
             var delta = ((analysisResult.ReferenceHigh - analysisResult.ReferenceLow) * 0.05m / 0.95m) / 2m;
@@ -153,6 +177,16 @@ namespace WebApi.Implementations.MainProcessing
             if (affiliation > 1m) { affiliation = 1m; }
 
             return Math.Round(affiliation, 4);
+        }
+
+        private int GetBinaryLowResultConfidence(AnalysisResult analysisResult)
+        {
+            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+        }
+
+        private int GetBinaryNormalResultConfidence(AnalysisResult analysisResult)
+        {
+            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
         }
     }
 }

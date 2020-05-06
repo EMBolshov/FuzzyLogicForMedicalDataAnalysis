@@ -30,5 +30,10 @@ namespace WebApi.Implementations.MainProcessing
         {
             _repo.RemovePatientByGuid(patientGuid);
         }
+
+        public void DeleteAllPatients()
+        {
+            throw new NotImplementedException("Method can be used only with learning data!");
+        }
     }
 }

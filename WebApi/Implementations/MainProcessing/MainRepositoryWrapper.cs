@@ -97,5 +97,15 @@ namespace WebApi.Implementations.MainProcessing
         {
             _repo.DeleteAllRules();
         }
+
+        public void CreateTestAccuracy(TestAccuracy testAccuracy)
+        {
+            _repo.CreateTestAccuracy(testAccuracy);
+        }
+
+        public List<TestAccuracy> GetAllTestAccuracies()
+        {
+            return _repo.GetAllTestAccuracies();
+        }
     }
 }

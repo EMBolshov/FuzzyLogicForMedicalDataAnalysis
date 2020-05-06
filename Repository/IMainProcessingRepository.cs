@@ -23,5 +23,7 @@ namespace Repository
         void SaveProcessedResult(ProcessedResult result);
         List<ProcessedResult> GetAllPositiveResults();
         void DeleteAllRules();
+        void CreateTestAccuracy(TestAccuracy testAccuracy);
+        List<TestAccuracy> GetAllTestAccuracies();
     }
 }

@@ -19,7 +19,6 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCor
 C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\bin\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.deps.json
 C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\bin\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.dll
 C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\bin\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.pdb
-C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.csprojAssemblyReference.cache
 C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.csproj.CoreCompileInputs.cache
 C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.AssemblyInfoInputs.cache
 C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicMedicalCore.BL\obj\Debug\netstandard2.0\FuzzyLogicMedicalCore.BL.AssemblyInfo.cs

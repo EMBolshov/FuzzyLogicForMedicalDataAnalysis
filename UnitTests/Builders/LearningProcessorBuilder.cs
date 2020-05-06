@@ -13,12 +13,14 @@ namespace UnitTests.Builders
     //TODO: Подготовить список пациентов, по которому будут формироваться новые правила.
     public class LearningProcessorBuilder
     {
-        public List<Patient> Patients { get; private set; }
+        public List<Patient> Patients { get; set; }
         public IPatientProvider PatientProvider { get; private set; }
         public IAnalysisResultProvider AnalysisResultProvider { get; private set; }
         public IDiagnosisProvider DiagnosisProvider { get; private set; }
         public IRuleProvider RuleProvider { get; private set; }
-        public IRuleProvider MainProcessingRuleProvider { get; set; }
+        public IRuleProvider MainProcessingRuleProvider { get; private set; }
+        public ITestAccuracyProvider MainProcessingTestAccuracyProvider { get; private set; }
+        public ITestAccuracyProvider LearningTestAccuracyProvider { get; private set; }
         public IProcessedResultProvider ProcessedResultProvider { get; private set; }
         public IReportGenerator ReportGenerator { get; private set; }
 
@@ -173,10 +175,26 @@ namespace UnitTests.Builders
             return this;
         }
 
+        //TODO:
+        public LearningProcessorBuilder GetTestAccuracyProvider()
+        {
+            var testAccuracies = new List<TestAccuracy>();
+            var mockLearningTestAccuracyDbProvider = new Mock<ITestAccuracyProvider>();
+            mockLearningTestAccuracyDbProvider.Setup(x => x.GetAllTestAccuracies()).Returns(testAccuracies);
+            LearningTestAccuracyProvider = mockLearningTestAccuracyDbProvider.Object;
+
+            var mockMainProcessingTestAccuracyDbProvider = new Mock<ITestAccuracyProvider>();
+            //TODO:
+            //mockMainProcessingRuleDbProvider.Setup(x => x.CreateRule());
+            MainProcessingTestAccuracyProvider = mockMainProcessingTestAccuracyDbProvider.Object;
+            return this;
+        }
+
         public LearningProcessor Build()
         {
             return new LearningProcessor(AnalysisResultProvider, DiagnosisProvider,
-                PatientProvider, RuleProvider, MainProcessingRuleProvider, ProcessedResultProvider, ReportGenerator);
+                PatientProvider, RuleProvider, MainProcessingRuleProvider, ProcessedResultProvider, 
+                ReportGenerator, LearningTestAccuracyProvider, MainProcessingTestAccuracyProvider);
         }
     }
 }

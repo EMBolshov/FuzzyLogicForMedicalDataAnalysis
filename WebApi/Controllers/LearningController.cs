@@ -40,6 +40,15 @@ namespace WebApi.Controllers
         /// <summary>
         /// TODO
         /// </summary>
+        [HttpGet("CalculateTestAccuracy")]
+        public void CalculateTestAccuracy()
+        {
+            _learningProcessor.CalculateTestAccuracy();
+        }
+
+        /// <summary>
+        /// TODO
+        /// </summary>
         [HttpGet("CreateBaseRules")]
         public void CreateBaseRules()
         {

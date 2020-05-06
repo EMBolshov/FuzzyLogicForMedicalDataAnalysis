@@ -136,3 +136,6 @@ C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingCon
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csproj.CopyComplete
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.exe
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.pdb
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csprojAssemblyReference.cache
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.exe.config
+C:\Users\bolshov.e\Documents\FuzzyLogicForMedicalDataAnalysis\FuzzyLogicTestingConsole\obj\Debug\FuzzyLogicTestingConsole.csproj.CoreCompileInputs.cache

@@ -8,9 +8,8 @@ namespace WebApi.Interfaces.MainProcessing
     public interface IPatientProvider
     {
         List<Patient> GetAllPatients();
-
         void CreateNewPatient(CreatePatientDto createPatientDto);
-
         void RemovePatient(Guid patientGuid);
+        void DeleteAllPatients();
     }
 }

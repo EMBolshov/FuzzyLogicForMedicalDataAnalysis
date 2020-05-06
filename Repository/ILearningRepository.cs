@@ -25,5 +25,9 @@ namespace Repository
         void DeleteAllProcessedResults();
         void ReturnAnalysisResultByGuid(Guid analysisResultGuid);
         void DeleteAllRules();
+        void CreateTestAccuracy(TestAccuracy testAccuracy);
+        List<TestAccuracy> GetAllTestAccuracies();
+        void DeleteAllAnalysisResults();
+        void DeleteAllPatients();
     }
 }

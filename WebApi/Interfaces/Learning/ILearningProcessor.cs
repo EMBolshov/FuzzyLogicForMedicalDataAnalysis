@@ -11,5 +11,6 @@ namespace WebApi.Interfaces.Learning
         void CreateNewDiagnosis(CreateDiagnosisDto dto);
         void CreateBaseRules();
         decimal GetErrorRatio();
+        void CalculateTestAccuracy();
     }
 }

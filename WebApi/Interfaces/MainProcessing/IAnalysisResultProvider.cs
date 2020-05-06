@@ -20,5 +20,6 @@ namespace WebApi.Interfaces.MainProcessing
         List<AnalysisResult> GetPositiveAnalysisResultsByDiagnosisGuid(Guid diagnosisGuid);
 
         void ReturnAnalysisResult(Guid analysisResultGuid);
+        void DeleteAllAnalysisResults();
     }
 }

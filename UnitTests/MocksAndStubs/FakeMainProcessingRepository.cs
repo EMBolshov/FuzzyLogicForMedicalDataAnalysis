@@ -89,5 +89,20 @@ namespace UnitTests.MocksAndStubs
         {
             throw new NotImplementedException();
         }
+
+        public void CreateTestAccuracy(TestAccuracy testAccuracy)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteAllRules()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<TestAccuracy> GetAllTestAccuracies()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

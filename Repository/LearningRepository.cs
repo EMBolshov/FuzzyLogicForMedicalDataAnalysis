@@ -199,7 +199,6 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "DELETE FROM \"Rule\"";
-
                 context.Execute(sql);
             }
         }
@@ -242,7 +241,6 @@ namespace Repository
             using (var context = new NpgsqlConnection(_connectionString))
             {
                 var sql = "DELETE FROM \"ProcessedResult\"";
-
                 context.Execute(sql);
             }
         }
@@ -254,6 +252,66 @@ namespace Repository
                 var sql = "UPDATE \"AnalysisResult\" set \"IsRemoved\" = \'false\' " +
                           $"WHERE \"Guid\" = '{analysisResultGuid}'";
 
+                context.Execute(sql);
+            }
+        }
+
+        public void CreateTestAccuracy(TestAccuracy testAccuracy)
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                context.Execute(
+                    "INSERT INTO \"TestAccuracy\" (\"Guid\", \"InsertedDate\", \"TestName\", \"DiagnosisGuid\", " +
+                    "\"TrulyPositive\", \"TrulyNegative\", \"FalselyPositive\", \"FalselyNegative\", \"OverallAccuracy\", \"IsRemoved\") " +
+                    "VALUES (@Guid, @InsertedDate, @TestName, @DiagnosisGuid, @TrulyPositive, " +
+                    "@TrulyNegative, @FalselyPositive, @FalselyNegative, @OverallAccuracy, @IsRemoved )",
+                    new
+                    {
+                        Guid = testAccuracy.Guid,
+                        InsertedDate = testAccuracy.InsertedDate,
+                        TestName = testAccuracy.TestName,
+                        DiagnosisGuid = testAccuracy.DiagnosisGuid,
+                        TrulyPositive = testAccuracy.TrulyPositive,
+                        TrulyNegative = testAccuracy.TrulyNegative,
+                        FalselyPositive = testAccuracy.FalselyPositive,
+                        FalselyNegative = testAccuracy.FalselyNegative,
+                        OverallAccuracy = testAccuracy.OverallAccuracy,
+                        IsRemoved = testAccuracy.IsRemoved
+                    });
+            }
+        }
+
+        public List<TestAccuracy> GetAllTestAccuracies()
+        {
+            List<TestAccuracy> result;
+
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "SELECT \"Id\", \"Guid\", \"InsertedDate\", \"TestName\", \"DiagnosisGuid\", " +
+                          "\"TrulyPositive\", \"TrulyNegative\", \"FalselyPositive\", \"FalselyNegative\", " +
+                          "\"OverallAccuracy\", \"IsRemoved\" " +
+                          "FROM \"TestAccuracy\" WHERE \"IsRemoved\" = 'False'";
+
+                result = context.Query<TestAccuracy>(sql).ToList();
+            }
+
+            return result;
+        }
+
+        public void DeleteAllPatients()
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "DELETE FROM \"Patient\"";
+                context.Execute(sql);
+            }
+        }
+
+        public void DeleteAllAnalysisResults()
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "DELETE FROM \"AnalysisResult\"";
                 context.Execute(sql);
             }
         }

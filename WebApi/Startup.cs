@@ -69,6 +69,8 @@ namespace WebApi
             services.AddTransient<TxtReportGenerator>();
             services.AddTransient<HtmlReportGenerator>();
             services.AddTransient<LearningProcessedResultDbProvider>();
+            services.AddTransient<TestAccuracyDbProvider>();
+            services.AddTransient<TestAccuracyLearningDbProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

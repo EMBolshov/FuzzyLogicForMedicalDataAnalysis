@@ -21,6 +21,7 @@ namespace UnitTests.LearningProcessorTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .GetHtmlReportGenerator()
                 .Build();
             

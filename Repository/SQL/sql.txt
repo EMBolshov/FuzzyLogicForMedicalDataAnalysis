@@ -94,6 +94,26 @@ WITH (
 );
 
 
+-------------------------------------------------
+
+CREATE TABLE "TestAccuracy"
+(
+  "Id" SERIAL,  
+  "Guid" uuid NOT NULL,    
+  "InsertedDate" timestamp without time zone NOT NULL,
+  "TestName" character varying(1024) NULL,   
+  "DiagnosisGuid" uuid NOT NULL, 
+  "TrulyPositive" decimal NULL,
+  "TrulyNegative" decimal NULL,
+  "FalselyPositive" decimal NULL,
+  "FalselyNegative" decimal NULL,
+  "OverallAccuracy" decimal NULL,    
+  "IsRemoved" boolean NOT NULL DEFAULT false,
+  CONSTRAINT "PK_TestAccuracy" PRIMARY KEY ("Id")
+)
+WITH (
+  OIDS=FALSE
+);
 
 
 

@@ -53,5 +53,10 @@ namespace WebApi.Implementations.Learning
         {
             return _repo.GetPositiveAnalysisResultsByDiagnosisGuid(diagnosisGuid);
         }
+
+        public void DeleteAllAnalysisResults()
+        {
+            _repo.DeleteAllAnalysisResults();
+        }
     }
 }
