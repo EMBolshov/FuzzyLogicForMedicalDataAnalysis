@@ -266,11 +266,7 @@ namespace WebApi.Implementations.Learning
             var statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
 
             var testAccuracies = CalculateTrulyTestAccuracies(statistics);
-            foreach (var testAccuracy in testAccuracies)
-            {
-                _learningTestAccuracyProvider.CreateTestAccuracy(testAccuracy);
-            }
-
+            
             //Загрузить инверсный набор правил и второй комплект результатов
             ReCreateInverseRulesAndLoadResults();
 
@@ -299,11 +295,11 @@ namespace WebApi.Implementations.Learning
             allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
             statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
 
-            //testAccuracies = CalculateTrulyTestAccuracies(statistics);
-            //foreach (var testAccuracy in testAccuracies)
-            //{
-            //    _learningTestAccuracyProvider.CreateTestAccuracy(testAccuracy);
-            //}
+            var completeTestAccuracies = CalculateFalselyTestAccuracies(statistics, testAccuracies);
+            foreach (var testAccuracy in completeTestAccuracies)
+            {
+                _learningTestAccuracyProvider.CreateTestAccuracy(testAccuracy);
+            }
 
             //По каждому диагнозу для каждого показателя посчитать OТ => (А + Г) / (А + Б + В + Г)
         }
@@ -507,21 +503,42 @@ namespace WebApi.Implementations.Learning
             return result;
         }
 
-        private TestAccuracy CreateTrulyTestAccuracy(Guid diagnosisGuid, decimal power, string test)
+        private List<TestAccuracy> CalculateFalselyTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies)
         {
-            return new TestAccuracy()
+            var result = testAccuracies;
+
+            foreach (var diagnosis in statistics.Keys)
             {
-                Guid = Guid.NewGuid(),
-                IsRemoved = false,
-                InsertedDate = DateTime.Now,
-                TestName = test,
-                DiagnosisGuid = diagnosisGuid,
-                TrulyPositive = power,
-                TrulyNegative = 1 - power,
-                FalselyPositive = 0, 
-                FalselyNegative = 0,
-                OverallAccuracy = 0
-            };
+                var analysisResults = statistics[diagnosis];
+
+                var tests = analysisResults.Select(x => x.TestName).Distinct().ToList();
+                var terms = analysisResults.Select(x => x.InputTermName).Distinct().ToList();
+
+                foreach (var test in tests)
+                {
+                    foreach (var term in terms)
+                    {
+                        var testResultByTerm = analysisResults
+                            .Where(x => x.InputTermName == term && x.TestName == test).ToList();
+                        decimal positiveResultsCount = testResultByTerm.Count(x => x.Confidence > 0);
+                        var power = Math.Round(positiveResultsCount / testResultByTerm.Count, 4);
+
+                        if (power > 0)
+                        {
+                            var testAccuracy = result.FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == test);
+                            if (testAccuracy != null)
+                            {
+                                result.Remove(testAccuracy);
+                                testAccuracy.FalselyPositive = power;
+                                testAccuracy.FalselyNegative = 1 - power;
+                                result.Add(testAccuracy);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
         }
 
         private Rule CreateRule(string diagnosis, string term, decimal power, string test)
@@ -534,6 +551,23 @@ namespace WebApi.Implementations.Learning
                 Power = power,
                 IsRemoved = false,
                 Test = test
+            };
+        }
+
+        private TestAccuracy CreateTrulyTestAccuracy(Guid diagnosisGuid, decimal power, string test)
+        {
+            return new TestAccuracy
+            {
+                Guid = Guid.NewGuid(),
+                IsRemoved = false,
+                InsertedDate = DateTime.Now,
+                TestName = test,
+                DiagnosisGuid = diagnosisGuid,
+                TrulyPositive = power,
+                TrulyNegative = 1 - power,
+                FalselyPositive = 0,
+                FalselyNegative = 0,
+                OverallAccuracy = 0
             };
         }
 
