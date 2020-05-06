@@ -295,19 +295,21 @@ namespace WebApi.Implementations.Learning
             allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
             statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
 
-            var completeTestAccuracies = CalculateFalselyTestAccuracies(statistics, testAccuracies);
+            var testAccuraciesWithFalsely = CalculateFalselyTestAccuracies(statistics, testAccuracies);
+            
+            //По каждому диагнозу для каждого показателя посчитать OТ => (А + Г) / (А + Б + В + Г)
+            var completeTestAccuracies = CalculateOverallTestAccuracies(statistics, testAccuraciesWithFalsely);
             foreach (var testAccuracy in completeTestAccuracies)
             {
                 _learningTestAccuracyProvider.CreateTestAccuracy(testAccuracy);
             }
 
-            //По каждому диагнозу для каждого показателя посчитать OТ => (А + Г) / (А + Б + В + Г)
+            ReCreateStandardRulesAndLoadResults();
         }
 
         private void ReCreateStandardRulesAndLoadResults()
         {
             ClearDb();
-
             CreateBaseRules();
 
             var analysisResults = _learningAnalysisResultProvider.LoadAnalysisResultsFromFile(_normalDataSet);
@@ -534,6 +536,33 @@ namespace WebApi.Implementations.Learning
                                 result.Add(testAccuracy);
                             }
                         }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private List<TestAccuracy> CalculateOverallTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies)
+        {
+            var result = testAccuracies;
+
+            foreach (var diagnosis in statistics.Keys)
+            {
+                var analysisResults = statistics[diagnosis];
+                var tests = analysisResults.Select(x => x.TestName).Distinct().ToList();
+
+                foreach (var test in tests)
+                {
+                    var testAccuracy = result.FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == test);
+
+                    if (testAccuracy != null)
+                    {
+                        result.Remove(testAccuracy);
+                        testAccuracy.OverallAccuracy = (testAccuracy.TrulyPositive + testAccuracy.FalselyPositive) /
+                                                       (testAccuracy.TrulyPositive + testAccuracy.TrulyNegative +
+                                                        testAccuracy.FalselyPositive + testAccuracy.FalselyNegative);
+                        result.Add(testAccuracy);
                     }
                 }
             }
