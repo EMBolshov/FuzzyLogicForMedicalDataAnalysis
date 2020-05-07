@@ -16,6 +16,7 @@ namespace WebApi.Implementations.MainProcessing
         private readonly IPatientProvider _patientProvider;
         private readonly IReportGenerator _reportGenerator;
         private readonly IDiagnosisDecisionMaker _decisionMaker;
+        private readonly ITestAccuracyProvider _testAccuracyProvider;
 
         private IEnumerable<Diagnosis> Diagnoses => _diagnosisProvider.GetAllDiagnoses();
 
@@ -24,10 +25,11 @@ namespace WebApi.Implementations.MainProcessing
             _analysisResultProvider = new AnalysisResultDbProvider(mainRepo, new FileParser(new AnalysisAndTestsNamingMapper()));
             _diagnosisProvider = new DiagnosisDbProvider(mainRepo);
             _patientProvider = new PatientDbProvider(mainRepo);
+            _testAccuracyProvider = new TestAccuracyDbProvider(mainRepo);
             IRuleProvider ruleProvider = new RuleDbProvider(mainRepo);
 
             _reportGenerator = new HtmlReportGenerator();
-            _decisionMaker = new DiagnosisDecisionMaker(_analysisResultProvider, _diagnosisProvider, ruleProvider);
+            _decisionMaker = new DiagnosisDecisionMaker(_analysisResultProvider, _diagnosisProvider, ruleProvider, _testAccuracyProvider);
         }
 
         public void ProcessForAllPatients()

@@ -25,5 +25,10 @@ namespace WebApi.Implementations.Learning
         {
             return _repo.GetAllTestAccuracies();
         }
+
+        public void DeleteAllTestAccuracies()
+        {
+            _repo.DeleteAllTestAccuracies();
+        }
     }
 }

@@ -12,13 +12,17 @@ namespace WebApi.Implementations.MainProcessing
         private readonly IDiagnosisProvider _diagnosisProvider;
         private readonly IRuleProvider _ruleProvider;
         private readonly IFuzzyficator _fuzzyficator;
+        private readonly ITestAccuracyProvider _testAccuracyProvider;
+        public List<TestAccuracy> TestAccuracies => _testAccuracyProvider.GetAllTestAccuracies();
 
         public DiagnosisDecisionMaker(IAnalysisResultProvider analysisResultProvider, 
-            IDiagnosisProvider diagnosisProvider, IRuleProvider ruleProvider)
+            IDiagnosisProvider diagnosisProvider, IRuleProvider ruleProvider,
+            ITestAccuracyProvider testAccuracyProvider)
         {
             _analysisResultProvider = analysisResultProvider;
             _diagnosisProvider = diagnosisProvider;
             _ruleProvider = ruleProvider;
+            _testAccuracyProvider = testAccuracyProvider;
             _fuzzyficator = new Fuzzyficator();
         }
 
@@ -51,7 +55,6 @@ namespace WebApi.Implementations.MainProcessing
             var countedTests = 0;
 
             var fuzzyResults = _fuzzyficator.FuzzyficateResults(analysisResults);
-
             var distinctRules = rules.GroupBy(x => x.Test).Select(x => x.First()).ToList();
 
             foreach (var rule in distinctRules)
@@ -62,9 +65,14 @@ namespace WebApi.Implementations.MainProcessing
                     var currentRuleValue = 0m;
                     if (anyResults)
                     {
+                        var testAccuracy = TestAccuracies
+                            .FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == rule.Test);
+
+                        var testAccuracyValue = testAccuracy?.OverallAccuracy ?? 1;
+
                         currentRuleValue = fuzzyResults
                                                .First(x => x.TestName == rule.Test && x.InputTermName == rule.InputTermName)
-                                               .Confidence * rule.Power;
+                                               .Confidence * rule.Power * testAccuracyValue;
                     }
 
                     if (currentRuleValue > 0)
@@ -94,10 +102,15 @@ namespace WebApi.Implementations.MainProcessing
                         var anySingleResult = fuzzyResults.Any(x => x.TestName == nonSingleRule.Test);
                         if (anySingleResult)
                         {
+                            var testAccuracy = TestAccuracies
+                                .FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == rule.Test);
+
+                            var testAccuracyValue = testAccuracy?.OverallAccuracy ?? 1;
+
                             anyResults = true;
                             currentRuleValue += fuzzyResults
                                                    .First(x => x.TestName == nonSingleRule.Test && x.InputTermName == nonSingleRule.InputTermName)
-                                                   .Confidence * nonSingleRule.Power;
+                                                   .Confidence * nonSingleRule.Power * testAccuracyValue;
                         }
                     }
 

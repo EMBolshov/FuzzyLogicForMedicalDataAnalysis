@@ -61,7 +61,7 @@ namespace WebApi.Implementations.Learning
             _mainTestAccuracyProvider = new TestAccuracyDbProvider(mainRepo);
 
             _reportGenerator = new HtmlReportGenerator();
-            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider, _learningRuleProvider);
+            _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, _learningDiagnosisProvider, _learningRuleProvider, _learningTestAccuracyProvider);
             _fuzzyficator = new Fuzzyficator();
             _createDtoMapper = new EntitiesToCreateDtoMapper();
         }
@@ -81,7 +81,7 @@ namespace WebApi.Implementations.Learning
             _mainTestAccuracyProvider = mainTestAccuracyProvider;
             _reportGenerator = reportGenerator;
             _decisionMaker = new DiagnosisDecisionMaker(_learningAnalysisResultProvider, 
-                _learningDiagnosisProvider, _learningRuleProvider);
+                _learningDiagnosisProvider, _learningRuleProvider, _learningTestAccuracyProvider);
             _fuzzyficator = new Fuzzyficator();
             _createDtoMapper = new EntitiesToCreateDtoMapper();
         }
@@ -237,9 +237,13 @@ namespace WebApi.Implementations.Learning
             return diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
         }
 
-        public void CalculateTestAccuracy()
+        public void CalculateTestAccuracy(bool clearAccuracies = true)
         {
             ReCreateStandardRulesAndLoadResults();
+            if (clearAccuracies)
+            {
+                _learningTestAccuracyProvider.DeleteAllTestAccuracies();
+            }
 
             //Сначала по обычному набору правил и результатов
             //Проставить диагнозы по полному набору данных
@@ -399,16 +403,14 @@ namespace WebApi.Implementations.Learning
                 foreach (var patientGuid in sickPatientGuids)
                 {
                     var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patientGuid);
-                    var nonCoreResults = patientResults.Where(x => !_coreTests.Contains(x.TestName)).ToList();
+                    //var nonCoreResults = patientResults.Where(x => !_coreTests.Contains(x.TestName)).ToList();
 
                     //(добавляем новые тесты или обновляем счетчик у старых)
-                    binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(nonCoreResults));
+                    //binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(nonCoreResults));
+                    binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(patientResults));
                 }
 
-                if (!statistic.ContainsKey(diagnosis))
-                {
-                    statistic.Add(diagnosis, binaryResults);
-                }
+                statistic.Add(diagnosis, binaryResults);
             }
 
             return statistic;
@@ -485,6 +487,8 @@ namespace WebApi.Implementations.Learning
                 var tests = analysisResults.Select(x => x.TestName).Distinct().ToList();
                 var terms = analysisResults.Select(x => x.InputTermName).Distinct().ToList();
 
+                tests.ForEach(x => result.Add(CreateEmptyTestAccuracy(diagnosis.Guid, x)));
+
                 foreach (var test in tests)
                 {
                     foreach (var term in terms)
@@ -496,7 +500,22 @@ namespace WebApi.Implementations.Learning
 
                         if (power > 0)
                         {
-                            result.Add(CreateTrulyTestAccuracy(diagnosis.Guid, power, test));
+                            var testAccuracy = result.FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == test);
+                            if (testAccuracy != null)
+                            {
+                                if (term == "Low")
+                                {
+                                    result.Remove(testAccuracy);
+                                    testAccuracy.TrulyPositive = power;
+                                    result.Add(testAccuracy);
+                                }
+                                if (term == "Normal")
+                                {
+                                    result.Remove(testAccuracy);
+                                    testAccuracy.TrulyNegative = power;
+                                    result.Add(testAccuracy);
+                                }
+                            }
                         }
                     }
                 }
@@ -530,10 +549,18 @@ namespace WebApi.Implementations.Learning
                             var testAccuracy = result.FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == test);
                             if (testAccuracy != null)
                             {
-                                result.Remove(testAccuracy);
-                                testAccuracy.FalselyPositive = power;
-                                testAccuracy.FalselyNegative = 1 - power;
-                                result.Add(testAccuracy);
+                                if (term == "Low")
+                                {
+                                    result.Remove(testAccuracy);
+                                    testAccuracy.FalselyPositive = power;
+                                    result.Add(testAccuracy);
+                                }
+                                if (term == "Normal")
+                                {
+                                    result.Remove(testAccuracy);
+                                    testAccuracy.FalselyNegative = power;
+                                    result.Add(testAccuracy);
+                                }
                             }
                         }
                     }
@@ -583,7 +610,7 @@ namespace WebApi.Implementations.Learning
             };
         }
 
-        private TestAccuracy CreateTrulyTestAccuracy(Guid diagnosisGuid, decimal power, string test)
+        private TestAccuracy CreateEmptyTestAccuracy(Guid diagnosisGuid, string test)
         {
             return new TestAccuracy
             {
@@ -592,8 +619,8 @@ namespace WebApi.Implementations.Learning
                 InsertedDate = DateTime.Now,
                 TestName = test,
                 DiagnosisGuid = diagnosisGuid,
-                TrulyPositive = power,
-                TrulyNegative = 1 - power,
+                TrulyPositive = 0,
+                TrulyNegative = 0,
                 FalselyPositive = 0,
                 FalselyNegative = 0,
                 OverallAccuracy = 0

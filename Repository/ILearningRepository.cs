@@ -29,5 +29,6 @@ namespace Repository
         List<TestAccuracy> GetAllTestAccuracies();
         void DeleteAllAnalysisResults();
         void DeleteAllPatients();
+        void DeleteAllTestAccuracies();
     }
 }

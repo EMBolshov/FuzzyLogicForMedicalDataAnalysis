@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using POCO.Domain;
 using Repository;
 using WebApi.Interfaces.MainProcessing;
@@ -23,6 +24,11 @@ namespace WebApi.Implementations.MainProcessing
         public List<TestAccuracy> GetAllTestAccuracies()
         {
             return _repo.GetAllTestAccuracies();
+        }
+
+        public void DeleteAllTestAccuracies()
+        {
+            throw new NotImplementedException();
         }
     }
 }

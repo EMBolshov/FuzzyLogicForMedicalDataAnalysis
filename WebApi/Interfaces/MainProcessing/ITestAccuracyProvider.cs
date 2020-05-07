@@ -6,7 +6,7 @@ namespace WebApi.Interfaces.MainProcessing
     public interface ITestAccuracyProvider
     {
         List<TestAccuracy> GetAllTestAccuracies();
-
         void CreateTestAccuracy(TestAccuracy testAccuracy);
+        void DeleteAllTestAccuracies();
     }
 }

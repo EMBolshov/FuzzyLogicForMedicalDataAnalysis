@@ -127,5 +127,10 @@ namespace WebApi.Implementations.Learning
         {
             _repo.DeleteAllPatients();
         }
+
+        public void DeleteAllTestAccuracies()
+        {
+            _repo.DeleteAllTestAccuracies();
+        }
     }
 }

@@ -315,5 +315,14 @@ namespace Repository
                 context.Execute(sql);
             }
         }
+
+        public void DeleteAllTestAccuracies()
+        {
+            using (var context = new NpgsqlConnection(_connectionString))
+            {
+                var sql = "DELETE FROM \"TestAccuracy\"";
+                context.Execute(sql);
+            }
+        }
     }
 }
