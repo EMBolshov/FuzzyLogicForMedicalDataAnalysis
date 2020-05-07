@@ -476,9 +476,13 @@ namespace WebApi.Implementations.Learning
             return result;
         }
 
-        private List<TestAccuracy> CalculateTrulyTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics)
+        private List<TestAccuracy> CalculateTrulyTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies = null)
         {
             var result = new List<TestAccuracy>();
+            if (testAccuracies != null)
+            {
+                result = testAccuracies;
+            }
 
             foreach (var diagnosis in statistics.Keys)
             {
@@ -487,7 +491,10 @@ namespace WebApi.Implementations.Learning
                 var tests = analysisResults.Select(x => x.TestName).Distinct().ToList();
                 var terms = analysisResults.Select(x => x.InputTermName).Distinct().ToList();
 
-                tests.ForEach(x => result.Add(CreateEmptyTestAccuracy(diagnosis.Guid, x)));
+                if (testAccuracies == null)
+                {
+                    tests.ForEach(x => result.Add(CreateEmptyTestAccuracy(diagnosis.Guid, x)));
+                }
 
                 foreach (var test in tests)
                 {
