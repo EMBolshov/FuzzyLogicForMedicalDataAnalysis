@@ -223,8 +223,17 @@ namespace WebApi.Implementations.Learning
 
                 var maxValue = allPartialDiagnosis.Values.Max();
                 var mostProbableDiagnoses = allPartialDiagnosis.Where(x => x.Value >= maxValue).Select(x => x.Key).ToList();
+                
+                //Наимболее вероятный диагноз не равен поставленному - ошибка
+                //if (!mostProbableDiagnoses.Contains(diagnosis))
+                //{
+                //    diffCount++;
+                //}
 
-                if (!mostProbableDiagnoses.Contains(diagnosis))
+                //Разница между наиболее вероятным диагнозом и поставленным диагнозов больше 90% - ошибка
+                var diagnosisChance = allPartialDiagnosis[diagnosis];
+                var mostProbableDiagnosisChance = allPartialDiagnosis[mostProbableDiagnoses.First()];
+                if (diagnosisChance / mostProbableDiagnosisChance < 0.9m)
                 {
                     diffCount++;
                 }
@@ -233,8 +242,9 @@ namespace WebApi.Implementations.Learning
             removedAnalysisResultsGuids.ForEach(x => _learningAnalysisResultProvider.ReturnAnalysisResult(x));
             _learningRuleProvider.DeleteAllRules();
             CreateBaseRules();
-
-            return diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
+            
+            var result = diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
+            return result;
         }
 
         public void CalculateTestAccuracy(bool clearAccuracies = true)
@@ -269,7 +279,14 @@ namespace WebApi.Implementations.Learning
             var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
             var statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
 
-            var testAccuracies = CalculateTrulyTestAccuracies(statistics);
+            List<TestAccuracy> previousTestAccuracies = null;
+
+            if (!clearAccuracies)
+            {
+                previousTestAccuracies = _learningTestAccuracyProvider.GetAllTestAccuracies();
+            }
+
+            var testAccuracies = CalculateTrulyTestAccuracies(statistics, previousTestAccuracies);
             
             //Загрузить инверсный набор правил и второй комплект результатов
             ReCreateInverseRulesAndLoadResults();
@@ -300,8 +317,14 @@ namespace WebApi.Implementations.Learning
             statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
 
             var testAccuraciesWithFalsely = CalculateFalselyTestAccuracies(statistics, testAccuracies);
-            
+
             //По каждому диагнозу для каждого показателя посчитать OТ => (А + Г) / (А + Б + В + Г)
+
+            if (!clearAccuracies)
+            {
+                _learningTestAccuracyProvider.DeleteAllTestAccuracies();
+            }
+
             var completeTestAccuracies = CalculateOverallTestAccuracies(statistics, testAccuraciesWithFalsely);
             foreach (var testAccuracy in completeTestAccuracies)
             {

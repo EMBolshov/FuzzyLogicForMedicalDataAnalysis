@@ -68,7 +68,7 @@ namespace WebApi.Implementations.MainProcessing
                         var testAccuracy = TestAccuracies
                             .FirstOrDefault(x => x.DiagnosisGuid == diagnosis.Guid && x.TestName == rule.Test);
 
-                        var testAccuracyValue = testAccuracy?.OverallAccuracy ?? 1;
+                        var testAccuracyValue = testAccuracy?.OverallAccuracy ?? 1m;
 
                         currentRuleValue = fuzzyResults
                                                .First(x => x.TestName == rule.Test && x.InputTermName == rule.InputTermName)

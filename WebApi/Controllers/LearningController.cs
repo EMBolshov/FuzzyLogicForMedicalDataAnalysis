@@ -22,18 +22,24 @@ namespace WebApi.Controllers
         /// Learn
         /// </summary>
         [HttpGet("Learn")]
-        public void Learn()
+        public decimal Learn()
         {
             //var results = _learningProcessor.ProcessForAllPatients();
+            //var iterations = 0;
             _learningProcessor.CalculateTestAccuracy();
+            _learningProcessor.CalculateTestAccuracy(false);
+
             var errorRatio = _learningProcessor.GetErrorRatio();
-            while (errorRatio >= 10m)
-            {
-                _learningProcessor.CalculateTestAccuracy(false);
-                errorRatio = _learningProcessor.GetErrorRatio();
-            }
+            //while (errorRatio >= 30m)
+            //{
+            //    
+            //    errorRatio = _learningProcessor.GetErrorRatio();
+            //    iterations++;
+            //}
 
             _learningProcessor.ProcessForAllPatients();
+
+            return errorRatio;
         }
 
         /// <summary>
