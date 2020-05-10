@@ -40,7 +40,7 @@ namespace WebApi.Implementations.Learning
         };
         private readonly List<string> _OAKTests = new List<string>
         {
-            "Гемоглобин (HGB)",
+            //"Гемоглобин (HGB)",
             "Средний объем эритроцита (MCV)",
             "Эритроциты (RBC)",
             "Средн. сод. гемоглобина в эр-те (MCH)",
@@ -286,7 +286,7 @@ namespace WebApi.Implementations.Learning
                 previousTestAccuracies = _learningTestAccuracyProvider.GetAllTestAccuracies();
             }
 
-            var testAccuracies = CalculateTrulyTestAccuracies(statistics, previousTestAccuracies);
+            var testAccuracies = CalculatePositiveTestAccuracies(statistics, previousTestAccuracies);
             
             //Загрузить инверсный набор правил и второй комплект результатов
             ReCreateInverseRulesAndLoadResults();
@@ -316,7 +316,7 @@ namespace WebApi.Implementations.Learning
             allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
             statistics = GetPositiveResultsBinaryStatistics(allPositiveResults);
 
-            var testAccuraciesWithFalsely = CalculateFalselyTestAccuracies(statistics, testAccuracies);
+            var testAccuraciesWithFalsely = CalculateNegativeTestAccuracies(statistics, testAccuracies);
 
             //По каждому диагнозу для каждого показателя посчитать OТ => (А + Г) / (А + Б + В + Г)
 
@@ -430,7 +430,7 @@ namespace WebApi.Implementations.Learning
 
                     //(добавляем новые тесты или обновляем счетчик у старых)
                     //binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(nonCoreResults));
-                    binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(patientResults));
+                    binaryResults.AddRange(_fuzzyficator.MakeBinaryResults(patientResults, diagnosis.Name));
                 }
 
                 statistic.Add(diagnosis, binaryResults);
@@ -499,7 +499,7 @@ namespace WebApi.Implementations.Learning
             return result;
         }
 
-        private List<TestAccuracy> CalculateTrulyTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies = null)
+        private List<TestAccuracy> CalculatePositiveTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies = null)
         {
             var result = new List<TestAccuracy>();
             if (testAccuracies != null)
@@ -542,7 +542,7 @@ namespace WebApi.Implementations.Learning
                                 if (term == "Normal")
                                 {
                                     result.Remove(testAccuracy);
-                                    testAccuracy.TrulyNegative = power;
+                                    testAccuracy.FalselyPositive = power;
                                     result.Add(testAccuracy);
                                 }
                             }
@@ -554,7 +554,7 @@ namespace WebApi.Implementations.Learning
             return result;
         }
 
-        private List<TestAccuracy> CalculateFalselyTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies)
+        private List<TestAccuracy> CalculateNegativeTestAccuracies(Dictionary<Diagnosis, List<BinaryAnalysisResult>> statistics, List<TestAccuracy> testAccuracies)
         {
             var result = testAccuracies;
 
@@ -582,7 +582,7 @@ namespace WebApi.Implementations.Learning
                                 if (term == "Low")
                                 {
                                     result.Remove(testAccuracy);
-                                    testAccuracy.FalselyPositive = power;
+                                    testAccuracy.TrulyNegative = power;
                                     result.Add(testAccuracy);
                                 }
                                 if (term == "Normal")
@@ -616,7 +616,7 @@ namespace WebApi.Implementations.Learning
                     if (testAccuracy != null)
                     {
                         result.Remove(testAccuracy);
-                        testAccuracy.OverallAccuracy = (testAccuracy.TrulyPositive + testAccuracy.FalselyPositive) /
+                        testAccuracy.OverallAccuracy = (testAccuracy.TrulyPositive + testAccuracy.FalselyNegative) /
                                                        (testAccuracy.TrulyPositive + testAccuracy.TrulyNegative +
                                                         testAccuracy.FalselyPositive + testAccuracy.FalselyNegative);
                         result.Add(testAccuracy);
@@ -715,42 +715,42 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "Low",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Железодефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Железодефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "Железодефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "Железодефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                }
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Железодефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Железодефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "Железодефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "Железодефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //}
             };
         }
 
@@ -803,42 +803,42 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "High",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                }
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //}
             };
         }
 
@@ -855,60 +855,60 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "Low",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
                 new CreateRuleDto
                 {
                     Guid = Guid.NewGuid(),
@@ -934,42 +934,42 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "Low",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
                 new CreateRuleDto
                 {
                     Guid = Guid.NewGuid(),
@@ -979,24 +979,24 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "Low",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Normal",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                }
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Normal",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //}
             };
         }
 
@@ -1058,24 +1058,24 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "High",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Железодефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "Железодефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                }
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Железодефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "Железодефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //}
             };
         }
 
@@ -1101,42 +1101,42 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "High",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "High",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "Анемия хронических заболеваний",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                }
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "High",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "Анемия хронических заболеваний",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //}
             };
         }
 
@@ -1162,33 +1162,33 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "High",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Витамин В12",
-                    DiagnosisName = "Фолиеводефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Витамин В12",
+                //    DiagnosisName = "Фолиеводефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
                 new CreateRuleDto
                 {
                     Guid = Guid.NewGuid(),
@@ -1232,24 +1232,24 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "High",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Железо в сыворотке",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Ферритин",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                },
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Железо в сыворотке",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Ферритин",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //},
                 new CreateRuleDto
                 {
                     Guid = Guid.NewGuid(),
@@ -1269,15 +1269,15 @@ namespace WebApi.Implementations.Learning
                     InputTermName = "High",
                     Power = 1
                 },
-                new CreateRuleDto
-                {
-                    Guid = Guid.NewGuid(),
-                    Test = "Фолат сыворотки",
-                    DiagnosisName = "B12-дефицитная анемия",
-                    IsRemoved = false,
-                    InputTermName = "Low",
-                    Power = 1
-                }
+                //new CreateRuleDto
+                //{
+                //    Guid = Guid.NewGuid(),
+                //    Test = "Фолат сыворотки",
+                //    DiagnosisName = "B12-дефицитная анемия",
+                //    IsRemoved = false,
+                //    InputTermName = "Low",
+                //    Power = 1
+                //}
             };
         }
     }

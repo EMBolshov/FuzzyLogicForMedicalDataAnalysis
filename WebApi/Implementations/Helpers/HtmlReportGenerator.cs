@@ -17,7 +17,7 @@ namespace WebApi.Implementations.Helpers
             generatedHtml += GetHeader(model);
             generatedHtml += GetBody(model);
 
-            File.WriteAllText(Path.Combine("TestReports", $"{Guid.NewGuid()}.html"), generatedHtml);
+            //File.WriteAllText(Path.Combine("TestReports", $"{Guid.NewGuid()}.html"), generatedHtml);
         }
 
         private string HtmlInit()

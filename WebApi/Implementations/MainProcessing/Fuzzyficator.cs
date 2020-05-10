@@ -39,24 +39,24 @@ namespace WebApi.Implementations.MainProcessing
             return fuzzyResults;
         }
 
-        public List<BinaryAnalysisResult> MakeBinaryResults(List<AnalysisResult> analysisResults)
+        public List<BinaryAnalysisResult> MakeBinaryResults(List<AnalysisResult> analysisResults, string diagnosis)
         {
             var binaryResults = new List<BinaryAnalysisResult>();
 
             foreach (var analysisResult in analysisResults)
             {
-                binaryResults.Add(new BinaryAnalysisResult()
+                binaryResults.Add(new BinaryAnalysisResult
                 {
                     TestName = analysisResult.TestName,
                     InputTermName = "Low",
-                    Confidence = GetBinaryLowResultConfidence(analysisResult)
+                    Confidence = GetBinaryLowResultConfidence(analysisResult, diagnosis)
                 });
 
-                binaryResults.Add(new BinaryAnalysisResult()
+                binaryResults.Add(new BinaryAnalysisResult
                 {
                     TestName = analysisResult.TestName,
                     InputTermName = "Normal",
-                    Confidence = GetBinaryNormalResultConfidence(analysisResult)
+                    Confidence = GetBinaryNormalResultConfidence(analysisResult, diagnosis)
                 });
             }
 
@@ -179,14 +179,249 @@ namespace WebApi.Implementations.MainProcessing
             return Math.Round(affiliation, 4);
         }
 
-        private int GetBinaryLowResultConfidence(AnalysisResult analysisResult)
+        //TODO: сделать по-нормальному вместо этого хардкода тут
+        private int GetBinaryLowResultConfidence(AnalysisResult analysisResult, string diagnosis)
         {
-            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+            //Исходя из конкретного диагноза и конкретного показателя
+            switch (diagnosis)
+            {
+                case "Железодефицитная анемия":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Витамин В12":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Tрансферрин":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Ферритин":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                    }
+                    break;
+                case "Анемия хронических заболеваний":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry <  analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Витамин В12":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry < analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Tрансферрин":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Ферритин":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                    }
+                    break;
+                case "Фолиеводефицитная анемия":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Витамин В12":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        //по трансферрину инфы не было
+                        case "Tрансферрин":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        //инфы не было
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Ферритин":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                    }
+                    break;
+                case "B12-дефицитная анемия":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Витамин В12":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 1 : 0;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        //no info
+                        case "Tрансферрин":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        //no info
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 1 : 0;
+                        case "Ферритин":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+                    }
+                    break;
+            }
+
+            throw new ArgumentOutOfRangeException();
         }
 
-        private int GetBinaryNormalResultConfidence(AnalysisResult analysisResult)
+        private int GetBinaryNormalResultConfidence(AnalysisResult analysisResult, string diagnosis)
         {
-            return analysisResult.Entry > analysisResult.ReferenceLow ? 1 : 0;
+            //Исходя из конкретного диагноза и конкретного показателя
+            switch (diagnosis)
+            {
+                case "Железодефицитная анемия":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Витамин В12":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Tрансферрин":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Ферритин":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                    }
+                    break;
+                case "Анемия хронических заболеваний":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry < analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Витамин В12":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry < analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Tрансферрин":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Ферритин":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                    }
+                    break;
+                case "Фолиеводефицитная анемия":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Витамин В12":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        //по трансферрину инфы не было
+                        case "Tрансферрин":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        //инфы не было
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Ферритин":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                    }
+                    break;
+                case "B12-дефицитная анемия":
+                    switch (analysisResult.TestName)
+                    {
+                        case "Фолат сыворотки":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средний объем эритроцита (MCV)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Витамин В12":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Железо в сыворотке":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                        case "Эритроциты (RBC)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Средн. сод. гемоглобина в эр-те (MCH)":
+                            return analysisResult.Entry >= analysisResult.ReferenceHigh ? 0 : 1;
+                        case "Гематокрит (HCT)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        //no info
+                        case "Tрансферрин":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Гемоглобин (HGB)":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        //no info
+                        case "Насыщение трансферрина":
+                            return analysisResult.Entry <= analysisResult.ReferenceLow ? 0 : 1;
+                        case "Ферритин":
+                            return analysisResult.Entry > analysisResult.ReferenceLow ? 0 : 1;
+                    }
+                    break;
+            }
+
+            throw new ArgumentOutOfRangeException();
         }
     }
 }
