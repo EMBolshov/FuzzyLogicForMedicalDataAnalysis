@@ -17,7 +17,7 @@ namespace WebApi.Implementations.Helpers
             generatedHtml += GetHeader(model);
             generatedHtml += GetBody(model);
 
-            //File.WriteAllText(Path.Combine("TestReports", $"{Guid.NewGuid()}.html"), generatedHtml);
+            File.WriteAllText(Path.Combine("TestReports", $"{Guid.NewGuid()}.html"), generatedHtml);
         }
 
         private string HtmlInit()
@@ -117,7 +117,7 @@ namespace WebApi.Implementations.Helpers
             builder.AppendLine("<tr> " +
                                "<th>Диагноз: </th> " +
                                "<th>Код МКБ-10: </th> " +
-                               "<th>Степень уверенности*: </th></tr>");
+                               "<th>Степень уверенности (0.00-1.00)*: </th></tr>");
             foreach (var diagnosis in model.Diagnoses)
             {
                 var reorderedResults = model.ProcessedResults.OrderByDescending(x => x.Value).ToList();

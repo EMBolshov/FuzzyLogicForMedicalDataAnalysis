@@ -28,8 +28,8 @@ namespace WebApi.Controllers
             //var iterations = 0;
             _learningProcessor.CalculateTestAccuracy();
             _learningProcessor.CalculateTestAccuracy(false);
-
-            var errorRatio = _learningProcessor.GetErrorRatio();
+            //
+            //var errorRatio = _learningProcessor.GetErrorRatio();
             //while (errorRatio >= 30m)
             //{
             //    
@@ -38,8 +38,8 @@ namespace WebApi.Controllers
             //}
 
             _learningProcessor.ProcessForAllPatients();
-
-            return errorRatio;
+            return 0m;
+            //return errorRatio;
         }
 
         /// <summary>

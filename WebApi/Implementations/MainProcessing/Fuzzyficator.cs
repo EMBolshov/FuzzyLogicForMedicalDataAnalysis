@@ -89,7 +89,8 @@ namespace WebApi.Implementations.MainProcessing
             if (affiliation < 0m) { affiliation = 0m; }
             if (affiliation > 1m) { affiliation = 1m; }
 
-            return Math.Round(affiliation, 4);
+            //return Math.Round(affiliation, 4);
+            return affiliation;
         }
 
         private decimal GetNormalResultConfidence(AnalysisResult analysisResult)
@@ -124,7 +125,8 @@ namespace WebApi.Implementations.MainProcessing
                 if (affiliation < 0m) { affiliation = 0m; }
                 if (affiliation > 1m) { affiliation = 1m; }
 
-                return Math.Round(affiliation, 4);
+                //return Math.Round(affiliation, 4);
+                return affiliation;
             }
 
             if (analysisResult.Entry > analysisResult.ReferenceHigh - delta && analysisResult.Entry < maxValue)
@@ -141,7 +143,8 @@ namespace WebApi.Implementations.MainProcessing
                 if (affiliation < 0m) { affiliation = 0m; }
                 if (affiliation > 1m) { affiliation = 1m; }
 
-                return Math.Round(affiliation, 4);
+                //return Math.Round(affiliation, 4);
+                return affiliation;
             }
 
             throw new ArgumentOutOfRangeException(analysisResult.Entry.ToString(CultureInfo.CurrentCulture),
@@ -176,7 +179,8 @@ namespace WebApi.Implementations.MainProcessing
             if (affiliation < 0m) { affiliation = 0m; }
             if (affiliation > 1m) { affiliation = 1m; }
 
-            return Math.Round(affiliation, 4);
+            //return Math.Round(affiliation, 4);
+            return affiliation;
         }
 
         //TODO: сделать по-нормальному вместо этого хардкода тут

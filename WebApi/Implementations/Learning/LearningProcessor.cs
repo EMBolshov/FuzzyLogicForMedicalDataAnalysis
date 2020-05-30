@@ -154,9 +154,9 @@ namespace WebApi.Implementations.Learning
             //Поставить диагнозы по полному набору данных, убрать из результатов пациентов специфические тесты,
             //поставить диагнозы по неполному набору данных, сравнить наиболее вероятный диагноз по неполным данным с поставленным по полным
 
-            _learningProcessedResultProvider.DeleteAllResults();
-            _learningRuleProvider.DeleteAllRules();
-            CreateBaseRules();
+           // _learningProcessedResultProvider.DeleteAllResults();
+           // _learningRuleProvider.DeleteAllRules();
+           // CreateBaseRules();
 
             var patients = _learningPatientProvider.GetAllPatients();
             var fullDataResults = new List<ProcessedResult>();
@@ -164,87 +164,105 @@ namespace WebApi.Implementations.Learning
             var removedAnalysisResultsGuids = new List<Guid>();
 
             //Полный набор данных
-            foreach (var patient in patients)
-            {
-                var fullRes = _decisionMaker.ProcessForPatient(patient, true);
-                if (fullRes.Any(x => x.Value > 0))
-                {
-                    fullRes.Where(x => x.Value > 0).ToList()
-                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
-
-                    fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
-                }
-            }
+           // foreach (var patient in patients)
+           // {
+           //     var fullRes = _decisionMaker.ProcessForPatient(patient, true);
+           //     if (fullRes.Any(x => x.Value > 0))
+           //     {
+           //         fullRes.Where(x => x.Value > 0).ToList()
+           //             .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+           // 
+           //         fullDataResults.AddRange(fullRes.Where(x => x.Value > 0));
+           //     }
+           // }
 
             //Добавить новые правила
-            var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
-            var statistics = GetPositiveResultsStatistics(allPositiveResults);
-            var newRules = MakeNewRulesBasedOnStatistics(statistics);
-            foreach (var newRule in newRules)
-            {
-                var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
-                _learningRuleProvider.CreateRule(ruleDto);
-            }
+           // var allPositiveResults = _learningProcessedResultProvider.GetAllPositiveResults();
+           // var statistics = GetPositiveResultsStatistics(allPositiveResults);
+           // var newRules = MakeNewRulesBasedOnStatistics(statistics);
+           // foreach (var newRule in newRules)
+           // {
+           //     var ruleDto = _createDtoMapper.RuleToCreateRuleDto(newRule);
+           //     _learningRuleProvider.CreateRule(ruleDto);
+           // }
 
             //Только ОАК
             foreach (var patient in patients)
             {
-                var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
-                patientResults.ForEach(x =>
-                {
-                    if (!_OAKTests.Contains(x.TestName))
-                    {
-                        _learningAnalysisResultProvider.RemoveAnalysisResult(x.Guid);
-                        removedAnalysisResultsGuids.Add(x.Guid);
-                    }
-                });
+                //var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+                //patientResults.ForEach(x =>
+                //{
+                //    if (!_OAKTests.Contains(x.TestName))
+                //    {
+                //        _learningAnalysisResultProvider.RemoveAnalysisResult(x.Guid);
+                //        removedAnalysisResultsGuids.Add(x.Guid);
+                //    }
+                //});
 
                 var partRes = _decisionMaker.ProcessForPatient(patient, false);
                 if (partRes.Any(x => x.Value > 0))
                 {
-                    partialDataResults.AddRange(partRes.Where(x => x.Value > 0));
+                    //partialDataResults.AddRange(partRes.Where(x => x.Value > 0));
+                   
+                    partRes.Where(x => x.Value > 0).ToList()
+                        .ForEach(x => _learningProcessedResultProvider.SaveProcessedResult(x));
+
+                    var patientResults = _learningAnalysisResultProvider.GetAnalysisResultsByPatientGuid(patient.Guid);
+
+                    //Подготовка отчетов по результатам для целей тестирования
+                    var reportModel = new ReportModel
+                    {
+                        ProcessedResults = partRes,
+                        Patient = patient,
+                        AnalysisResults = patientResults,
+                        Diagnoses = LearningDiagnoses.ToList(),
+                        Path = "TestReports"
+                    };
+
+                    _reportGenerator.GenerateReport(reportModel);
                 }
             }
 
             //Сравнение полного набора с неполным
 
-            var patientsWithPositiveResultByFullData =
-                patients.Where(x => fullDataResults.Any(y => y.PatientGuid == x.Guid)).ToList();
-
-            var diffCount = 0;
-
-            foreach (var patient in patientsWithPositiveResultByFullData)
-            {
-                var diagnosisGuid = fullDataResults.First(x => x.PatientGuid == patient.Guid).DiagnosisGuid;
-                var diagnosis = LearningDiagnoses.FirstOrDefault(x => x.Guid == diagnosisGuid)?.Name;
-
-                var allPartialDiagnosis = partialDataResults.Where(x => x.PatientGuid == patient.Guid)
-                    .ToDictionary(x => LearningDiagnoses.First(y => y.Guid == x.DiagnosisGuid).Name, x => x.Value);
-
-                var maxValue = allPartialDiagnosis.Values.Max();
-                var mostProbableDiagnoses = allPartialDiagnosis.Where(x => x.Value >= maxValue).Select(x => x.Key).ToList();
-                
-                //Наимболее вероятный диагноз не равен поставленному - ошибка
-                //if (!mostProbableDiagnoses.Contains(diagnosis))
-                //{
-                //    diffCount++;
-                //}
-
-                //Разница между наиболее вероятным диагнозом и поставленным диагнозов больше 90% - ошибка
-                var diagnosisChance = allPartialDiagnosis[diagnosis];
-                var mostProbableDiagnosisChance = allPartialDiagnosis[mostProbableDiagnoses.First()];
-                if (diagnosisChance / mostProbableDiagnosisChance < 0.9m)
-                {
-                    diffCount++;
-                }
-            }
-
-            removedAnalysisResultsGuids.ForEach(x => _learningAnalysisResultProvider.ReturnAnalysisResult(x));
-            _learningRuleProvider.DeleteAllRules();
-            CreateBaseRules();
-            
-            var result = diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
-            return result;
+           // var patientsWithPositiveResultByFullData =
+           //     patients.Where(x => fullDataResults.Any(y => y.PatientGuid == x.Guid)).ToList();
+           //
+           // var diffCount = 0;
+           //
+           // foreach (var patient in patientsWithPositiveResultByFullData)
+           // {
+           //     var diagnosisGuid = fullDataResults.First(x => x.PatientGuid == patient.Guid).DiagnosisGuid;
+           //     var diagnosis = LearningDiagnoses.FirstOrDefault(x => x.Guid == diagnosisGuid)?.Name;
+           //
+           //     var allPartialDiagnosis = partialDataResults.Where(x => x.PatientGuid == patient.Guid)
+           //         .ToDictionary(x => LearningDiagnoses.First(y => y.Guid == x.DiagnosisGuid).Name, x => x.Value);
+           //
+           //     var maxValue = allPartialDiagnosis.Values.Max();
+           //     var mostProbableDiagnoses = allPartialDiagnosis.Where(x => x.Value >= maxValue).Select(x => x.Key).ToList();
+           //     
+           //     //Наимболее вероятный диагноз не равен поставленному - ошибка
+           //     if (!mostProbableDiagnoses.Contains(diagnosis))
+           //     {
+           //         diffCount++;
+           //     }
+           //
+           //     //Разница между наиболее вероятным диагнозом и поставленным диагнозов больше 90% - ошибка
+           //     //var diagnosisChance = allPartialDiagnosis[diagnosis];
+           //     //var mostProbableDiagnosisChance = allPartialDiagnosis[mostProbableDiagnoses.First()];
+           //     //if (diagnosisChance / mostProbableDiagnosisChance < 0.9m)
+           //     //{
+           //     //    diffCount++;
+           //     //}
+           // }
+           //
+           // removedAnalysisResultsGuids.ForEach(x => _learningAnalysisResultProvider.ReturnAnalysisResult(x));
+           // _learningRuleProvider.DeleteAllRules();
+           // CreateBaseRules();
+           // 
+           // var result = diffCount / (decimal)patientsWithPositiveResultByFullData.Count * 100m;
+           // return result;
+            return 0m;
         }
 
         public void CalculateTestAccuracy(bool clearAccuracies = true)
