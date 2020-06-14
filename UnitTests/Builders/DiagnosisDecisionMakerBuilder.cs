@@ -18,6 +18,7 @@ namespace UnitTests.Builders
         public IDiagnosisProvider DiagnosisProvider { get; private set; }
         public IRuleProvider RuleProvider { get; private set; }
         public IProcessedResultProvider ProcessedResultProvider { get; private set; }
+        public ITestAccuracyProvider TestAccuracyProvider { get; private set; }
 
         private readonly StubObjectProvider _stubObjectProvider;
 
@@ -158,10 +159,17 @@ namespace UnitTests.Builders
             ProcessedResultProvider = mockProcessedResultsDbProvider.Object;
             return this;
         }
+
+        public DiagnosisDecisionMakerBuilder GetTestAccuracyProvider()
+        {
+            var mockTestAccuracyProvider = new Mock<ITestAccuracyProvider>();
+            TestAccuracyProvider = mockTestAccuracyProvider.Object;
+            return this;
+        }
         
         public DiagnosisDecisionMaker Build()
         {
-            return new DiagnosisDecisionMaker(AnalysisResultProvider, DiagnosisProvider, RuleProvider);
+            return new DiagnosisDecisionMaker(AnalysisResultProvider, DiagnosisProvider, RuleProvider, TestAccuracyProvider);
         }
     }
 }

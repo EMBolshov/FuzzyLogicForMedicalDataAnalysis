@@ -9,7 +9,6 @@ C:\Users\bolshov.e\Downloads\FuzzyLogicForMedicalDataAnalysis-develop\POCO.Domai
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\bin\Debug\netstandard2.0\POCO.Domain.deps.json
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\bin\Debug\netstandard2.0\POCO.Domain.dll
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\bin\Debug\netstandard2.0\POCO.Domain.pdb
-C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\obj\Debug\netstandard2.0\POCO.Domain.csprojAssemblyReference.cache
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\obj\Debug\netstandard2.0\POCO.Domain.csproj.CoreCompileInputs.cache
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\obj\Debug\netstandard2.0\POCO.Domain.AssemblyInfoInputs.cache
 C:\Users\ПК\source\repos\FuzzyLogicForMedicalDataAnalysis\POCO.Domain\obj\Debug\netstandard2.0\POCO.Domain.AssemblyInfo.cs

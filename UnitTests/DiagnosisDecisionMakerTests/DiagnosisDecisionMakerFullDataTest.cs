@@ -21,6 +21,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
@@ -46,6 +47,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
@@ -71,6 +73,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
@@ -96,6 +99,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
@@ -121,6 +125,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
@@ -143,6 +148,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
@@ -165,6 +171,7 @@ namespace UnitTests.DiagnosisDecisionMakerTests
                 .GetDiagnosisProvider()
                 .GetRulesProvider()
                 .GetProcessedResultProvider()
+                .GetTestAccuracyProvider()
                 .Build();
 
             var patient = _builder.Patient;
